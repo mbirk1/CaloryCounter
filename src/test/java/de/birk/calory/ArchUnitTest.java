@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.methods;
+import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 
 public class ArchUnitTest {
 
@@ -15,7 +16,6 @@ public class ArchUnitTest {
     private static final String MODULE_SERVICE = BASE_PACKAGE + ".service";
     private static final String MODULE_PERSISTENCE = BASE_PACKAGE + ".persistence";
     private static final JavaClasses ALL_CLASSES = new ClassFileImporter().importPackages(BASE_PACKAGE);
-    private static final JavaClasses TEST_CLASSES = new ClassFileImporter().
 
     @Test
     public void allClassesShouldNotUseJunitFourTest() {
@@ -25,16 +25,28 @@ public class ArchUnitTest {
     }
 
     @Test
-    public void methodsInTestClassesShouldBeNamedTest(){
-        methods().that().areDeclaredInClassesThat().areAnnotatedWith("org.junit.jupiter.api.Test")
+    public void methodsInTestClassesShouldBeNamedTest() {
+        methods().that().areDeclaredInClassesThat()
+                .areAnnotatedWith("org.junit.jupiter.api.Test")
                 .should().haveNameEndingWith("Test")
-                .check();
+                .check(ALL_CLASSES);
     }
 
-    //TODO Marius ArchUnitTest für zyklische Abhängigkeiten ist sinnvoll
     @Test
     public void cyclicDependenciesAreNotAllowedTest() {
+        layeredArchitecture().consideringAllDependencies()
 
+                .layer("Controllers").definedBy(MODULE_CONTROLLER + "..")
+                .layer("Services").definedBy(MODULE_SERVICE + "..")
+                .layer("Domain").definedBy(MODULE_DOMAIN + "..")
+                .layer("Persistence").definedBy(MODULE_PERSISTENCE + "..")
+
+                .whereLayer("Controllers").mayOnlyBeAccessedByLayers("Services")
+                .whereLayer("Services").mayOnlyBeAccessedByLayers("Controllers", "Domain", "Persistence")
+                .whereLayer("Domain").mayOnlyBeAccessedByLayers("Services", "Persistence")
+                .whereLayer("Persistence").mayOnlyBeAccessedByLayers("Domain", "Services")
+
+                .check(ALL_CLASSES);
     }
 
     @Test

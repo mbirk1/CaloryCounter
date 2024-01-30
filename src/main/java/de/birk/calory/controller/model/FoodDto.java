@@ -27,8 +27,4 @@ public class FoodDto {
     public BigDecimal getCalory() {
         return calory;
     }
-
-    public static FoodDto of(Food toBeDto){
-        return new FoodDto(toBeDto.getId(), toBeDto.getName(), toBeDto.getCalory());
-    }
 }
