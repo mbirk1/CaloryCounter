@@ -1,12 +1,23 @@
 package de.birk.calory.domain.food;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 
+@Entity
+@Table(name = "tab_calory_food")
 public class Food {
 
+    @Id
+    @Column
     private UUID id;
+    @Column
     private String name;
+    @Column(name = "calory_count")
     private BigDecimal calory;
 
     public Food() {

@@ -8,5 +8,5 @@ create table tab_calory_food (
 
 create table tab_calory_recipe (
     id uuid,
-    name varchar(255),
+    name varchar(255)
 );

@@ -4,15 +4,19 @@ import de.birk.calory.controller.model.FoodDto;
 import de.birk.calory.domain.food.Food;
 import de.birk.calory.persistence.FoodRepository;
 import de.birk.calory.service.exceptions.FoodNotExistException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@Service
 public class FoodService {
 
     private FoodRepository foodRepository;
 
-    public FoodService(FoodRepository foodRepository) {
+    @Autowired
+    public FoodService(FoodRepository foodRepository){
         this.foodRepository = foodRepository;
     }
 
