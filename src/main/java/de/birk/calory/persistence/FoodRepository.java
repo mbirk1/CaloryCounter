@@ -1,6 +1,6 @@
 package de.birk.calory.persistence;
 
-import de.birk.calory.models.food.Food;
+import de.birk.calory.domain.food.Food;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.UUID;

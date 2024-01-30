@@ -1,14 +1,19 @@
-package de.birk.calory.models.food;
+package de.birk.calory.domain.food;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class FoodDto {
+public class Food {
+
     private UUID id;
     private String name;
     private BigDecimal calory;
 
-    public FoodDto(UUID id, String name, BigDecimal calory) {
+    public Food() {
+        //for JPA
+    }
+
+    public Food(UUID id, String name, BigDecimal calory) {
         this.id = id;
         this.name = name;
         this.calory = calory;
@@ -24,9 +29,5 @@ public class FoodDto {
 
     public BigDecimal getCalory() {
         return calory;
-    }
-
-    public static FoodDto of(Food toBeDto){
-        return new FoodDto(toBeDto.getId(), toBeDto.getName(), toBeDto.getCalory());
     }
 }

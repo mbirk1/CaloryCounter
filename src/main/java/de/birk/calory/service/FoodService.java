@@ -1,6 +1,6 @@
 package de.birk.calory.service;
 
-import de.birk.calory.models.food.Food;
+import de.birk.calory.domain.food.Food;
 import de.birk.calory.persistence.FoodRepository;
 
 import java.util.Optional;
