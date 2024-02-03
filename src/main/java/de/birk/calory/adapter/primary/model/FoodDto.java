@@ -1,6 +1,4 @@
-package de.birk.calory.controller.model;
-
-import de.birk.calory.domain.food.Food;
+package de.birk.calory.adapter.primary.model;
 
 import java.math.BigDecimal;
 import java.util.UUID;
