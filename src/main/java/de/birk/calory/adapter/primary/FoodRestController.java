@@ -12,7 +12,6 @@ public class FoodRestController {
 
   private final FindFoodUsecase findFoodUsecase;
 
-  @Autowired
   public FoodRestController(FindFoodUsecase findFoodUsecase) {
     this.findFoodUsecase = findFoodUsecase;
   }
