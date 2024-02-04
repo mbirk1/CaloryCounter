@@ -1,14 +1,18 @@
 package de.birk.calory.usecase.food;
 
-import static de.birk.calory.usecase.food.FoodDtoBuilder.convertDtoFromFood;
+import static de.birk.calory.usecase.food.FoodDetailsDtoBuilder.convertDtoFromFood;
 
-import de.birk.calory.adapter.primary.model.FoodDto;
-import de.birk.calory.domain.food.Food;
-import de.birk.calory.service.FoodService;
-import de.birk.calory.service.exceptions.FoodNotExistException;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import org.springframework.stereotype.Component;
+
+import de.birk.calory.adapter.primary.model.FoodDetailsDto;
+import de.birk.calory.domain.food.Food;
+import de.birk.calory.service.FoodService;
+import de.birk.calory.service.exceptions.FoodNotExistException;
+
+@Component
 public class FindFoodUsecase {
 
   private final FoodService foodService;
@@ -17,13 +21,13 @@ public class FindFoodUsecase {
     this.foodService = foodService;
   }
 
-  public FoodDto findFoodById(UUID uuid) {
-    Food food = null;
+  public FoodDetailsDto findFoodById(UUID uuid) {
+    Food food;
     try {
       food = foodService.findFood(uuid);
       return convertDtoFromFood(food.getId(), food.getName(), food.getCalory());
     } catch (FoodNotExistException e) {
-      return new FoodDto(UUID.randomUUID(), "", BigDecimal.ZERO);
+      return new FoodDetailsDto(UUID.randomUUID(), "", BigDecimal.ZERO);
     }
   }
 }

@@ -1,17 +1,19 @@
 package de.birk.calory.service;
 
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import de.birk.calory.adapter.secondary.FoodRepository;
 import de.birk.calory.domain.food.Food;
 import de.birk.calory.service.exceptions.FoodNotExistException;
-import java.util.Optional;
-import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class FoodService {
 
-  private FoodRepository foodRepository;
+  private final FoodRepository foodRepository;
 
   @Autowired
   public FoodService(FoodRepository foodRepository) {
@@ -24,5 +26,9 @@ public class FoodService {
       throw new FoodNotExistException();
     }
     return optional.get();
+  }
+
+  public Food createFood(Food food) {
+    return this.foodRepository.save(food);
   }
 }

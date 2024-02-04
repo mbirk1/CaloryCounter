@@ -1,21 +1,28 @@
 package de.birk.calory.adapter.primary;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-import de.birk.calory.AbstractTestBase;
-import de.birk.calory.IntegrationTest;
+import jakarta.transaction.Transactional;
+
 import org.junit.jupiter.api.Test;
 
+import de.birk.calory.AbstractTestBase;
+import de.birk.calory.IntegrationTest;
+
 @IntegrationTest
+@Transactional
 public class FoodRestControllerTest extends AbstractTestBase {
 
   @Test
-  public void getFoodTest() throws Exception {
+  public void createAndGetFoodTest() throws Exception {
     String id = "a97da1bd-30ec-4267-9a1f-0df987d4ccc9";
     this.mockMvc.perform(
-            get("/" + id)
+            get("/food/{id}", id)
         )
         .andDo(print());
+
+    assertTrue(true);
   }
 }

@@ -1,12 +1,14 @@
 package de.birk.calory;
 
+import static com.tngtech.archunit.core.importer.ImportOption.DoNotIncludeTests.DoNotIncludeTests;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.methods;
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 
+import org.junit.jupiter.api.Test;
+
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
-import org.junit.jupiter.api.Test;
 
 public class ArchUnitTest {
 
@@ -18,6 +20,9 @@ public class ArchUnitTest {
   private static final String MODULE_PERSISTENCE = BASE_PACKAGE + ".adapter.secondary";
   private static final JavaClasses ALL_CLASSES =
       new ClassFileImporter().importPackages(BASE_PACKAGE);
+  private static final JavaClasses PROD_CLASSES =
+      new ClassFileImporter().withImportOption(new DoNotIncludeTests())
+          .importPackages(BASE_PACKAGE);
 
   @Test
   public void allClassesShouldNotUseJunitFourTest() {
@@ -30,6 +35,7 @@ public class ArchUnitTest {
   public void methodsInTestClassesShouldBeNamedTest() {
     methods().that()
         .areAnnotatedWith("org.junit.jupiter.api.Test")
+
         .should().haveNameEndingWith("Test")
         .check(ALL_CLASSES);
   }
@@ -58,20 +64,20 @@ public class ArchUnitTest {
   public void classesInControllerPackageShouldBeNamedRestControllerTest() {
     classes().that().resideInAPackage(MODULE_CONTROLLER)
         .should().haveSimpleNameEndingWith("RestController")
-        .check(ALL_CLASSES);
+        .check(PROD_CLASSES);
   }
 
   @Test
   public void classesAnnotatedWithRepositoryShouldBeInPersistenceTest() {
     classes().that().areAssignableTo("org.springframework.data.repository.CrudRepository")
         .should().resideInAPackage(MODULE_PERSISTENCE)
-        .check(ALL_CLASSES);
+        .check(PROD_CLASSES);
   }
 
   @Test
   public void classesInPersistencePackageShouldBeNamedRepositoryTest() {
     classes().that().resideInAPackage(MODULE_PERSISTENCE)
         .should().haveSimpleNameEndingWith("Repository")
-        .check(ALL_CLASSES);
+        .check(PROD_CLASSES);
   }
 }
