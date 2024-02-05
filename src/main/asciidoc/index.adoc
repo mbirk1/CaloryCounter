@@ -1,0 +1,15 @@
+:sourcedir: src/main/java
+:testdir: src/main/test
+:docfiles: ../../../target/snippets
+
+= REST Documentation for Calory Count Application
+
+These are the reachable endpoints for the calory count application at http://localhost:8080:
+
+== Food Endpoints
+
+.request
+include::{docfiles}/home/http-request.adoc[]
+
+.response
+include::{docfiles}/home/http-response.adoc[]
