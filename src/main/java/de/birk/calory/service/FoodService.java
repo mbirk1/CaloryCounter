@@ -23,7 +23,7 @@ public class FoodService {
   public Food findFood(UUID id) throws FoodNotExistException {
     Optional<Food> optional = this.foodRepository.findById(id);
     if (optional.isEmpty()) {
-      throw new FoodNotExistException();
+      throw new FoodNotExistException("Food not persisted");
     }
     return optional.get();
   }

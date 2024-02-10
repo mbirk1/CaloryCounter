@@ -22,12 +22,7 @@ public class FindFoodUsecase {
   }
 
   public FoodDetailsDto findFoodById(UUID uuid) {
-    Food food;
-    try {
-      food = foodService.findFood(uuid);
-      return convertDtoFromFood(food.getId(), food.getName(), food.getCalory());
-    } catch (FoodNotExistException e) {
-      return new FoodDetailsDto(UUID.randomUUID(), "", BigDecimal.ZERO);
-    }
+    Food food = foodService.findFood(uuid);
+    return convertDtoFromFood(food.getId(), food.getName(), food.getCalory());
   }
 }
