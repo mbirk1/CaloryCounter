@@ -1,28 +1,33 @@
 package de.birk.calory.usecase.food;
 
-import static de.birk.calory.usecase.food.FoodDetailsDtoBuilder.convertDtoFromFood;
-
-import java.math.BigDecimal;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.birk.calory.adapter.primary.model.FoodDetailsDto;
+import de.birk.calory.adapter.secondary.FoodRepository;
+import de.birk.calory.adapter.secondary.model.FoodPersistence;
 import de.birk.calory.domain.food.Food;
-import de.birk.calory.service.FoodService;
-import de.birk.calory.service.exceptions.FoodNotExistException;
+import de.birk.calory.usecase.food.converter.FoodDtoConverter;
+import de.birk.calory.usecase.food.converter.converter.FoodPersistenceConverter;
 
 @Component
 public class FindFoodUsecase {
+  @Autowired
+  private FoodRepository foodRepository;
 
-  private final FoodService foodService;
-
-  public FindFoodUsecase(FoodService foodService) {
-    this.foodService = foodService;
+  public FindFoodUsecase() {
   }
 
   public FoodDetailsDto findFoodById(UUID uuid) {
-    Food food = foodService.findFood(uuid);
-    return convertDtoFromFood(food.getId(), food.getName(), food.getCalory());
+    FoodPersistence foodPersistence = this.foodRepository.findById(uuid)
+        .orElseThrow();
+    Food food = FoodPersistenceConverter.convertToFood(foodPersistence);
+    return FoodDtoConverter.convertToDetails(
+        food.getId(),
+        food.getName(),
+        food.getCalory()
+    );
   }
 }

@@ -18,21 +18,20 @@ import de.birk.calory.usecase.food.FindFoodUsecase;
 @RequestMapping("/food")
 public class FoodRestController {
 
-  private final FindFoodUsecase findFoodUsecase;
-  private final CreateFoodUsecase createFoodUseCase;
+  public FoodRestController() {
 
-  public FoodRestController(FindFoodUsecase findFoodUsecase, CreateFoodUsecase createFoodUseCase) {
-    this.findFoodUsecase = findFoodUsecase;
-    this.createFoodUseCase = createFoodUseCase;
   }
 
   @GetMapping("/{id}")
   public FoodDetailsDto getFood(@PathVariable UUID id) {
+    FindFoodUsecase findFoodUsecase = new FindFoodUsecase();
     return findFoodUsecase.findFoodById(id);
   }
 
   @PostMapping
   public FoodDetailsDto createFood(@RequestBody FoodDto foodDto) {
-    return this.createFoodUseCase.createFood(foodDto);
+    CreateFoodUsecase createFoodUsecase = new CreateFoodUsecase();
+
+    return createFoodUsecase.createFood(foodDto);
   }
 }

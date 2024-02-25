@@ -19,6 +19,7 @@
 
     <properties>
         <java.version>21</java.version>
+        <node.version>v20.11.0</node.version>
     </properties>
 
     <repositories>
@@ -167,6 +168,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
             </plugin>
 
             <!-- Tools -->
@@ -188,29 +197,65 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.asciidoctor</groupId>
-                <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>1.5.8</version>
+                <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>generate-docs</id>
-                        <phase>prepare-package</phase>
+                        <id>position-react-build</id>
                         <goals>
-                            <goal>process-asciidoc</goal>
+                            <goal>copy-resources</goal>
                         </goals>
+                        <phase>prepare-package</phase>
                         <configuration>
-                            <backend>html</backend>
-                            <doctype>book</doctype>
+                            <outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/src/main/frontend/build</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.springframework.restdocs</groupId>
-                        <artifactId>spring-restdocs-asciidoctor</artifactId>
-                        <version>${spring-restdocs.version}</version>
-                    </dependency>
-                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.7.6</version>
+                <configuration>
+                    <nodeVersion>${node.version}</nodeVersion>
+                    <workingDirectory>${project.basedir}/src/main/frontend/calory_count</workingDirectory>
+                    <installDirectory>${project.build.directory}</installDirectory>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>install-frontend-tools</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
+                        <id>npm-install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>build-frontend</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Database -->
