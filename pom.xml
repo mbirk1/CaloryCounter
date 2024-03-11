@@ -226,7 +226,6 @@
                     <workingDirectory>${project.basedir}/src/main/frontend/calory_count</workingDirectory>
                     <installDirectory>${project.build.directory}</installDirectory>
                 </configuration>
-
                 <executions>
                     <execution>
                         <id>install-frontend-tools</id>
@@ -234,7 +233,6 @@
                             <goal>install-node-and-npm</goal>
                         </goals>
                     </execution>
-
                     <execution>
                         <id>npm-install</id>
                         <goals>
@@ -244,7 +242,6 @@
                             <arguments>install</arguments>
                         </configuration>
                     </execution>
-
                     <execution>
                         <id>build-frontend</id>
                         <goals>

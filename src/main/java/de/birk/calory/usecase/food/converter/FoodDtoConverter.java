@@ -5,8 +5,11 @@ import java.util.UUID;
 
 import de.birk.calory.adapter.primary.model.FoodDetailsDto;
 import de.birk.calory.adapter.primary.model.FoodDto;
+import de.birk.calory.domain.food.Food;
 
 public class FoodDtoConverter {
+
+  public static Food convertToEntity(FoodDto food)
 
   public static FoodDetailsDto convertToDetails(UUID id, String name, BigDecimal calory) {
     return new FoodDetailsDto(

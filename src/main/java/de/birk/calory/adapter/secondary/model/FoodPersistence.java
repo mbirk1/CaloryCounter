@@ -1,5 +1,7 @@
 package de.birk.calory.adapter.secondary.model;
 
+import de.birk.calory.adapter.secondary.FoodRepository;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

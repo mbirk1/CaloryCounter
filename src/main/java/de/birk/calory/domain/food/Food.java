@@ -1,12 +1,9 @@
 package de.birk.calory.domain.food;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
 import java.math.BigDecimal;
 import java.util.UUID;
+
+import de.birk.calory.adapter.primary.model.FoodDto;
 
 public class Food {
 
@@ -34,5 +31,9 @@ public class Food {
 
     public BigDecimal getCalory() {
         return calory;
+    }
+
+    public static Food of(FoodDto foodDto) {
+        return new Food(UUID.randomUUID(), foodDto.getName(), foodDto.getCalory());
     }
 }

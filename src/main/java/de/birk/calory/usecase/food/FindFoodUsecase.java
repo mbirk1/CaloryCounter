@@ -14,10 +14,10 @@ import de.birk.calory.usecase.food.converter.converter.FoodPersistenceConverter;
 
 @Component
 public class FindFoodUsecase {
-  @Autowired
-  private FoodRepository foodRepository;
+  private final FoodRepository foodRepository;
 
-  public FindFoodUsecase() {
+  public FindFoodUsecase(FoodRepository foodRepository) {
+    this.foodRepository = foodRepository;
   }
 
   public FoodDetailsDto findFoodById(UUID uuid) {

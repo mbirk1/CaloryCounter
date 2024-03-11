@@ -24,7 +24,7 @@ import de.birk.calory.IntegrationTest;
 
 @IntegrationTest
 @Transactional
-@AutoConfigureRestDocs(outputDir = "target/snippets")
+@AutoConfigureRestDocs(outputDir = "doc/snippets/default")
 public class FoodRestControllerTest extends AbstractTestBase {
 
   @Test
