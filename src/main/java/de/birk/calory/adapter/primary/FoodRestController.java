@@ -2,6 +2,7 @@ package de.birk.calory.adapter.primary;
 
 import java.util.UUID;
 
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +28,7 @@ public class FoodRestController {
     this.findFoodUsecase = findFoodUsecase;
     this.createFoodUsecase = createFoodUsecase;
   }
+
 
   @GetMapping("/{id}")
   public FoodDetailsDto getFood(@PathVariable UUID id) {

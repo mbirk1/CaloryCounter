@@ -9,7 +9,10 @@ import de.birk.calory.domain.food.Food;
 
 public class FoodDtoConverter {
 
-  public static Food convertToEntity(FoodDto food)
+  public static Food convertToEntity(FoodDto food) {
+    UUID id = UUID.randomUUID();
+    return new Food(id, food.getName(), food.getCalory());
+  }
 
   public static FoodDetailsDto convertToDetails(UUID id, String name, BigDecimal calory) {
     return new FoodDetailsDto(

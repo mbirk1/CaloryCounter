@@ -12,4 +12,8 @@ public class FoodPersistenceConverter {
         foodPersistence.getCalory()
     );
   }
+
+  public static FoodPersistence convertToPersistence(Food food) {
+    return new FoodPersistence(food.getId(), food.getName(), food.getCalory());
+  }
 }

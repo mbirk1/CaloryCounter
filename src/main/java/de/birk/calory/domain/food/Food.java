@@ -32,8 +32,4 @@ public class Food {
     public BigDecimal getCalory() {
         return calory;
     }
-
-    public static Food of(FoodDto foodDto) {
-        return new Food(UUID.randomUUID(), foodDto.getName(), foodDto.getCalory());
-    }
 }

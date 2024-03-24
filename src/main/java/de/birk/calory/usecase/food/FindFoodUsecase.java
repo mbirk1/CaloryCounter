@@ -2,8 +2,7 @@ package de.birk.calory.usecase.food;
 
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import de.birk.calory.adapter.primary.model.FoodDetailsDto;
 import de.birk.calory.adapter.secondary.FoodRepository;
@@ -12,7 +11,7 @@ import de.birk.calory.domain.food.Food;
 import de.birk.calory.usecase.food.converter.FoodDtoConverter;
 import de.birk.calory.usecase.food.converter.converter.FoodPersistenceConverter;
 
-@Component
+@Service
 public class FindFoodUsecase {
   private final FoodRepository foodRepository;
 
