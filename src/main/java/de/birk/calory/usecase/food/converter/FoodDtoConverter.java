@@ -10,6 +10,7 @@ import de.birk.calory.domain.food.Food;
 public class FoodDtoConverter {
 
   public static Food convertToEntity(FoodDto food) {
+    validateDto(food);
     UUID id = UUID.randomUUID();
     return new Food(id, food.getName(), food.getCalory());
   }
@@ -27,5 +28,14 @@ public class FoodDtoConverter {
         name,
         calory
     );
+  }
+  private static void validateDto(FoodDto foodDto){
+    if(foodDto.getName().trim().isBlank() || foodDto.getName().trim().isEmpty() || foodDto.getName() == null){
+      throw new IllegalArgumentException();
+    }
+
+    if(foodDto.getCalory() == null){
+      throw new IllegalArgumentException();
+    }
   }
 }

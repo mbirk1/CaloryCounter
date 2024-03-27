@@ -9,7 +9,7 @@ import de.birk.calory.adapter.secondary.FoodRepository;
 import de.birk.calory.adapter.secondary.model.FoodPersistence;
 import de.birk.calory.domain.food.Food;
 import de.birk.calory.usecase.food.converter.FoodDtoConverter;
-import de.birk.calory.usecase.food.converter.converter.FoodPersistenceConverter;
+import de.birk.calory.usecase.food.converter.FoodPersistenceConverter;
 
 @Service
 public class FindFoodUsecase {

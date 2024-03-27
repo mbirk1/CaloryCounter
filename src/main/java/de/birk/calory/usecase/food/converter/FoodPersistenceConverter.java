@@ -1,4 +1,4 @@
-package de.birk.calory.usecase.food.converter.converter;
+package de.birk.calory.usecase.food.converter;
 
 import de.birk.calory.adapter.secondary.model.FoodPersistence;
 import de.birk.calory.domain.food.Food;
