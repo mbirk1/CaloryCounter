@@ -3,17 +3,12 @@ package de.birk.calory.usecase.food.converter;
 import de.birk.calory.adapter.secondary.model.FoodPersistence;
 import de.birk.calory.domain.food.Food;
 
-public class FoodPersistenceConverter {
+public class FoodPersistenceConverter extends Converter<FoodPersistence, Food> {
 
-  public static Food convertToFood(FoodPersistence foodPersistence) {
-    return new Food(
-        foodPersistence.getId(),
-        foodPersistence.getName(),
-        foodPersistence.getCalory()
-    );
-  }
-
-  public static FoodPersistence convertToPersistence(Food food) {
-    return new FoodPersistence(food.getId(), food.getName(), food.getCalory());
-  }
+    public FoodPersistenceConverter() {
+        super(
+            dto -> new Food(dto.getId(), dto.getName(), dto.getCalory()),
+            entity -> new FoodPersistence(entity.getId(), entity.getName(), entity.getCalory())
+        );
+    }
 }

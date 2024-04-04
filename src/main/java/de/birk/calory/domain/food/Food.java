@@ -3,22 +3,32 @@ package de.birk.calory.domain.food;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import de.birk.calory.adapter.primary.model.FoodDto;
+import de.birk.calory.exception.ValidationException;
 
-public class Food {
+
+public class Food extends AbstractEntity<UUID> {
 
     private UUID id;
-    private String name;
-    private BigDecimal calory;
+    private final String name;
+    private final BigDecimal calory;
 
     private Food() {
-        //for JPA
+        // default constructor with zero/empty values
+        calory = BigDecimal.ZERO;
+        name = "";
     }
 
-    public Food(UUID id, String name, BigDecimal calory) {
+    public Food(String name, BigDecimal calory){
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.calory = calory;
+    }
+
+    public Food(UUID id, String name, BigDecimal calory) throws ValidationException {
         this.id = id;
         this.name = name;
         this.calory = calory;
+        validate();
     }
 
     public UUID getId() {
@@ -31,5 +41,17 @@ public class Food {
 
     public BigDecimal getCalory() {
         return calory;
+    }
+
+    protected void validate() throws ValidationException {
+        if (this.id == null) {
+            throw new ValidationException();
+        }
+        if (this.name == null || this.name.isEmpty() || this.name.isBlank()) {
+            throw new ValidationException();
+        }
+        if (this.calory == null) {
+            throw new ValidationException();
+        }
     }
 }
