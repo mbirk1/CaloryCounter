@@ -12,7 +12,7 @@ public class Food extends AbstractEntity<UUID> {
     private final String name;
     private final BigDecimal calory;
 
-    private Food() {
+    protected Food() {
         // default constructor with zero/empty values
         calory = BigDecimal.ZERO;
         name = "";
@@ -22,6 +22,7 @@ public class Food extends AbstractEntity<UUID> {
         this.id = UUID.randomUUID();
         this.name = name;
         this.calory = calory;
+        validate();
     }
 
     public Food(UUID id, String name, BigDecimal calory) throws ValidationException {
@@ -44,9 +45,6 @@ public class Food extends AbstractEntity<UUID> {
     }
 
     protected void validate() throws ValidationException {
-        if (this.id == null) {
-            throw new ValidationException();
-        }
         if (this.name == null || this.name.isEmpty() || this.name.isBlank()) {
             throw new ValidationException();
         }

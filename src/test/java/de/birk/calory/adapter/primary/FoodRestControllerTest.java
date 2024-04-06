@@ -60,4 +60,19 @@ public class FoodRestControllerTest extends AbstractTestBase {
         .andExpect(status().isNotFound())
         .andDo(document("request a not persisted food item"));
   }
+
+  @Test
+  @DisplayName("Tries to get a non existing Fooditem")
+  public void getUnvalidatedFoodAndCatchExceptionTest() throws Exception {
+    String content = readResourceAsString("/http-bodies/createFood.json");
+
+    content = content.replace("food", "");
+
+    this.mockMvc.perform(
+            post("/food")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content)
+        ).andExpect(status().isNotAcceptable())
+        .andDo(document("create and request a faulty food"));
+  }
 }

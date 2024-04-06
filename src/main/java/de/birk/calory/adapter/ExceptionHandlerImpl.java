@@ -34,7 +34,7 @@ public class ExceptionHandlerImpl extends ResponseEntityExceptionHandler {
         e,
         body,
         new HttpHeaders(),
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NOT_ACCEPTABLE,
         request
     );
   }
