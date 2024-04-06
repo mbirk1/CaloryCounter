@@ -1,4 +1,0 @@
-[source,bash]
-----
-$ http GET 'http://localhost:8080/food/a97da1bd-30ec-4267-9a1f-0df987d4ccc9'
-----

@@ -1,11 +1,7 @@
-:snippets: ../../../docs/snippets/default
+:snippets: ../../../doc/snippets/default
 
-= Getting Started With Spring REST Docs
+= Calory Counter Requests and Responses
 
-This is an example output for a service running at http://localhost:8080:
+This is the documentation of the http requests and responses for the server of calory counter on  http://localhost:8080:
 
-.request
-include::{snippets}/http-request.adoc[]
-
-.response
-include::{snippets}/http-response.adoc[]
+include::Food.adoc[]

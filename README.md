@@ -28,10 +28,16 @@ mvn install
 ```
 2. Nun kann die Jar-Datei auf einem Server deiner Wahl deployed werden. Alternativ sollte ein Workflow genutzt werden,
 um diese zu auszuliefern.
-3. 
 
 ## Bedienung
 
 ## Endpunkte
+Die Liste der verfügbaren Endpunkte, sowie deren Verhalten wird über ein Maven Plugin bereitgestellt. Dieses nennt sich 
+AsciiDoctor und ein lokaler Server kann über Maven gestartet werden:
+```
+mvn asciidoctor:http
+```
+Neben dem Ausführen des lokalen Servers kann auch die [index.adoc](src/main/asciidoc/index.adoc) in einem Browser der Wahl
+geöffnet werden.
 
 [Liste der verfügbaren Endpunkte](target/generated-docs/index.html)

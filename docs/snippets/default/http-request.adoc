@@ -1,6 +1,0 @@
-[source,http,options="nowrap"]
-----
-GET /food/a97da1bd-30ec-4267-9a1f-0df987d4ccc9 HTTP/1.1
-Host: localhost:8080
-
-----
