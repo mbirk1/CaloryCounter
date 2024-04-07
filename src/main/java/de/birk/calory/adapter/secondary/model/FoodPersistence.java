@@ -22,14 +22,18 @@ public class FoodPersistence {
   @Column(name = "calory_count")
   private BigDecimal calory;
 
+  @Column(name = "grams")
+  private BigDecimal grams;
+
   public FoodPersistence() {
     //for JPA
   }
 
-  public FoodPersistence(UUID id, String name, BigDecimal calory) {
+  public FoodPersistence(UUID id, String name, BigDecimal calory, BigDecimal grams) {
     this.id = id;
     this.name = name;
     this.calory = calory;
+    this.grams = grams;
   }
 
   public UUID getId() {
@@ -42,6 +46,9 @@ public class FoodPersistence {
 
   public BigDecimal getCalory() {
     return calory;
+  }
+  public BigDecimal getGrams() {
+    return grams;
   }
 }
 

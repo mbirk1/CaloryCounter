@@ -3,7 +3,8 @@ EXTENSION IF NOT EXISTS "uuid-ossp";
 create table tab_calory_food (
     id uuid,
     name varchar(255),
-    calory_count numeric(6,2)
+    calory_count numeric(6,2),
+    grams numeric(6,2)
 );
 
 create table tab_calory_recipe (

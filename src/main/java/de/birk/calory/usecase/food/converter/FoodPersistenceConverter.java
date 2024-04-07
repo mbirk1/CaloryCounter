@@ -7,8 +7,8 @@ public class FoodPersistenceConverter extends Converter<FoodPersistence, Food> {
 
     public FoodPersistenceConverter() {
         super(
-            dto -> new Food(dto.getId(), dto.getName(), dto.getCalory()),
-            entity -> new FoodPersistence(entity.getId(), entity.getName(), entity.getCalory())
+            dto -> new Food(dto.getId(), dto.getName(), dto.getCalory(), dto.getGrams()),
+            entity -> new FoodPersistence(entity.getId(), entity.getName(), entity.getCalory(), entity.getGrams())
         );
     }
 }

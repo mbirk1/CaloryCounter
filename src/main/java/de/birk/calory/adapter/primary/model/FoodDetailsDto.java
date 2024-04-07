@@ -8,11 +8,13 @@ public class FoodDetailsDto {
   private final UUID uuid;
   private final String name;
   private final BigDecimal calory;
+  private final BigDecimal grams;
 
-  public FoodDetailsDto(UUID uuid, String name, BigDecimal calory) {
+  public FoodDetailsDto(UUID uuid, String name, BigDecimal calory, BigDecimal grams) {
     this.uuid = uuid;
     this.name = name;
     this.calory = calory;
+    this.grams = grams;
   }
 
   public UUID getUuid() {
@@ -25,5 +27,8 @@ public class FoodDetailsDto {
 
   public BigDecimal getCalory() {
     return calory;
+  }
+  public BigDecimal getGrams() {
+    return grams;
   }
 }

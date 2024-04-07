@@ -5,10 +5,12 @@ import java.math.BigDecimal;
 public class FoodDto {
   private final String name;
   private final BigDecimal calory;
+  private final BigDecimal grams;
 
-  public FoodDto(String name, BigDecimal calory) {
+  public FoodDto(String name, BigDecimal calory, BigDecimal grams) {
     this.name = name;
     this.calory = calory;
+    this.grams = grams;
   }
 
   public String getName() {
@@ -17,5 +19,8 @@ public class FoodDto {
 
   public BigDecimal getCalory() {
     return calory;
+  }
+  public BigDecimal getGrams() {
+    return grams;
   }
 }

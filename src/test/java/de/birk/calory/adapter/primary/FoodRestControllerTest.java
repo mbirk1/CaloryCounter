@@ -48,6 +48,7 @@ public class FoodRestControllerTest extends AbstractTestBase {
         .andExpect(jsonPath("$.uuid").value(id))
         .andExpect(jsonPath("$.name").value("food"))
         .andExpect(jsonPath("$.calory").value(1312))
+        .andExpect(jsonPath("$.grams").value(100))
         .andDo(document("request a food item"));
   }
 

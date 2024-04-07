@@ -20,6 +20,7 @@ public class FoodDetailsDtoConverterUnitTest {
         Food food = new Food(
             UUID.randomUUID(),
             "Apple",
+            new BigDecimal("100"),
             new BigDecimal("100")
         );
         FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();

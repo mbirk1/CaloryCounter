@@ -13,8 +13,8 @@ public class FoodDtoConverter extends Converter<FoodDto, Food>{
 
   public FoodDtoConverter() {
     super(
-        dto -> new Food(UUID.randomUUID(), dto.getName(), dto.getCalory()),
-        entity -> new FoodDto(entity.getName(), entity.getCalory())
+        dto -> new Food(UUID.randomUUID(), dto.getName(), dto.getCalory(), dto.getGrams()),
+        entity -> new FoodDto(entity.getName(), entity.getCalory(), entity.getGrams())
     );
   }
 }

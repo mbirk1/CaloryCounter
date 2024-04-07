@@ -9,8 +9,8 @@ import java.util.UUID;
 public class FoodDetailsDtoConverter extends Converter<FoodDetailsDto, Food> {
     public FoodDetailsDtoConverter() {
         super(
-            dto -> new Food(dto.getName(), dto.getCalory()),
-            entity -> new FoodDetailsDto(entity.getId(), entity.getName(), entity.getCalory())
+            dto -> new Food(dto.getName(), dto.getCalory(), dto.getGrams()),
+            entity -> new FoodDetailsDto(entity.getId(), entity.getName(), entity.getCalory(), entity.getGrams())
         );
     }
 }

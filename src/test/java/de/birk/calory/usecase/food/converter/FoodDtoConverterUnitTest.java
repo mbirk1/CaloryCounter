@@ -16,74 +16,107 @@ import de.birk.calory.exception.ValidationException;
 public class FoodDtoConverterUnitTest {
 
 
-    @Test
-    public void convertToEntityWithValidFoodDtoTest() {
-        // Arrange
-        FoodDto foodDto = new FoodDto("Apple", new BigDecimal("100"));
-        FoodDtoConverter foodDtoConverter = new FoodDtoConverter();
+  @Test
+  public void convertToEntityWithValidFoodDtoTest() {
+    // Arrange
+    FoodDto foodDto = new FoodDto(
+        "Apple",
+        new BigDecimal("100"),
+        new BigDecimal("100")
+    );
+    FoodDtoConverter foodDtoConverter = new FoodDtoConverter();
 
-        // Act
-        Food result = foodDtoConverter.convertFromDto(foodDto);
+    // Act
+    Food result = foodDtoConverter.convertFromDto(foodDto);
 
-        // Assert
-        assertThat(foodDto.getName()).isEqualTo(result.getName());
-        assertThat(foodDto.getCalory()).isEqualTo(result.getCalory());
-    }
-
-
-    @Test
-    public void convertToDetailsWithValidInputTest() {
-        // Arrange
-        Food food = new Food(
-            UUID.randomUUID(),
-            "Apple",
-            new BigDecimal("100")
-        );
-        FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();
-
-        // Act
-        FoodDetailsDto result = foodDetailsDtoConverter.convertFromEntity(food);
-
-        // Assert
-        assertThat(result.getUuid()).isEqualTo(food.getId());
-        assertThat(result.getName()).isEqualTo(food.getName());
-        assertThat(result.getCalory()).isEqualTo(food.getCalory());
-    }
-
-    @Test
-    public void convertToDtoWithValidInputTest() {
-        // Arrange
-        Food food = new Food(UUID.randomUUID(), "Apple", new BigDecimal("100"));
-        FoodDtoConverter foodDtoConverter = new FoodDtoConverter();
-
-        // Act
-        FoodDto result = foodDtoConverter.convertFromEntity(food);
-
-        // Assert
-        assertThat(result.getName()).isEqualTo(food.getName());
-        assertThat(result.getCalory()).isEqualTo(food.getCalory());
-    }
-
-    @Test
-    public void convertToEntityWithNullNameFoodDtoTest() {
-        // Arrange
-        FoodDto foodDto = new FoodDto(null, new BigDecimal("100"));
-        FoodDtoConverter foodDtoConverter = new FoodDtoConverter();
+    // Assert
+    assertThat(foodDto.getName()).isEqualTo(result.getName());
+    assertThat(foodDto.getCalory()).isEqualTo(result.getCalory());
+  }
 
 
-        // Act and Assert
-        assertThatThrownBy(() -> foodDtoConverter.convertFromDto(foodDto))
-            .isInstanceOf(ValidationException.class);
-    }
+  @Test
+  public void convertToDetailsWithValidInputTest() {
+    // Arrange
+    Food food = new Food(
+        UUID.randomUUID(),
+        "Apple",
+        new BigDecimal("100"),
+        new BigDecimal("100")
+    );
+    FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();
 
-    @Test
-    public void convertToEntityWithNullCaloryTest() {
-        // Arrange
-        FoodDto foodDto = new FoodDto("Apple", null);
-        FoodDtoConverter foodDtoConverter = new FoodDtoConverter();
+    // Act
+    FoodDetailsDto result = foodDetailsDtoConverter.convertFromEntity(food);
 
-        // Act & Assert
-        assertThatThrownBy(() -> foodDtoConverter.convertFromDto(foodDto))
-            .isInstanceOf(ValidationException.class);
-    }
+    // Assert
+    assertThat(result.getUuid()).isEqualTo(food.getId());
+    assertThat(result.getName()).isEqualTo(food.getName());
+    assertThat(result.getCalory()).isEqualTo(food.getCalory());
+  }
+
+  @Test
+  public void convertToDtoWithValidInputTest() {
+    // Arrange
+    Food food = new Food(
+        UUID.randomUUID(),
+        "Apple",
+        new BigDecimal("100"),
+        new BigDecimal("100")
+    );
+    FoodDtoConverter foodDtoConverter = new FoodDtoConverter();
+
+    // Act
+    FoodDto result = foodDtoConverter.convertFromEntity(food);
+
+    // Assert
+    assertThat(result.getName()).isEqualTo(food.getName());
+    assertThat(result.getCalory()).isEqualTo(food.getCalory());
+  }
+
+  @Test
+  public void convertToEntityWithNullNameFoodDtoTest() {
+    // Arrange
+    FoodDto foodDto = new FoodDto(
+        null,
+        new BigDecimal("100"),
+        new BigDecimal("100")
+    );
+    FoodDtoConverter foodDtoConverter = new FoodDtoConverter();
+
+
+    // Act and Assert
+    assertThatThrownBy(() -> foodDtoConverter.convertFromDto(foodDto))
+        .isInstanceOf(ValidationException.class);
+  }
+
+  @Test
+  public void convertToEntityWithNullCaloryTest() {
+    // Arrange
+    FoodDto foodDto = new FoodDto(
+        "Apple",
+        null,
+        new BigDecimal("100")
+    );
+    FoodDtoConverter foodDtoConverter = new FoodDtoConverter();
+
+    // Act & Assert
+    assertThatThrownBy(() -> foodDtoConverter.convertFromDto(foodDto))
+        .isInstanceOf(ValidationException.class);
+  }
+
+  @Test
+  public void convertToEntityWithNullGramsTest() {
+    // Arrange
+    FoodDto foodDto = new FoodDto(
+        "Apple",
+        new BigDecimal("100"),
+        null
+    );
+    FoodDtoConverter foodDtoConverter = new FoodDtoConverter();
+
+    // Act & Assert
+    assertThatThrownBy(() -> foodDtoConverter.convertFromDto(foodDto))
+        .isInstanceOf(ValidationException.class);
+  }
 }
