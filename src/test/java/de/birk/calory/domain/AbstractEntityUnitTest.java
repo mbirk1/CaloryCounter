@@ -1,10 +1,11 @@
-package de.birk.calory.domain.food;
+package de.birk.calory.domain;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import de.birk.calory.domain.AbstractEntity;
 import de.birk.calory.exception.ValidationException;
 
 public class AbstractEntityUnitTest {

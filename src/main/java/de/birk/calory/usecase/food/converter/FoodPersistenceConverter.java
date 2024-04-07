@@ -2,6 +2,7 @@ package de.birk.calory.usecase.food.converter;
 
 import de.birk.calory.adapter.secondary.model.FoodPersistence;
 import de.birk.calory.domain.food.Food;
+import de.birk.calory.usecase.converter.Converter;
 
 public class FoodPersistenceConverter extends Converter<FoodPersistence, Food> {
 

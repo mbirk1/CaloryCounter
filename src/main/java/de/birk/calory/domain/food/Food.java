@@ -3,6 +3,7 @@ package de.birk.calory.domain.food;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import de.birk.calory.domain.AbstractEntity;
 import de.birk.calory.exception.ValidationException;
 
 

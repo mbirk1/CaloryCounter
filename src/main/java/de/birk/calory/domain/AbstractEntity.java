@@ -1,4 +1,4 @@
-package de.birk.calory.domain.food;
+package de.birk.calory.domain;
 
 import java.io.Serializable;
 

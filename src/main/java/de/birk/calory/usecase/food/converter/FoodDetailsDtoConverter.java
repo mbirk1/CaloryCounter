@@ -1,10 +1,8 @@
 package de.birk.calory.usecase.food.converter;
 
 import de.birk.calory.adapter.primary.model.FoodDetailsDto;
-import de.birk.calory.adapter.secondary.model.FoodPersistence;
 import de.birk.calory.domain.food.Food;
-
-import java.util.UUID;
+import de.birk.calory.usecase.converter.Converter;
 
 public class FoodDetailsDtoConverter extends Converter<FoodDetailsDto, Food> {
     public FoodDetailsDtoConverter() {

@@ -1,15 +1,12 @@
 package de.birk.calory.usecase.food.converter;
 
-import java.math.BigDecimal;
 import java.util.UUID;
-import java.util.function.Function;
 
-import de.birk.calory.adapter.primary.model.FoodDetailsDto;
 import de.birk.calory.adapter.primary.model.FoodDto;
-import de.birk.calory.adapter.secondary.model.FoodPersistence;
 import de.birk.calory.domain.food.Food;
+import de.birk.calory.usecase.converter.Converter;
 
-public class FoodDtoConverter extends Converter<FoodDto, Food>{
+public class FoodDtoConverter extends Converter<FoodDto, Food> {
 
   public FoodDtoConverter() {
     super(

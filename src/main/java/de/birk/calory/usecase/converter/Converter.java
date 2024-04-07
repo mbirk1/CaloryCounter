@@ -1,4 +1,4 @@
-package de.birk.calory.usecase.food.converter;
+package de.birk.calory.usecase.converter;
 
 import java.util.Collection;
 import java.util.List;
