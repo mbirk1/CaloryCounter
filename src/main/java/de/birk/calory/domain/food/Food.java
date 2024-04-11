@@ -19,6 +19,7 @@ public class Food extends AbstractEntity<UUID> {
     calory = BigDecimal.ZERO;
     name = "";
     grams = BigDecimal.ZERO;
+    validate();
   }
 
   public Food(String name, BigDecimal calory, BigDecimal grams) {
