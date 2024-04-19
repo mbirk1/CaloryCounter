@@ -23,14 +23,17 @@ public class RecipePersistence {
     @ManyToMany
     @JoinTable(
         name = "tab_calory_food",
-        joinColumns = @JoinColumn(name = "id"),
-    inverseJoinColumns = @JoinColumn(name = "id"))
+        joinColumns = @JoinColumn(name = "recipe_id"),
+        inverseJoinColumns = @JoinColumn(name = "food_id"))
     private List<FoodPersistence> foods;
 
     public RecipePersistence(UUID id, String name, List<FoodPersistence> foods) {
         this.id = id;
         this.name = name;
         this.foods = foods;
+    }
+
+    public RecipePersistence() {
     }
 
     public UUID getId() {

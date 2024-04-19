@@ -12,11 +12,11 @@ public class RecipeDetailsDtoConverter extends Converter<RecipeDetailsDto, Recip
   public RecipeDetailsDtoConverter() {
     super(
         dto -> new Recipe(dto.getId(), dto.getName(), dto.getFoods().stream().map(
-            food -> new Food(food.getId(), food.getName(), food.getCalory(), food.getGrams())
+            food -> new Food(food.getUuid(), food.getName(), food.getCalory(), food.getGrams())
         ).toList()),
         entity -> new RecipeDetailsDto(entity.getId(), entity.getName(),
             entity.getFoods().stream().map(
-                food -> new Food(food.getId(), food.getName(), food.getCalory(), food.getGrams())
+                food -> new FoodDetailsDto(food.getId(), food.getName(), food.getCalory(), food.getGrams())
             ).toList())
     );
   }
