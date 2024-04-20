@@ -19,7 +19,6 @@ public class Recipe extends AbstractEntity<UUID> {
     this.id = UUID.randomUUID();
     this.name = "";
     this.foods = new ArrayList<>();
-    validate();
   }
 
   public Recipe(String name, List<Food> foods) {
@@ -49,11 +48,9 @@ public class Recipe extends AbstractEntity<UUID> {
 
   @Override
   protected void validate() throws ValidationException {
-    if (this.name == null || this.name.isEmpty() || this.name.isBlank()) {
-      throw new ValidationException();
-    }
-    if (this.foods == null) {
-      throw new ValidationException();
-    }
+    if (this.name == null) throw new ValidationException();
+    if (this.name.isEmpty()) throw new ValidationException();
+    if (this.name.isBlank()) throw new ValidationException();
+    if (this.foods == null) throw new ValidationException();
   }
 }

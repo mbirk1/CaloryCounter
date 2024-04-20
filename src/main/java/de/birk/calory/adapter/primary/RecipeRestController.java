@@ -31,8 +31,8 @@ public class RecipeRestController {
   }
 
   @GetMapping
-  public RecipeDetailsDto getRecipe(@PathVariable UUID uuid) {
-    return this.findRecipeUsecase.findRecipeById(uuid);
+  public RecipeDetailsDto getRecipe(@PathVariable UUID id) {
+    return this.findRecipeUsecase.findRecipeById(id);
   }
 
   @PostMapping
