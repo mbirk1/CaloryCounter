@@ -2,6 +2,7 @@
 
 = Calory Counter Requests and Responses
 
-This is the documentation of the http requests and responses for the server of calory counter on  http://localhost:8080:
+Dies ist die Dokumentation der verfügbaren Endpunkte sowie der Http Requests und Responses des Servers auf http://localhost:8080
 
 include::Food.adoc[]
+include::Recipe.adoc[]

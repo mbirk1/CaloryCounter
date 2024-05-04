@@ -16,7 +16,7 @@ import de.birk.calory.exception.ValidationException;
 public class RecipeDtoConverterTest {
 
   @Test
-  public void convertRecipeDtoToEntity_SuccessfullyTest() {
+  public void convertRecipeDtoToEntitySuccessfullyTest() {
     // Arrange
     RecipeDtoConverter converter = new RecipeDtoConverter();
     RecipeDto recipeDto = new RecipeDto("Recipe 1", List.of(
