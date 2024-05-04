@@ -1,10 +1,8 @@
-package de.birk.calory.usecase.recipe;
+package de.birk.calory.usecase.recipe.converter;
 
 import java.util.UUID;
-import java.util.function.Function;
 
 import de.birk.calory.adapter.primary.model.FoodDetailsDto;
-import de.birk.calory.adapter.primary.model.FoodDto;
 import de.birk.calory.adapter.primary.model.RecipeDto;
 import de.birk.calory.domain.food.Food;
 import de.birk.calory.domain.recipe.Recipe;

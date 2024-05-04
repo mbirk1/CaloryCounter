@@ -30,7 +30,7 @@ public class RecipeRestController {
     this.createRecipeUsecase = createRecipeUsecase;
   }
 
-  @GetMapping
+  @GetMapping("/{id}")
   public RecipeDetailsDto getRecipe(@PathVariable UUID id) {
     return this.findRecipeUsecase.findRecipeById(id);
   }

@@ -1,4 +1,4 @@
-package de.birk.calory.usecase.recipe;
+package de.birk.calory.usecase.recipe.converter;
 
 import de.birk.calory.adapter.secondary.model.FoodPersistence;
 import de.birk.calory.adapter.secondary.model.RecipePersistence;
@@ -21,7 +21,7 @@ public class RecipePersistenceConverter extends Converter<RecipePersistence, Rec
                 foodPersistence.getId(),
                 foodPersistence.getName(),
                 foodPersistence.getCalory(),
-                foodPersistence.getCalory())
+                foodPersistence.getGrams())
             ).toList()
         ),
         entity -> new RecipePersistence(

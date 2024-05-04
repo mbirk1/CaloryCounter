@@ -4,10 +4,11 @@ import de.birk.calory.adapter.primary.model.RecipeDetailsDto;
 import de.birk.calory.adapter.secondary.RecipeRepository;
 import de.birk.calory.adapter.secondary.model.RecipePersistence;
 import de.birk.calory.domain.recipe.Recipe;
+import de.birk.calory.usecase.recipe.converter.RecipeDetailsDtoConverter;
+import de.birk.calory.usecase.recipe.converter.RecipePersistenceConverter;
 
 import java.util.UUID;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service

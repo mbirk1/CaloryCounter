@@ -9,8 +9,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "tab_calory_recipe")
 public class RecipePersistence {
 
     @Id
@@ -22,7 +24,7 @@ public class RecipePersistence {
 
     @ManyToMany
     @JoinTable(
-        name = "tab_calory_food",
+        name = "tab_calory_recipe_food",
         joinColumns = @JoinColumn(name = "recipe_id"),
         inverseJoinColumns = @JoinColumn(name = "food_id"))
     private List<FoodPersistence> foods;

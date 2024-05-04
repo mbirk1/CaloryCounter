@@ -14,45 +14,64 @@ import de.birk.calory.exception.ValidationException;
 
 public class FoodDetailsDtoConverterUnitTest {
 
-    @Test
-    public void convertValidFoodEntityToFoodDetailsDtoTest() throws ValidationException {
-        // Arrange
-        Food food = new Food(
-            UUID.randomUUID(),
-            "Apple",
-            new BigDecimal("100"),
-            new BigDecimal("100")
-        );
-        FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();
+  @Test
+  public void convertValidFoodEntityToFoodDetailsDtoTest() throws ValidationException {
+    // Arrange
+    Food food = new Food(
+        UUID.randomUUID(),
+        "Apple",
+        new BigDecimal("100"),
+        new BigDecimal("100")
+    );
+    FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();
 
-        // Act
-        FoodDetailsDto result = foodDetailsDtoConverter.convertFromEntity(food);
+    // Act
+    FoodDetailsDto result = foodDetailsDtoConverter.convertFromEntity(food);
 
-        // Assert
-        assertThat(food.getId()).isEqualTo(result.getUuid());
-        assertThat(food.getName()).isEqualTo(result.getName());
-        assertThat(food.getCalory()).isEqualTo(result.getCalory());
-    }
+    // Assert
+    assertThat(food.getId()).isEqualTo(result.getUuid());
+    assertThat(food.getName()).isEqualTo(result.getName());
+    assertThat(food.getCalory()).isEqualTo(result.getCalory());
+  }
 
-    // Should throw a NullPointerException if the input Food entity is null
-    @Test
-    public void throwNullPointerExceptionIfInputFoodEntityIsNullTest() {
-        // Arrange
-        FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();
+  @Test
+  public void throwNullPointerExceptionIfInputFoodEntityIsNullTest() {
+    // Arrange
+    FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();
 
-        // Act and Assert
-        assertThatThrownBy(
-            () -> foodDetailsDtoConverter.convertFromEntity(null))
-            .isInstanceOf(NullPointerException.class);
-    }
+    // Act and Assert
+    assertThatThrownBy(
+        () -> foodDetailsDtoConverter.convertFromEntity(null))
+        .isInstanceOf(NullPointerException.class);
+  }
 
-    @Test
-    public void throwNullPointerExceptionIfInputFoodDetailsDtoIsNullTest() {
-        // Arrange
-        FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();
+  @Test
+  public void throwNullPointerExceptionIfInputFoodDetailsDtoIsNullTest() {
+    // Arrange
+    FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();
 
-        // Act and Assert
-        assertThatThrownBy(() -> foodDetailsDtoConverter.convertFromDto(null))
-            .isInstanceOf(NullPointerException.class);
-    }
+    // Act and Assert
+    assertThatThrownBy(() -> foodDetailsDtoConverter.convertFromDto(null))
+        .isInstanceOf(NullPointerException.class);
+  }
+
+  @Test
+  public void convertValidFoodDetailsDtoToFoodEntityTest() throws ValidationException {
+    // Arrange
+    FoodDetailsDto food = new FoodDetailsDto(
+        UUID.randomUUID(),
+        "Apple",
+        new BigDecimal("100"),
+        new BigDecimal("100")
+    );
+    FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();
+
+    // Act
+    Food result = foodDetailsDtoConverter.convertFromDto(food);
+
+    // Assert
+    assertThat(food.getUuid()).isEqualTo(result.getId());
+    assertThat(food.getName()).isEqualTo(result.getName());
+    assertThat(food.getCalory()).isEqualTo(result.getCalory());
+  }
 }

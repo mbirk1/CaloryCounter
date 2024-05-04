@@ -23,13 +23,13 @@ public abstract class Converter<T, C> {
     return fromEntity.apply(entity);
   }
 
-  public final List<C> createFromDtos(final Collection<T> dtoList) {
-    return dtoList
-        .stream().map(this::convertFromDto).collect(Collectors.toList());
-  }
+  //public final List<C> createFromDtos(final Collection<T> dtoList) {
+  //  return dtoList
+  //      .stream().map(this::convertFromDto).collect(Collectors.toList());
+  //}
 
-  public final List<T> createFromEntities(final Collection<C> entities) {
-    return entities.stream().map(this::convertFromEntity).collect(Collectors.toList());
-  }
+  //public final List<T> createFromEntities(final Collection<C> entities) {
+  //  return entities.stream().map(this::convertFromEntity).collect(Collectors.toList());
+  //}
 
 }

@@ -5,9 +5,11 @@ import de.birk.calory.adapter.secondary.FoodRepository;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -24,6 +26,9 @@ public class FoodPersistence {
 
   @Column(name = "grams")
   private BigDecimal grams;
+
+  @ManyToMany(mappedBy = "foods")
+  private Set<RecipePersistence> recipe;
 
   public FoodPersistence() {
     //for JPA

@@ -1,9 +1,9 @@
 {
   "name": "recipe",
-  "foods": {
-    "uuid": "b96b7756-91c6-49ec-aacb-da5ef7d815cd",
+  "foods": [{
+    "uuid": "PLACEHOLDER",
     "name": "food",
     "calory": 1312,
     "grams": 100
-  }
+  }]
 }
