@@ -1,6 +1,5 @@
 package de.birk.calory.adapter.primary;
 
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -23,7 +22,6 @@ import de.birk.calory.IntegrationTest;
 
 @IntegrationTest
 @Transactional
-@AutoConfigureRestDocs(outputDir = "doc/snippets/default")
 public class FoodRestControllerTest extends AbstractTestBase {
 
   @Test
@@ -47,8 +45,7 @@ public class FoodRestControllerTest extends AbstractTestBase {
         .andExpect(jsonPath("$.uuid").value(id))
         .andExpect(jsonPath("$.name").value("food"))
         .andExpect(jsonPath("$.calory").value(1312))
-        .andExpect(jsonPath("$.grams").value(100))
-        .andDo(document("request a food item"));
+        .andExpect(jsonPath("$.grams").value(100));
   }
 
   @Test
@@ -57,8 +54,7 @@ public class FoodRestControllerTest extends AbstractTestBase {
     this.mockMvc.perform(
             get("/food/{id}", UUID.randomUUID())
         )
-        .andExpect(status().isNotFound())
-        .andDo(document("request a not persisted food item"));
+        .andExpect(status().isNotFound());
   }
 
   @Test
@@ -72,7 +68,6 @@ public class FoodRestControllerTest extends AbstractTestBase {
             post("/food")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content)
-        ).andExpect(status().isNotAcceptable())
-        .andDo(document("create and request a faulty food"));
+        ).andExpect(status().isNotAcceptable());
   }
 }

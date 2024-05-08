@@ -1,8 +1,0 @@
-:snippets: ../../../doc/snippets/default
-
-= Calory Counter Requests and Responses
-
-Dies ist die Dokumentation der verfügbaren Endpunkte sowie der Http Requests und Responses des Servers auf http://localhost:8080
-
-include::Food.adoc[]
-include::Recipe.adoc[]
