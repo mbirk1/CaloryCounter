@@ -1,13 +1,10 @@
 package de.birk.calory.adapter.primary;
 
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import jakarta.transaction.Transactional;
@@ -25,7 +22,6 @@ import de.birk.calory.IntegrationTest;
 
 @IntegrationTest
 @Transactional
-@AutoConfigureRestDocs(outputDir = "doc/snippets/default")
 public class RecipeRestControllerTest extends AbstractTestBase {
 
   @Test
@@ -62,7 +58,6 @@ public class RecipeRestControllerTest extends AbstractTestBase {
         .andExpect(jsonPath("$.name").value("recipe"))
         .andExpect(jsonPath("$.foods[0].name").value("food"))
         .andExpect(jsonPath("$.foods[0].calory").value(1312))
-        .andExpect(jsonPath("$.foods[0].grams").value(100))
-        .andDo(document("request a recipe"));
+        .andExpect(jsonPath("$.foods[0].grams").value(100));
   }
 }

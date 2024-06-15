@@ -122,9 +122,9 @@
 
         <!-- Documentation -->
         <dependency>
-            <groupId>org.springframework.restdocs</groupId>
-            <artifactId>spring-restdocs-mockmvc</artifactId>
-            <scope>test</scope>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.5.0</version>
         </dependency>
 
         <!-- Testing -->
@@ -222,44 +222,6 @@
                     </execution>
                 </executions>
             </plugin>
-<!--            TODO Marius Sobald es ans Frontend geht, wird das benötigt-->
-<!--            <plugin>-->
-<!--                <groupId>com.github.eirslett</groupId>-->
-<!--                <artifactId>frontend-maven-plugin</artifactId>-->
-<!--                <version>1.7.6</version>-->
-<!--                <configuration>-->
-<!--                    <nodeVersion>${node.version}</nodeVersion>-->
-<!--                    <workingDirectory>${project.basedir}/src/main/frontend/calory_count</workingDirectory>-->
-<!--                    <installDirectory>${project.build.directory}</installDirectory>-->
-<!--                </configuration>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>install-frontend-tools</id>-->
-<!--                        <goals>-->
-<!--                            <goal>install-node-and-npm</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                    <execution>-->
-<!--                        <id>npm-install</id>-->
-<!--                        <goals>-->
-<!--                            <goal>npm</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <arguments>install</arguments>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                    <execution>-->
-<!--                        <id>build-frontend</id>-->
-<!--                        <goals>-->
-<!--                            <goal>npm</goal>-->
-<!--                        </goals>-->
-<!--                        <phase>prepare-package</phase>-->
-<!--                        <configuration>-->
-<!--                            <arguments>run build</arguments>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
 
             <!-- Database -->
             <plugin>
@@ -321,30 +283,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.asciidoctor</groupId>
-                <artifactId>asciidoctor-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>generate-docs</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <backend>html</backend>
-                            <doctype>book</doctype>
-                        </configuration>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.springframework.restdocs</groupId>
-                        <artifactId>spring-restdocs-asciidoctor</artifactId>
-                        <version>${spring-restdocs.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>

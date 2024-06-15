@@ -1,15 +1,15 @@
 package de.birk.calory.adapter.primary;
 
+import java.util.List;
 import java.util.UUID;
 
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.birk.calory.adapter.primary.annotations.GetRequest;
+import de.birk.calory.adapter.primary.annotations.PostRequest;
 import de.birk.calory.adapter.primary.model.FoodDetailsDto;
 import de.birk.calory.adapter.primary.model.FoodDto;
 import de.birk.calory.usecase.food.CreateFoodUsecase;
@@ -29,13 +29,18 @@ public class FoodRestController {
     this.createFoodUsecase = createFoodUsecase;
   }
 
+  @GetRequest()
+  public List<FoodDetailsDto> getAllFoods() {
+    return this.findFoodUsecase.findAllFoods();
+  }
 
-  @GetMapping("/{id}")
+
+  @GetRequest("/{id}")
   public FoodDetailsDto getFood(@PathVariable UUID id) {
     return this.findFoodUsecase.findFoodById(id);
   }
 
-  @PostMapping
+  @PostRequest
   public FoodDetailsDto createFood(@RequestBody FoodDto foodDto) {
     return this.createFoodUsecase.createFood(foodDto);
   }

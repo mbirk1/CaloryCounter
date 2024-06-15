@@ -1,5 +1,6 @@
 package de.birk.calory.usecase.food;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -21,6 +22,13 @@ public class FindFoodUsecase {
         this.foodRepository = foodRepository;
         this.persistenceConverter = new FoodPersistenceConverter();
         this.detailsDtoConverter = new FoodDetailsDtoConverter();
+    }
+
+    public List<FoodDetailsDto> findAllFoods(){
+        List<FoodPersistence> foodPersistence = this.foodRepository.findAll();
+
+        List<Food> foods = this.persistenceConverter.convertFromDtos(foodPersistence);
+        return this.detailsDtoConverter.convertFromEntities(foods);
     }
 
     public FoodDetailsDto findFoodById(UUID uuid) {
