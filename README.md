@@ -32,13 +32,6 @@ um diese zu auszuliefern.
 ## Bedienung
 
 ## Endpunkte
-Die Liste der verfügbaren Endpunkte, sowie deren Verhalten wird über ein Maven Plugin bereitgestellt. Somit lassen sich 
-die Endpunkte nur lokal in der Dokumentation lesen. Das Plzgin nennt sich 
-AsciiDoctor und ein lokaler Server kann über Maven gestartet werden:
-```shell
-mvn asciidoctor:http
-```
-Neben dem Ausführen des lokalen Servers kann auch die [index.adoc](src/main/asciidoc/index.adoc) in einem Browser der Wahl
-geöffnet werden.
-
-[Liste der verfügbaren Endpunkte](target/generated-docs/index.html)
+Die Liste der verfügbaren Endpunkte, sowie deren Verhalten wird über eine Swagger UI bereitgestellt. Hierfür muss lediglich
+die Anwendung lokal über die verfügbare Run Config gestartet werden. Über einen [Link](localhost:8080/swagger-ui/index.html) 
+ist die Dokumentation der verschiedenen Endpunkte und deren Requests und Responses erreichbar.
