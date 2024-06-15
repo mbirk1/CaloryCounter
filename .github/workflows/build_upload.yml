@@ -1,8 +1,10 @@
 on:
   push:
     branches:
-      - master  # Ändere dies entsprechend deines Branch-Namens
-
+      - master
+  pull_request:
+    branches:
+      - master
 jobs:
   test:
     runs-on: ubuntu-latest
