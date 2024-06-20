@@ -10,7 +10,7 @@ services:
       - calory-db
 
   calory-db:
-    image: 'postgres:13.1-alpine'
+    image: 'postgres:16.3'
     container_name: calory-db
     ports:
       - 5432:5432

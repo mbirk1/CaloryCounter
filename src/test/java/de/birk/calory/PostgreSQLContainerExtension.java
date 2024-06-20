@@ -8,7 +8,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 public class PostgreSQLContainerExtension
     implements TestExecutionListener, BeforeEachCallback, Ordered {
-  private static final PostgreSQLContainer PSQL = new PostgreSQLContainer("postgres:13.1-alpine");
+  private static final PostgreSQLContainer PSQL = new PostgreSQLContainer("postgres:16.3");
 
   static {
     PSQL.start();
