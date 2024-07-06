@@ -1,7 +1,9 @@
-import React from 'react';
-import logo from './static/logo.svg';
 import './styles/App.css';
+import ReactDOM from "react-dom/client";
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Dashboard from './components/Dashboard';
+import Food from './components/Food';
+import Recipe from './components/Recipe';
 import Navigation from './components/Navigation'
 
 
@@ -11,9 +13,19 @@ function App() {
       <header>
         <Navigation />
       </header>
-        <Dashboard />
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' index element={<Dashboard />}/>
+          <Route path='/food' element={<Food />} />
+          <Route path='/recipe' element={<Recipe />} />
+          <Route path="*" element={<Dashboard />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
 
 export default App;
