@@ -7,6 +7,7 @@ import de.birk.calory.domain.recipe.Recipe;
 import de.birk.calory.usecase.recipe.converter.RecipeDetailsDtoConverter;
 import de.birk.calory.usecase.recipe.converter.RecipePersistenceConverter;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -30,5 +31,12 @@ public class FindRecipeUsecase {
         .orElseThrow();
     Recipe recipe = recipePersistenceConverter.convertFromDto(recipePersistence);
     return this.recipeDetailsDtoConverter.convertFromEntity(recipe);
+  }
+
+  public List<RecipeDetailsDto> findAllRecipes(){
+    List<RecipePersistence> recipePersistence = this.recipeRepository.findAll();
+    List<Recipe> recipes = recipePersistenceConverter.convertFromDtos(recipePersistence);
+
+    return this.recipeDetailsDtoConverter.convertFromEntities(recipes);
   }
 }
