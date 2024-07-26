@@ -3,6 +3,7 @@ package de.birk.calory.adapter.primary;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,14 +18,15 @@ import de.birk.calory.usecase.food.FindFoodUsecase;
 
 @RestController
 @RequestMapping("/food")
+//TODO Marius Should be outsourced to env variable
+@CrossOrigin(origins = "http://localhost:3000")
 public class FoodRestController {
   private final FindFoodUsecase findFoodUsecase;
   private final CreateFoodUsecase createFoodUsecase;
 
   public FoodRestController(
       FindFoodUsecase findFoodUsecase,
-      CreateFoodUsecase createFoodUsecase
-  ) {
+      CreateFoodUsecase createFoodUsecase) {
     this.findFoodUsecase = findFoodUsecase;
     this.createFoodUsecase = createFoodUsecase;
   }
@@ -33,7 +35,6 @@ public class FoodRestController {
   public List<FoodDetailsDto> getAllFoods() {
     return this.findFoodUsecase.findAllFoods();
   }
-
 
   @GetRequest("/{id}")
   public FoodDetailsDto getFood(@PathVariable UUID id) {

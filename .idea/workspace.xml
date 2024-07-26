@@ -4,7 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3162980e-c525-4e66-8372-a999cd48fad1" name="Changes" comment="Add React and add first navigation labels" />
+    <list default="true" id="3162980e-c525-4e66-8372-a999cd48fad1" name="Changes" comment="Add first Page and Table. &#10;&#10;Also moved files to maintain the directory structure. A frontend Readme is also available now.">
+      <change afterPath="$PROJECT_DIR$/frontend/src/api/food_api.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/static/models/FoodModel.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.run/Backend - dev.run.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.run/Backend - dev.run.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.run/Backend.run.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.run/Backend.run.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.run/Run all Integration Test.run.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.run/Run all Integration Test.run.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.run/Run all Test.run.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.run/Run all Test.run.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/de/birk/calory/adapter/primary/FoodRestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/de/birk/calory/adapter/primary/FoodRestController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Dashboard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Food.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Food.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Navigation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Navigation.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/output.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/output.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/styles/Navigation.css" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -57,6 +75,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Application.Backend - dev.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.Run all Integration Test.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.Run all Test.executor&quot;: &quot;Run&quot;,
     &quot;Maven.calory [clean,install].executor&quot;: &quot;Run&quot;,
@@ -71,12 +90,12 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\mariu\IdeaProjects\CaloryCounter\backend" />
       <recent name="C:\Users\mariu\IdeaProjects\CaloryCounter\frontend\src\static" />
       <recent name="C:\Users\mariu\IdeaProjects\CaloryCounter\frontend\src\styles" />
-      <recent name="C:\Users\mariu\IdeaProjects\CaloryCounter\backend" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Backend - dev">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="CaloryCounter" />
       <method v="2">
@@ -119,9 +138,21 @@
     <option name="localTasksCounter" value="3" />
     <servers />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Reorganize backend and add react as frontend" />
     <MESSAGE value="Add React and add first navigation labels" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add React and add first navigation labels" />
+    <MESSAGE value="Add first Page and Table. &#10;&#10;Also moved files to maintain the directory structure. A frontend Readme is also available now." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add first Page and Table. &#10;&#10;Also moved files to maintain the directory structure. A frontend Readme is also available now." />
   </component>
 </project>
