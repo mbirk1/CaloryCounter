@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+  app:
+    image: 'caloryCounter:latest'
+    build:
+      context: ..
+    container_name: calory
+    depends_on:
+      - calory-db
+
+  calory-db:
+    image: 'postgres:16.3'
+    container_name: calory-db
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=calory-db
+      - POSTGRES_PASSWORD=V40jN2gavmfj1q9Ln5Aq
+      - PGUSER=calory-db
+      - POSTGRES_DB=calory-db
+
+networks:
+  default:
+    driver: bridge

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3162980e-c525-4e66-8372-a999cd48fad1" name="Changes" comment="Add general ReadMe File">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/test/java/de/birk/calory/adapter/primary/RecipeRestControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/de/birk/calory/adapter/primary/RecipeRestControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/output.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/output.css" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="REMOTE">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="origin/dependabot/maven/org.springdoc-springdoc-openapi-starter-webmvc-ui-2.6.0" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;mbirk1&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/mbirk1/CaloryCounter&quot;,
+    &quot;accountId&quot;: &quot;b9751e25-48cd-46b9-87d9-946a69e2cb0a&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2iqN6VcGiwqvx4ppYFNxVHbDItU" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Backend - dev.executor": "Run",
+    "JUnit.RecipeRestControllerTest.createOneGetAllRecipeTest.executor": "Run",
+    "JUnit.RecipeRestControllerTest.executor": "Coverage",
+    "JUnit.RecipeRestControllerTest.getRecipeAndCatchExceptionTest.executor": "Run",
+    "JUnit.Run all Integration Test.executor": "Run",
+    "JUnit.Run all Test.executor": "Run",
+    "JUnit.primary in calory.executor": "Coverage",
+    "Maven.calory [clean,install].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "#15 on add-frontend",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/mariu/IdeaProjects/CaloryCounter/frontend",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\mariu\IdeaProjects\CaloryCounter\backend" />
+      <recent name="C:\Users\mariu\IdeaProjects\CaloryCounter\frontend\src\static" />
+      <recent name="C:\Users\mariu\IdeaProjects\CaloryCounter\frontend\src\styles" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.RecipeRestControllerTest.createOneGetAllRecipeTest">
+    <configuration name="RecipeRestControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="calory" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="de.birk.calory.adapter.primary.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="de.birk.calory.adapter.primary" />
+      <option name="MAIN_CLASS_NAME" value="de.birk.calory.adapter.primary.RecipeRestControllerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RecipeRestControllerTest.createOneGetAllRecipeTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="calory" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="de.birk.calory.adapter.primary.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="de.birk.calory.adapter.primary" />
+      <option name="MAIN_CLASS_NAME" value="de.birk.calory.adapter.primary.RecipeRestControllerTest" />
+      <option name="METHOD_NAME" value="createOneGetAllRecipeTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RecipeRestControllerTest.getRecipeAndCatchExceptionTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="calory" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="de.birk.calory.adapter.primary.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="de.birk.calory.adapter.primary" />
+      <option name="MAIN_CLASS_NAME" value="de.birk.calory.adapter.primary.RecipeRestControllerTest" />
+      <option name="METHOD_NAME" value="getRecipeAndCatchExceptionTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="primary in calory" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="calory" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/backend/src/test/java/de/birk/calory/adapter/primary" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="CaloryCounter" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="CaloryCounter" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.RecipeRestControllerTest.createOneGetAllRecipeTest" />
+        <item itemvalue="JUnit.RecipeRestControllerTest.getRecipeAndCatchExceptionTest" />
+        <item itemvalue="JUnit.RecipeRestControllerTest" />
+        <item itemvalue="JUnit.primary in calory" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3162980e-c525-4e66-8372-a999cd48fad1" name="Changes" comment="" />
+      <created>1720213972457</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1720213972457</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Reorganize backend and add react as frontend">
+      <option name="closed" value="true" />
+      <created>1720215430809</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1720215430809</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Add React and add first navigation labels">
+      <option name="closed" value="true" />
+      <created>1720218547735</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1720218547735</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Add first Page and Table. &#10;&#10;Also moved files to maintain the directory structure. A frontend Readme is also available now.">
+      <option name="closed" value="true" />
+      <created>1722028862122</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1722028862122</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Add Recipe Page with corresponding table">
+      <option name="closed" value="true" />
+      <created>1722030553625</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1722030553625</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Add general ReadMe File">
+      <option name="closed" value="true" />
+      <created>1722030743938</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1722030743938</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Reorganize backend and add react as frontend" />
+    <MESSAGE value="Add React and add first navigation labels" />
+    <MESSAGE value="Add first Page and Table. &#10;&#10;Also moved files to maintain the directory structure. A frontend Readme is also available now." />
+    <MESSAGE value="Add Recipe Page with corresponding table" />
+    <MESSAGE value="Add general ReadMe File" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add general ReadMe File" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/backend/src/test/java/de/birk/calory/adapter/primary/RecipeRestControllerTest.java</url>
+          <line>98</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/CaloryCounter$primary_in_calory.ic" NAME="primary in calory Coverage Results" MODIFIED="1722369520155" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/CaloryCounter$RecipeRestControllerTest.ic" NAME="RecipeRestControllerTest Coverage Results" MODIFIED="1722369588280" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>de.birk.calory.adapter.primary.*</FILTER>
+    </SUITE>
+  </component>
+</project>
