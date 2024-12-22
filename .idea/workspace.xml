@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3162980e-c525-4e66-8372-a999cd48fad1" name="Changes" comment="Add general ReadMe File">
+    <list default="true" id="3162980e-c525-4e66-8372-a999cd48fad1" name="Changes" comment="Update Dependencies">
+      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/application-dev.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/de/birk/calory/adapter/primary/model/FoodDetailsDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/de/birk/calory/adapter/primary/model/FoodDetailsDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/de/birk/calory/adapter/primary/model/FoodDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/de/birk/calory/adapter/primary/model/FoodDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/de/birk/calory/adapter/primary/model/RecipeDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/de/birk/calory/adapter/primary/model/RecipeDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/test/java/de/birk/calory/adapter/primary/RecipeRestControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/de/birk/calory/adapter/primary/RecipeRestControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/output.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/output.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,17 +63,20 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.Backend - dev.executor": "Run",
-    "JUnit.RecipeRestControllerTest.createOneGetAllRecipeTest.executor": "Run",
+    "JUnit.FoodRestControllerTest.createAndGetAllFoodTest.executor": "Run",
+    "JUnit.RecipeRestControllerTest.createOneGetAllRecipeTest.executor": "Debug",
     "JUnit.RecipeRestControllerTest.executor": "Coverage",
     "JUnit.RecipeRestControllerTest.getRecipeAndCatchExceptionTest.executor": "Run",
     "JUnit.Run all Integration Test.executor": "Run",
     "JUnit.Run all Test.executor": "Run",
+    "JUnit.de.birk.calory in calory.executor": "Run",
     "JUnit.primary in calory.executor": "Coverage",
     "Maven.calory [clean,install].executor": "Run",
+    "Maven.calory [test].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "#15 on add-frontend",
+    "git-widget-placeholder": "13-insert-viable-test-data",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/mariu/IdeaProjects/CaloryCounter/frontend",
+    "last_opened_file_path": "C:/Users/mariu/IdeaProjects/CaloryCounter/backend/src/main/resources",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2"
@@ -83,7 +89,23 @@
       <recent name="C:\Users\mariu\IdeaProjects\CaloryCounter\frontend\src\styles" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.RecipeRestControllerTest.createOneGetAllRecipeTest">
+  <component name="RunManager" selected="JUnit.de.birk.calory in calory">
+    <configuration name="FoodRestControllerTest.createAndGetAllFoodTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="calory" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="de.birk.calory.adapter.primary.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="de.birk.calory.adapter.primary" />
+      <option name="MAIN_CLASS_NAME" value="de.birk.calory.adapter.primary.FoodRestControllerTest" />
+      <option name="METHOD_NAME" value="createAndGetAllFoodTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="RecipeRestControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="calory" />
       <extension name="coverage">
@@ -131,10 +153,16 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="primary in calory" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="de.birk.calory in calory" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="calory" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/backend/src/test/java/de/birk/calory/adapter/primary" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="de.birk.calory.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="de.birk.calory" />
+      <option name="TEST_OBJECT" value="package" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -154,10 +182,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.RecipeRestControllerTest.createOneGetAllRecipeTest" />
+        <item itemvalue="JUnit.de.birk.calory in calory" />
         <item itemvalue="JUnit.RecipeRestControllerTest.getRecipeAndCatchExceptionTest" />
+        <item itemvalue="JUnit.RecipeRestControllerTest.createOneGetAllRecipeTest" />
+        <item itemvalue="JUnit.FoodRestControllerTest.createAndGetAllFoodTest" />
         <item itemvalue="JUnit.RecipeRestControllerTest" />
-        <item itemvalue="JUnit.primary in calory" />
       </list>
     </recent_temporary>
   </component>
@@ -210,7 +239,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722030743938</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Update Dependencies">
+      <option name="closed" value="true" />
+      <created>1723834189404</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1723834189404</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -230,15 +267,16 @@
     <MESSAGE value="Add first Page and Table. &#10;&#10;Also moved files to maintain the directory structure. A frontend Readme is also available now." />
     <MESSAGE value="Add Recipe Page with corresponding table" />
     <MESSAGE value="Add general ReadMe File" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add general ReadMe File" />
+    <MESSAGE value="Update Dependencies" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update Dependencies" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/backend/src/test/java/de/birk/calory/adapter/primary/RecipeRestControllerTest.java</url>
-          <line>98</line>
-          <option name="timeStamp" value="1" />
+          <url>file://$PROJECT_DIR$/backend/src/main/java/de/birk/calory/usecase/recipe/FindRecipeUsecase.java</url>
+          <line>29</line>
+          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

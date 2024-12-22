@@ -65,7 +65,7 @@ public class RecipeRestControllerTest extends AbstractTestBase {
   @DisplayName("Tries to get a non existing Recipe")
   public void getRecipeAndCatchExceptionTest() throws Exception {
     this.mockMvc.perform(
-                    get("/recipe/{id}", UUID.randomUUID())
+                    get("/recipe/{id}", UUID.randomUUID().toString())
             )
             .andExpect(status().isNotFound());
   }
