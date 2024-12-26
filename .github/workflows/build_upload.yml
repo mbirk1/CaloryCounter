@@ -40,9 +40,12 @@ jobs:
         working-directory: ./backend
         run: mvn -B clean package -DskipTests
 
+      - name: Check Dir
+        run: ls -R
+
       - name: Build Docker image
         run: |
-          docker build -f ../../../backend/docker-compose.yml -t mbirk2/calory-count:latest .
+          docker build -f ../../../backend/Dockerfile -t mbirk2/calory-count:latest .
 
       # 5. Docker Login
       - name: Log in to Docker Hub
