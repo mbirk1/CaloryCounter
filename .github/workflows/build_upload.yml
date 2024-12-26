@@ -37,4 +37,20 @@ jobs:
 
       - name: Build with Maven
         working-directory: ./backend
-        run: mvn -B install -DskipTests
+        run: mvn -B clean package -DskipTests
+
+      - name: Build Docker image
+        run: |
+          docker build -t mbirk2/calory-count:latest .
+
+      # 5. Docker Login
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+        # 6. Push des Images zu Docker Hub
+      - name: Push Docker image to Docker Hub
+        run: |
+            docker push mbirk2/calory-count:latest
