@@ -40,9 +40,6 @@ jobs:
         working-directory: ./backend
         run: mvn -B clean package -DskipTests
 
-      - name: Check Dir
-        run: ls ./backend
-
       - name: Build Docker image
         run: |
           docker build -f ./backend/Dockerfile -t mbirk2/calory-count:latest .
