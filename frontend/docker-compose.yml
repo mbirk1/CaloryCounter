@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  frontend_service:
+    build:
+      context: .
+    ports:
+      - "3000:3000"  # Mapping des Ports für den React-Entwicklungsserver
+    volumes:
+      - ./src:/app/src  # Mounten des Quellcodes, damit Änderungen direkt reflektiert werden
+
+networks:
+  default:
+    external: true
