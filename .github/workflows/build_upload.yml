@@ -42,7 +42,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -f ./backend/Dockerfile -t mbirk2/calory-count:latest .
+          docker build --no-cache -f ./backend/Dockerfile -t mbirk2/calory-count:latest .
 
       # 5. Docker Login
       - name: Log in to Docker Hub
