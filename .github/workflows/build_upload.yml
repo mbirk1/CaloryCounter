@@ -41,7 +41,7 @@ jobs:
         run: mvn -B clean package -DskipTests
 
       - name: Build Docker image
-        working-directory: ./backend
+        working-directory: ./backend/target
         run: |
           ls -la
           docker build --no-cache -f ./Dockerfile -t mbirk2/calory-count:latest .
