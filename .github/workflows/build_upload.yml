@@ -41,8 +41,9 @@ jobs:
         run: mvn -B clean package -DskipTests
 
       - name: Build Docker image
+        working-directory: ./backend
         run: |
-          docker build --no-cache -f ./backend/Dockerfile -t mbirk2/calory-count:latest .
+          docker build --no-cache -f ./Dockerfile -t mbirk2/calory-count:latest .
 
       # 5. Docker Login
       - name: Log in to Docker Hub
