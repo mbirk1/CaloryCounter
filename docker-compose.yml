@@ -1,18 +1,12 @@
-version: '3.8'
-
 services:
-  backend:
-    build:
-      context: ./backend
+  app:
+    image: mbirk2/calory-count
+    container_name: calory-count
     ports:
-      - "5000:5000"
-
-  frontend:
-    build:
-      context: ./frontend
-    ports:
-      - "3000:3000"
-
-networks:
-  default:
-    driver: bridge
+      - "8080:80"
+    deploy:
+      update_config:
+        parallelism: 1
+        order: start-first
+    restart: always
+    pull_policy: always
