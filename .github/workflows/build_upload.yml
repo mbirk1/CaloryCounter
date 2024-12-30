@@ -44,6 +44,7 @@ jobs:
       - name: Build Docker image
         working-directory: ./backend
         run: |
+          ls -la
           docker build --no-cache -f ./Dockerfile -t mbirk2/calory-count:latest .
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
