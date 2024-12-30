@@ -1,7 +1,7 @@
 # React Build
 FROM node:20.15 as react-build
 WORKDIR /app
-RUN ls -la
+RUN echo "Files in current directory:" && ls -la
 COPY ./frontend/ .
 RUN npm install && npm run build
 
@@ -13,7 +13,7 @@ RUN mvn clean package -DskipTests
 
 # Final Image
 FROM eclipse-temurin:22
-COPY --from=spring-build /app/backend/target/*.jar application.jar
-COPY --from=react-build /app/frontend/build /app/backend/resources/static
+COPY --from=spring-build /target/*.jar application.jar
+COPY --from=react-build /../frontend/build /app/backend/resources/static
 ENTRYPOINT ["java", "-jar", "application.jar"]
 EXPOSE 8080
