@@ -1,10 +1,10 @@
 import './styles/App.css';
 import ReactDOM from "react-dom/client";
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import Dashboard from './components/Dashboard';
-import Food from './components/Food';
-import Recipe from './components/Recipe';
 import Navigation from './components/Navigation'
+import Dashboard from './components/pages/Dashboard';
+import Food from './components/pages/Food';
+import Recipe from './components/pages/Recipe';
 
 
 function App() {
