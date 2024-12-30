@@ -1,5 +1,6 @@
 # Spring Boot Build
 FROM eclipse-temurin:22 as spring-build
+WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
