@@ -1,7 +1,6 @@
 # React Build
 FROM node:20.15 as react-build
 WORKDIR /app
-RUN echo "Files in current directory:" && ls -la
 COPY ../frontend/ .
 RUN npm install && npm run build
 
