@@ -34,7 +34,7 @@ jobs:
           distribution: 'temurin'
           java-version: '22'
       - name: Build React app
-        working-directory: ./path-to-react
+        working-directory: ./frontend
         run: |
           npm install
           npm run build
