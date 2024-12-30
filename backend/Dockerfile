@@ -2,7 +2,7 @@
 FROM node:20.15 as react-build
 ARG CACHE_BUSTER=1
 RUN echo "Current working directory:" && pwd && ls
-COPY ./frontend/ .
+COPY ../frontend/ .
 RUN npm install && npm run build
 
 # Spring Boot Build
