@@ -45,7 +45,7 @@ jobs:
         run: |
           ls -la
           cd ./backend
-          docker build --no-cache -f ./Dockerfile -t mbirk2/calory-count:latest .
+          docker build --no-cache --build-arg CACHE_BUSTER=$(date +%s) -f ./Dockerfile -t mbirk2/calory-count:latest .
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
