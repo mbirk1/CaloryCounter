@@ -1,13 +1,12 @@
 # React Build
 FROM node:20.15 as react-build
-WORKDIR /app
-COPY ./frontend/ .
+RUN echo ls -la
+COPY ../frontend/ .
 RUN npm install && npm run build
 
 # Spring Boot Build
 FROM eclipse-temurin:22 as spring-build
-WORKDIR /app
-COPY ./backend/ .
+COPY . .
 RUN mvn clean package -DskipTests
 
 # Final Image
