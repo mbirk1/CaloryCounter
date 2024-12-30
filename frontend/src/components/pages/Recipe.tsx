@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getAllRecipes } from "../api/recipe_api";
-import { RecipeModel } from "../static/models/RecipeModel";
+import { getAllRecipes } from "../../api/recipe_api";
+import { RecipeModel } from "../../static/models/RecipeModel";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 
