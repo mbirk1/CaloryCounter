@@ -2,6 +2,9 @@ services:
   app:
     image: mbirk2/calory-count
     container_name: calory-count
+    networks:
+      default:
+        - ipv4_address: 172.18.0.3
     ports:
       - "8080:80"
     deploy:
@@ -13,6 +16,9 @@ services:
   calory-db:
     image: 'postgres:16.3'
     container_name: calory-db
+    networks:
+      default:
+        - ipv4_address: 172.18.0.2
     ports:
       - "5432:5432"
     environment:
