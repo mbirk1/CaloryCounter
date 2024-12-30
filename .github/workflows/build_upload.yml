@@ -6,7 +6,7 @@ on:
     branches:
       - master
 jobs:
-  test-backend:
+  test:
     runs-on: ubuntu-latest
 
     steps:
