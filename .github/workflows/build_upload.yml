@@ -1,5 +1,3 @@
-env:
-  ACTIONS_STEP_DEBUG: true
 on:
   push:
     branches:
@@ -35,18 +33,13 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '22'
-      - name: Build React app
-        working-directory: ./frontend
-        run: |
-          npm install
-          npm run build
       - name: Build with Maven
         working-directory: ./backend
         run: mvn -B clean package -DskipTests
       - name: Build Docker image
         working-directory: ./backend
         run: |
-          docker build --no-cache --progress=plain --build-arg CACHE_BUSTER=$(date +%s) -f ./Dockerfile -t mbirk2/calory-count:latest .
+          docker build -f ./Dockerfile -t mbirk2/calory-count:latest .
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
