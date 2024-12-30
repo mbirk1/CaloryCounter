@@ -29,7 +29,7 @@ services:
 
 
 networks:
-  calory_network:
+  calory_counter_network:
     driver: bridge
     ipam:
       driver: default
