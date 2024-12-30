@@ -21,6 +21,6 @@ services:
       - PGUSER=calory-db
       - POSTGRES_DB=calory-db
 
-  networks:
-    default:
-      driver: bridge
+networks:
+  default:
+    driver: bridge
