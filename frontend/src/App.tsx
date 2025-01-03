@@ -9,10 +9,11 @@ import Recipe from './components/pages/Recipe';
 function App() {
   return (
       <div className="App">
-      <header>
-        <Navigation />
-      </header>
       <HashRouter>
+        <header>
+          <Navigation />
+        </header>
+      
         <Routes>
           <Route path='/' index element={<Dashboard />}/>
           <Route path='/food' element={<Food />} />
