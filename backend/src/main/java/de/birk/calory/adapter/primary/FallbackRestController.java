@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class FallbackRestController {
   @GetRequest(value = "/{path:[^\\.]*}")
   public String redirect() {
-      return "forward:/index.html";
+      return "redirect:/index.html";
   }
 }
