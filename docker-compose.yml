@@ -28,5 +28,12 @@ services:
       - POSTGRES_DB=calory-db
 
 networks:
-  calory-count-network:
+  my_macvlan:
     driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: 192.168.0.0/24
+          gateway: 192.168.0.1
+          ip_range: 192.168.0.120/29
