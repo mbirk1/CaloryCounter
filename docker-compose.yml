@@ -2,9 +2,6 @@ services:
   app:
     image: mbirk2/calory-count
     container_name: calory-count
-    networks:
-      calory_counter_network:
-        ipv4_address: 172.18.0.3
     ports:
       - "8080:80"
     deploy:
@@ -16,9 +13,6 @@ services:
   calory-db:
     image: 'postgres:16.3'
     container_name: calory-db
-    networks:
-      calory_counter_network:
-        ipv4_address: 172.18.0.2
     ports:
       - "5432:5432"
     environment:
@@ -26,12 +20,3 @@ services:
       - POSTGRES_PASSWORD=V40jN2gavmfj1q9Ln5Aq
       - PGUSER=calory-db
       - POSTGRES_DB=calory-db
-
-
-networks:
-  calory_counter_network:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.18.0.0/24
