@@ -28,7 +28,7 @@ services:
       - POSTGRES_DB=calory-db
 
 networks:
-  my_macvlan:
+  calory-count-network:
     driver: macvlan
     driver_opts:
       parent: eth0
