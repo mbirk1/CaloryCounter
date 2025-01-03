@@ -28,5 +28,5 @@ services:
       - POSTGRES_DB=calory-db
 
 networks:
-  default:
-    driver: bridge
+  calory_counter_network:
+    driver: macvlan
