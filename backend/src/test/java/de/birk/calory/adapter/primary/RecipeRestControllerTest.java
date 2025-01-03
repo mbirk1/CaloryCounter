@@ -30,7 +30,7 @@ public class RecipeRestControllerTest extends AbstractTestBase {
     String foodContent = readResourceAsString("/http-bodies/createFood.json");
 
     MvcResult foodResult = mockMvc.perform(
-        post("/food")
+        post("/api/food")
             .contentType(MediaType.APPLICATION_JSON)
             .content(foodContent)
     ).andReturn();
@@ -42,7 +42,7 @@ public class RecipeRestControllerTest extends AbstractTestBase {
     content = content.replace("PLACEHOLDER", foodId);
 
     MvcResult mvcResult = mockMvc.perform(
-        post("/recipe")
+        post("/api/recipe")
             .contentType(MediaType.APPLICATION_JSON)
             .content(content)
     ).andReturn();
@@ -51,7 +51,7 @@ public class RecipeRestControllerTest extends AbstractTestBase {
     String id = readContext.read("$.id");
 
     this.mockMvc.perform(
-            get("/recipe/{id}", UUID.fromString(id))
+            get("/api/recipe/{id}", UUID.fromString(id))
         )
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(id))
@@ -65,7 +65,7 @@ public class RecipeRestControllerTest extends AbstractTestBase {
   @DisplayName("Tries to get a non existing Recipe")
   public void getRecipeAndCatchExceptionTest() throws Exception {
     this.mockMvc.perform(
-                    get("/recipe/{id}", UUID.randomUUID())
+                    get("/api/recipe/{id}", UUID.randomUUID())
             )
             .andExpect(status().isNotFound());
   }
@@ -76,7 +76,7 @@ public class RecipeRestControllerTest extends AbstractTestBase {
     String foodContent = readResourceAsString("/http-bodies/createFood.json");
 
     MvcResult foodResult = mockMvc.perform(
-            post("/food")
+            post("/api/food")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(foodContent)
     ).andReturn();
@@ -88,7 +88,7 @@ public class RecipeRestControllerTest extends AbstractTestBase {
     content = content.replace("PLACEHOLDER", foodId);
 
     MvcResult mvcResult = mockMvc.perform(
-            post("/recipe")
+            post("/api/recipe")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(content)
     ).andReturn();
@@ -97,7 +97,7 @@ public class RecipeRestControllerTest extends AbstractTestBase {
     String id = readContext.read("$.id");
 
     this.mockMvc.perform(
-                    get("/recipe", UUID.fromString(id))
+                    get("/api/recipe", UUID.fromString(id))
             )
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].id").value(id))

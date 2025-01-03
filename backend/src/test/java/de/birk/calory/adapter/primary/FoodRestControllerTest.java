@@ -29,7 +29,7 @@ public class FoodRestControllerTest extends AbstractTestBase {
     String content = readResourceAsString("/http-bodies/createFood.json");
 
     MvcResult mvcResult = mockMvc.perform(
-        post("/food")
+        post("/api/food")
             .contentType(MediaType.APPLICATION_JSON)
             .content(content)
     ).andReturn();
@@ -38,7 +38,7 @@ public class FoodRestControllerTest extends AbstractTestBase {
     String id = context.read("$.uuid");
 
     this.mockMvc.perform(
-            get("/food", UUID.fromString(id))
+            get("/api/food", UUID.fromString(id))
         )
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.[0].uuid").value(id))
@@ -53,7 +53,7 @@ public class FoodRestControllerTest extends AbstractTestBase {
     String content = readResourceAsString("/http-bodies/createFood.json");
 
     MvcResult mvcResult = mockMvc.perform(
-        post("/food")
+        post("/api/food")
             .contentType(MediaType.APPLICATION_JSON)
             .content(content)
     ).andReturn();
@@ -62,7 +62,7 @@ public class FoodRestControllerTest extends AbstractTestBase {
     String id = context.read("$.uuid");
 
     this.mockMvc.perform(
-            get("/food/{id}", UUID.fromString(id))
+            get("/api/food/{id}", UUID.fromString(id))
         )
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.uuid").value(id))
@@ -75,7 +75,7 @@ public class FoodRestControllerTest extends AbstractTestBase {
   @DisplayName("Tries to get a non existing Fooditem")
   public void getFoodAndCatchExceptionTest() throws Exception {
     this.mockMvc.perform(
-            get("/food/{id}", UUID.randomUUID())
+            get("/api/food/{id}", UUID.randomUUID())
         )
         .andExpect(status().isNotFound());
   }
@@ -88,7 +88,7 @@ public class FoodRestControllerTest extends AbstractTestBase {
     content = content.replace("food", "");
 
     this.mockMvc.perform(
-        post("/food")
+        post("/api/food")
             .contentType(MediaType.APPLICATION_JSON)
             .content(content)
     ).andExpect(status().isNotAcceptable());
