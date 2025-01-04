@@ -15,7 +15,7 @@ import de.birk.calory.usecase.recipe.CreateRecipeUsecase;
 import de.birk.calory.usecase.recipe.FindRecipeUsecase;
 
 @RestController
-@RequestMapping("/recipe")
+@RequestMapping("/api/recipe")
 //TODO Marius Should be outsourced to env variable
 @CrossOrigin(origins = "http://localhost:3000")
 public class RecipeRestController {
