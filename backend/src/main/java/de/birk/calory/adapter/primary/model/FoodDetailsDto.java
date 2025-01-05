@@ -5,10 +5,13 @@ import java.util.UUID;
 
 public class FoodDetailsDto {
 
-  private final UUID uuid;
-  private final String name;
-  private final BigDecimal calory;
-  private final BigDecimal grams;
+  private UUID uuid;
+  private String name;
+  private BigDecimal calory;
+  private BigDecimal grams;
+
+  public FoodDetailsDto() {
+  }
 
   public FoodDetailsDto(UUID uuid, String name, BigDecimal calory, BigDecimal grams) {
     this.uuid = uuid;
