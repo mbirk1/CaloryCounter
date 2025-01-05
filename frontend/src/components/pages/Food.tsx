@@ -1,15 +1,28 @@
-import { useEffect, useState } from 'react';
-import { getAllFoods } from '../api/food_api';
-import { FoodModel } from '../static/models/FoodModel';
+import { useCallback, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { getAllFoods } from '../../api/food_api';
+import { FoodModel } from '../../static/models/FoodModel';
+import DeleteFoodModal from '../modals/deleteFoodModal';
 
 export default function Food(){
     const [food, setFood] = useState([]);
+    const [deleteFoodModal, setDeleteFoodModal] = useState(false);
 
     useEffect(() =>{
         getAllFoods().then(res => setFood(res));
     }, []);  
+
+    useEffect(()=> {
+
+    })
+
+    const editFood = useCallback((uuid: string) => {
+    }, []);
+
+    const deleteFood = useCallback((uuid: string)=> {
+        setDeleteFoodModal(true);
+    }, []);
                     
     return (
         <div className='relative overflow-x-auto shadow-md mt-16 mx-8'>
@@ -32,7 +45,7 @@ export default function Food(){
                     </tr>
                 </thead>
                 <tbody>
-                    {food.map((item: FoodModel) => (
+                    {food?.map((item: FoodModel) => (
                         <tr key={item.uuid} className='bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600'>
                             <th scope='row' className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white'>
                                 {item.name}
@@ -44,13 +57,21 @@ export default function Food(){
                                 {item.grams}
                             </td>
                             <td>
-                                <FontAwesomeIcon icon={faPen} className='mr-8'/>
-                                <FontAwesomeIcon icon={faTrash} />
+                                <button onClick={() =>
+                                    editFood(item.uuid)
+                                }><FontAwesomeIcon icon={faPen} className='mr-8 cursor-pointer'/></button>
+                                <button onClick={() =>
+                                    deleteFood(item.uuid)
+                                }><FontAwesomeIcon icon={faTrash} className='cursor-pointer'/></button>
                             </td>
                         </tr>
                     ))} 
                 </tbody>
             </table>
+
+            <DeleteFoodModal isOpen={deleteFoodModal} onClose={function (): void {
+                throw new Error('Function not implemented.');
+            } } children={undefined} />
         </div>
     );
 }

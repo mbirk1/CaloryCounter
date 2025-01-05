@@ -1,5 +1,5 @@
 export async function getAllRecipes() {
-    const result : any = await fetch('http://localhost:8080/recipe')
+    const result : any = await fetch('http://localhost:8080(api)/recipe')
     .then(response =>{
         return response.json().then(data => {
             return data;

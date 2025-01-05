@@ -1,18 +1,41 @@
 version: '3.8'
 
 services:
-  backend:
-    build:
-      context: ./backend
+  app:
+    image: mbirk2/calory-count
+    container_name: calory-count
+    networks:
+      calory-count-network:
+        ipv4_address: 192.168.0.121
     ports:
-      - "5000:5000"
-
-  frontend:
-    build:
-      context: ./frontend
+      - "8080:80"
+    deploy:
+      update_config:
+        parallelism: 1
+        order: start-first
+    restart: always
+    pull_policy: always
+  calory-db:
+    image: 'postgres:16.3'
+    container_name: calory-db
+    networks:
+      calory-count-network:
+        ipv4_address: 192.168.0.122
     ports:
-      - "3000:3000"
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=calory-db
+      - POSTGRES_PASSWORD=V40jN2gavmfj1q9Ln5Aq
+      - PGUSER=calory-db
+      - POSTGRES_DB=calory-db
 
 networks:
-  default:
-    driver: bridge
+  calory-count-network:
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: 192.168.0.0/24
+          gateway: 192.168.0.1
+          ip_range: 192.168.0.120/29
