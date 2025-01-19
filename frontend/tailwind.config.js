@@ -4,8 +4,13 @@ module.exports = {
     './src/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        navigationBackground: '#173083',
+        navigationButton: '#451eaf',
+        navigationButtonHover: '#13286e',
+      },
+    },
   },
   plugins: [],
 }
-
