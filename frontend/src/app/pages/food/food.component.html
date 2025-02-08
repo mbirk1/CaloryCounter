@@ -1,0 +1,15 @@
+<div class="p-4">
+<div class="flex justify-end">
+  <app-button
+    [text]="'Lebensmittel hinzufügen'"
+    class="right-0"/>
+</div>
+  <div class="pl-56">
+<app-food-table
+  [data]="this.foodResource"
+  [columnHeaders]="['Name', 'Calory', 'Grams', 'Actions']"
+  />
+
+
+  </div>
+</div>

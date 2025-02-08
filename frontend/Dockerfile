@@ -6,7 +6,7 @@ COPY package*.json ./
 
 RUN npm install
 
-COPY . .
+COPY ../frontend2/frontend .
 
 EXPOSE 3000
 

@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b834cce2-29ab-4aae-b8a4-53c2cc569329" name="Changes" comment="test push">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/build_upload.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/build_upload.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="b834cce2-29ab-4aae-b8a4-53c2cc569329" name="Changes" comment="change to angular">
+      <change afterPath="$PROJECT_DIR$/frontend/src/app/components/button/button.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/app/components/button/button.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/app/components/food-table/food-table.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/app/components/food-table/food-table.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/food/food.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/food/food.component.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,13 +17,20 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="36-zu-angular-migrieren" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;mbirk1&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/mbirk1/CaloryCounter&quot;,
+    &quot;accountId&quot;: &quot;b9751e25-48cd-46b9-87d9-946a69e2cb0a&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -32,12 +42,14 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;Application.Backend.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.Backend - dev.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Backend.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;36-zu-angular-migrieren&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/mariu/IdeaProjects/CaloryCounter&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/mariu/IdeaProjects/CaloryCounter/frontend2/frontend&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -47,12 +59,17 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-WS-243.22562.222" />
-      </set>
-    </attachedChunks>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\mariu\IdeaProjects\CaloryCounter\frontend2\frontend" />
+      <recent name="C:\Users\mariu\IdeaProjects\CaloryCounter\frontend2\frontend\src\app\static" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\mariu\IdeaProjects\CaloryCounter\frontend\src\app\components" />
+      <recent name="C:\Users\mariu\IdeaProjects\CaloryCounter\frontend2\frontend\src\app\models" />
+      <recent name="C:\Users\mariu\IdeaProjects\CaloryCounter\frontend2\frontend\src\app\components" />
+      <recent name="C:\Users\mariu\IdeaProjects\CaloryCounter\frontend\src" />
+    </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -62,25 +79,53 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1737276199942</updated>
-      <workItem from="1737276201825" duration="5084000" />
+      <workItem from="1737276201825" duration="7737000" />
+      <workItem from="1737399318209" duration="5002000" />
+      <workItem from="1737489355381" duration="3852000" />
+      <workItem from="1737836910768" duration="2822000" />
+      <workItem from="1737910571446" duration="492000" />
+      <workItem from="1738363961019" duration="4795000" />
+      <workItem from="1738515356289" duration="173000" />
+      <workItem from="1738515604981" duration="1911000" />
+      <workItem from="1738517553074" duration="21000" />
     </task>
-    <task id="LOCAL-00001" summary="test push">
+    <task id="LOCAL-00001" summary="Fix Navigation.tsx">
       <option name="closed" value="true" />
-      <created>1739049808852</created>
+      <created>1737285254687</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1739049808852</updated>
+      <updated>1737285254687</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="change to angular">
+      <option name="closed" value="true" />
+      <created>1739049542581</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1739049542581</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add gitignore on base level" />
-    <MESSAGE value="test push" />
-    <option name="LAST_COMMIT_MESSAGE" value="test push" />
+    <MESSAGE value="Fix Navigation.tsx" />
+    <MESSAGE value="change to angular" />
+    <option name="LAST_COMMIT_MESSAGE" value="change to angular" />
   </component>
 </project>
