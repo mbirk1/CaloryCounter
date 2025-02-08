@@ -1,29 +1,59 @@
-# Calory Count Application Frontend
+# Frontend
 
-## Tailwind Stylegenerierung
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.3.
 
-### Installation
+## Development server
 
-Das Plugin kann mit folgenden Befehl installiert werden:
+To start a local development server, run:
 
-```shell
-    npm install -D tailwindcss postcss autoprefixer
+```bash
+ng serve
 ```
 
-### Stylegenerierung
+Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-Die benötigten Styles können direkt in die className Tags der benötigten HTML Elemente genutzt werden. Ist die Komponente geschrieben, dann kann über folgenden Befehl die Generierung des Stylings beginnen:
+## Code scaffolding
 
-```shell
-    npx tailwindcss -i ./src/index.css -o ./src/output.css --watch
+Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+
+```bash
+ng generate component component-name
 ```
 
-Dies generiert aus allen Komponenten alle benötigten CSS Attribute und legt sie in der output.css Datei ab. Die output.css Datei wiederum ist in der index.tsx eingebunden und wird als Standart für das Styling verwendet. Mit dem Attribut "--watch" wird angegeben, dass Tailwind dauerhaft darauf schaut, ob es Änderungen an den CSS Klassen gegeben hat und ggf diese neu baut.
+For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
 
-## Lokale Entwicklung
+```bash
+ng generate --help
+```
 
-Das Frontend kann innerhalb des `\frontend` Verzeichnises gestartet werden.  
-Hierzu ein Terminal starten, mit dem `cd` Befehl in das Verzeichnis navigieren und `npm run start` ausführen. Dies startet
-ein internes Script innerhalb der `package.json`. Dabei gibt `npm run` an, dass ein Script ausgeführt werden soll und `start`
-bezeichnet dieses Script.
+## Building
 
+To build the project run:
+
+```bash
+ng build
+```
+
+This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+
+## Running unit tests
+
+To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+
+```bash
+ng test
+```
+
+## Running end-to-end tests
+
+For end-to-end (e2e) testing, run:
+
+```bash
+ng e2e
+```
+
+Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Additional Resources
+
+For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

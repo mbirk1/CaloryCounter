@@ -3,9 +3,9 @@ version: '3.8'
 services:
   frontend_service:
     build:
-      context: .
+      context: ../frontend2/frontend
     ports:
-      - "3000:3000"  # Mapping des Ports für den React-Entwicklungsserver
+      - "4200:4200"  # Mapping des Ports für den Angular-Entwicklungsserver
     volumes:
       - ./src:/app/src  # Mounten des Quellcodes, damit Änderungen direkt reflektiert werden
 
