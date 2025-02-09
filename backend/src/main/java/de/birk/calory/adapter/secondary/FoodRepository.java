@@ -8,6 +8,11 @@ import org.springframework.stereotype.Repository;
 
 import de.birk.calory.adapter.secondary.model.FoodPersistence;
 
+/**
+ * Basic Spring Boot Repository.
+ *
+ * @author Marius Birk
+ */
 @Repository
 public interface FoodRepository extends JpaRepository<FoodPersistence, UUID> {
 

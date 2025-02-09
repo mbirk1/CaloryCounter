@@ -16,6 +16,11 @@ import de.birk.calory.adapter.primary.model.FoodDto;
 import de.birk.calory.usecase.food.CreateFoodUsecase;
 import de.birk.calory.usecase.food.FindFoodUsecase;
 
+/**
+ * RestController for all food related requests.
+ *
+ * @author Marius Birk
+ */
 @RestController
 @RequestMapping("/api/food")
 //TODO Marius Should be outsourced to env variable

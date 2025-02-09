@@ -1,7 +1,5 @@
 package de.birk.calory.adapter;
 
-import de.birk.calory.exception.ValidationException;
-
 import java.util.NoSuchElementException;
 
 import org.springframework.http.HttpHeaders;
@@ -12,6 +10,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import de.birk.calory.exception.ValidationException;
+
+
+/**
+ * Implementation of the ResponseEntityExceptionHandler.
+ *
+ * <p>Implements necessary methods to return http error codes to the client,
+ * if any server errors happen.
+ */
 @ControllerAdvice
 public class ExceptionHandlerImpl extends ResponseEntityExceptionHandler {
 
@@ -28,7 +35,10 @@ public class ExceptionHandlerImpl extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler(value = {ValidationException.class})
-  protected ResponseEntity<Object> handleValidationException(RuntimeException e, WebRequest request){
+  protected ResponseEntity<Object> handleValidationException(
+          RuntimeException e,
+          WebRequest request
+  ) {
     String body = "Validation failed.";
     return handleExceptionInternal(
         e,

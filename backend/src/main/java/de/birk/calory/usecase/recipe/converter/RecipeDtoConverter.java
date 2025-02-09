@@ -8,7 +8,16 @@ import de.birk.calory.domain.food.Food;
 import de.birk.calory.domain.recipe.Recipe;
 import de.birk.calory.usecase.converter.Converter;
 
+/**
+ * Inheritor of the converter.
+ *
+ * @author Marius Birk
+ */
 public class RecipeDtoConverter extends Converter<RecipeDto, Recipe> {
+
+  /**
+   * Constructor, that inherits the conversion from dto to entity and the other way around.
+   */
   public RecipeDtoConverter() {
     super(
         dto -> new Recipe(UUID.randomUUID(), dto.getName(), dto.getFoods().stream()

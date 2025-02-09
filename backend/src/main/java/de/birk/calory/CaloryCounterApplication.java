@@ -5,6 +5,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
+/**
+ * Base Class to start the Spring Boot Application.
+ *
+ * @author Marius Birk
+ */
 @SpringBootApplication
 public class CaloryCounterApplication extends SpringBootServletInitializer {
 

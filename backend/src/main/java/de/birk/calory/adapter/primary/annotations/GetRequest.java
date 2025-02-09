@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
+/**
+ * Default Get Request, that also defines which http response should be sent.
+ *
+ * @author Marius Birk
+ */
 @RequestMapping(method = RequestMethod.GET)
 @Operation(summary = "Getting a resource")
 @ApiResponse(responseCode = "200", description = "Element found")
@@ -20,11 +25,27 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface GetRequest {
+
+  /**
+   * Parameter for the name.
+   *
+   * @return the name
+   */
   String name() default "";
 
+  /**
+   * Parameter for the path.
+   *
+   * @return the path
+   */
   @AliasFor("path")
   String[] value() default {};
 
+  /**
+   * Parameter for the value.
+   *
+   * @return the value
+   */
   @AliasFor("value")
   String[] path() default {};
 }

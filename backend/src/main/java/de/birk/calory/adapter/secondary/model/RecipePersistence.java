@@ -11,42 +11,54 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
+/**
+ * Persistence entity for the recipe.
+ *
+ * @author Marius Birk
+ */
 @Entity
 @Table(name = "tab_calory_recipe")
 public class RecipePersistence {
 
-    @Id
-    @Column
-    private UUID id;
+  @Id
+  @Column
+  private UUID id;
 
-    @Column
-    private String name;
+  @Column
+  private String name;
 
-    @ManyToMany
-    @JoinTable(
-        name = "tab_calory_recipe_food",
-        joinColumns = @JoinColumn(name = "recipe_id"),
-        inverseJoinColumns = @JoinColumn(name = "food_id"))
-    private List<FoodPersistence> foods;
+  @ManyToMany
+  @JoinTable(
+          name = "tab_calory_recipe_food",
+          joinColumns = @JoinColumn(name = "recipe_id"),
+          inverseJoinColumns = @JoinColumn(name = "food_id"))
+  private List<FoodPersistence> foods;
 
-    public RecipePersistence(UUID id, String name, List<FoodPersistence> foods) {
-        this.id = id;
-        this.name = name;
-        this.foods = foods;
-    }
+  /**
+   * Creates an instance of a persistence object for the database.
+   *
+   * @param id the identifier
+   * @param name the name
+   * @param foods the list of foods
+   */
+  public RecipePersistence(UUID id, String name, List<FoodPersistence> foods) {
+    this.id = id;
+    this.name = name;
+    this.foods = foods;
+  }
 
-    public RecipePersistence() {
-    }
+  public RecipePersistence() {
+  }
 
-    public UUID getId() {
-        return id;
-    }
+  public UUID getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public List<FoodPersistence> getFoods() {
-        return foods;
-    }
+  public List<FoodPersistence> getFoods() {
+    return foods;
+  }
 }

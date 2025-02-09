@@ -5,7 +5,11 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import de.birk.calory.adapter.primary.annotations.GetRequest;
 import de.birk.calory.adapter.primary.annotations.PostRequest;
@@ -14,6 +18,11 @@ import de.birk.calory.adapter.primary.model.RecipeDto;
 import de.birk.calory.usecase.recipe.CreateRecipeUsecase;
 import de.birk.calory.usecase.recipe.FindRecipeUsecase;
 
+/**
+ * RestController for all recipe correlated requests.
+ *
+ * @author Marius Birk
+ */
 @RestController
 @RequestMapping("/api/recipe")
 //TODO Marius Should be outsourced to env variable
@@ -25,8 +34,8 @@ public class RecipeRestController {
   private CreateRecipeUsecase createRecipeUsecase;
 
   public RecipeRestController(
-      FindRecipeUsecase findRecipeUsecase,
-      CreateRecipeUsecase createRecipeUsecase
+          FindRecipeUsecase findRecipeUsecase,
+          CreateRecipeUsecase createRecipeUsecase
   ) {
     this.findRecipeUsecase = findRecipeUsecase;
     this.createRecipeUsecase = createRecipeUsecase;
@@ -38,7 +47,7 @@ public class RecipeRestController {
   }
 
   @GetRequest()
-  public List<RecipeDetailsDto> getAllRecipes(){
+  public List<RecipeDetailsDto> getAllRecipes() {
     return this.findRecipeUsecase.findAllRecipes();
   }
 

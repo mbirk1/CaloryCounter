@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
+/**
+ * Default Post Request, that also defines which http response should be sent.
+ *
+ * @author Marius Birk
+ */
 @RequestMapping(method = RequestMethod.POST)
 @ApiResponse(responseCode = "201", description = "Element successful created")
 @ApiResponse(responseCode = "404", description = "A required Element was not found")

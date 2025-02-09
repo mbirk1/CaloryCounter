@@ -1,6 +1,8 @@
 package de.birk.calory.adapter.secondary.model;
 
-import de.birk.calory.adapter.secondary.FoodRepository;
+import java.math.BigDecimal;
+import java.util.Set;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,10 +10,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
-import java.math.BigDecimal;
-import java.util.Set;
-import java.util.UUID;
-
+/**
+ * Persistence entity for the food items.
+ *
+ * @author Marius Birk
+ */
 @Entity
 @Table(name = "tab_calory_food")
 public class FoodPersistence {
@@ -34,6 +37,14 @@ public class FoodPersistence {
     //for JPA
   }
 
+  /**
+   * Constructor to create an instance of the object, that can be saved in the database.
+   *
+   * @param id the identifier
+   * @param name the name
+   * @param calory amount of calories for the grams
+   * @param grams amount of grams
+   */
   public FoodPersistence(UUID id, String name, BigDecimal calory, BigDecimal grams) {
     this.id = id;
     this.name = name;
@@ -52,6 +63,7 @@ public class FoodPersistence {
   public BigDecimal getCalory() {
     return calory;
   }
+
   public BigDecimal getGrams() {
     return grams;
   }

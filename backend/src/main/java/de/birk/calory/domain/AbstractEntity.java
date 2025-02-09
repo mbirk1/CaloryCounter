@@ -4,6 +4,13 @@ import java.io.Serializable;
 
 import de.birk.calory.exception.ValidationException;
 
+/**
+ * Abstract Entity to serialize basic entities.
+ *
+ * @author Marius Birk
+ * @param <I> the data type which is used for the id property
+ */
+
 public abstract class AbstractEntity<I> implements Serializable {
 
   protected abstract I getId();

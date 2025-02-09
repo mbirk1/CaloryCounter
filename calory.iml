@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module version="4">
   <component name="AdditionalModuleElements">
-    <content url="file://$MODULE_DIR$/frontend" />
+    <content url="file://$MODULE_DIR$/frontend">
+      <excludeFolder url="file://$MODULE_DIR$/frontend/.angular/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/frontend/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/frontend/node_modules/encoding/node_modules/iconv-lite/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/frontend/node_modules/needle/node_modules/iconv-lite/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/frontend/node_modules/ordered-binary/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/frontend/node_modules/source-map-loader/node_modules/iconv-lite/.idea" />
+    </content>
+    <content url="file://$MODULE_DIR$/backend" dumb="true">
+      <excludeFolder url="file://$MODULE_DIR$/backend/node/node_modules/npm/node_modules/@isaacs/cliui/build" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/node/node_modules/npm/node_modules/smart-buffer/build" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/node/node_modules/npm/node_modules/socks/build" />
+    </content>
   </component>
   <component name="CheckStyle-IDEA-Module" serialisationVersion="2">
     <option name="activeLocationsIds" />

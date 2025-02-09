@@ -5,6 +5,14 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Converter Parent Class to convert DTOs and entities.
+ *
+ * @author Marius Birk
+ * @param <T> data type of the used dto
+ * @param <C> data type of the used entity
+ */
+
 public abstract class Converter<T, C> {
 
   private final Function<T, C> fromDto;
