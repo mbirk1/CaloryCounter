@@ -1,6 +1,6 @@
-import {BaseModel} from './BaseModel';
+import { BaseModel } from './BaseModel'
 
-export interface FoodModel extends BaseModel{
-       calory: number,
-       grams: number
+export interface FoodModel extends BaseModel {
+  calory: number
+  grams: number
 }

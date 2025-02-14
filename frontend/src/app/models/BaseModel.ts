@@ -1,4 +1,4 @@
 export interface BaseModel {
-  uuid: string,
-  name: string,
+  uuid: string
+  name: string
 }

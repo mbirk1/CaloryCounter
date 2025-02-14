@@ -1,11 +1,9 @@
-import { Component } from '@angular/core';
+import { Component } from '@angular/core'
 
 @Component({
   selector: 'app-recipe',
   imports: [],
   templateUrl: './recipe.component.html',
-  styleUrl: './recipe.component.css'
+  styleUrl: './recipe.component.css',
 })
-export class RecipeComponent {
-
-}
+export class RecipeComponent {}
