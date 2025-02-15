@@ -1,7 +1,9 @@
 <div class="p-4">
 <div class="flex justify-end">
   <app-button
+    [type]="'button'"
     [text]="'Lebensmittel hinzufügen'"
+    (click)="handleFoodDialog()"
     class="right-0"/>
 </div>
   <div class="pl-56">
@@ -9,7 +11,5 @@
   [data]="this.foodResource"
   [columnHeaders]="['Name', 'Calory', 'Grams', 'Actions']"
   />
-
-
   </div>
 </div>
