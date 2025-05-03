@@ -1,28 +1,28 @@
-<div class="flex flex-col bg-white rounded-xl p-5 gap-5">
-  <div>
-    <label>Lebensmittel hinzufügen</label>
+<form class="flex flex-col bg-white rounded-xl p-5 gap-5" [formGroup]="food" (submit)="onSubmit()">
+  <div class="mb-8">
+    <label class="text-[#444444] font-bold text-xl">Lebensmittel hinzufügen</label>
   </div>
-  <div class="grid grid-cols-2 gap-4">
-    <div class="">
+  <div class="grid grid-cols-2 gap-8" >
+    <div class="text-[#444444] font-bold">
       <app-label [text]="'Name: '" />
     </div>
     <div class="">
-      <app-text-input class="" />
+      <app-text-input [formControlName]="'name'" />
     </div>
-    <div class="">
+    <div class="text-[#444444] font-bold">
       <app-label [text]="'Anzahl in Gramm: '" />
     </div>
     <div class="">
-      <app-text-input />
+      <app-number-input [placeholder]="'0'" [formControlName]="'grams'"/>
     </div>
-    <div class="">
+    <div class="text-[#444444] font-bold">
       <app-label [text]="'Anzahl in Kalorien: '" />
     </div>
     <div class="">
-      <app-text-input />
+      <app-number-input [placeholder]="'0'" [formControlName]="'calory'"/>
     </div>
   </div>
-  <div>
-    <app-button [type]="'submit'" [text]="'Hinzufügen'" (click)="this.dialogRef.close({})"></app-button>
+  <div class="mt-8">
+    <app-button [type]="'submit'" [text]="'Hinzufügen'"></app-button>
   </div>
-</div>
+</form>

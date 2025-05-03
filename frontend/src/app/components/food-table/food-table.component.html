@@ -26,12 +26,16 @@
           <app-button
             class="mr-8 cursor-pointer text-blue-500"
             aria-label="Edit"
-            >
+            [text]="'Bearbeiten'"
+            [type]="'button'"
+          >
             <fa-icon [icon]="faPen"></fa-icon>
           </app-button>
           <app-button
             class="cursor-pointer text-red-500"
             aria-label="Delete"
+            [text]="'Löschen'"
+            [type]="'button'"
           >
             <fa-icon [icon]="faTrash"></fa-icon>
           </app-button>

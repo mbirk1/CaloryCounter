@@ -2,19 +2,19 @@ import { Component, forwardRef, Input } from '@angular/core'
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms'
 
 @Component({
-  selector: 'app-text-input',
+  selector: 'app-number-input',
   imports: [],
-  templateUrl: './text-input.component.html',
+  templateUrl: './number-input.component.html',
   styles: '',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => TextInputComponent),
+      useExisting: forwardRef(() => NumberInputComponent),
       multi: true,
     },
   ],
 })
-export class TextInputComponent implements ControlValueAccessor {
+export class NumberInputComponent implements ControlValueAccessor {
   @Input() placeholder: string = ''
   @Input() type: string = 'text'
 
@@ -22,7 +22,6 @@ export class TextInputComponent implements ControlValueAccessor {
   disabled = false
 
   onChange = (value: string) => {}
-
   onTouched = () => {}
 
   onInput(event: Event) {

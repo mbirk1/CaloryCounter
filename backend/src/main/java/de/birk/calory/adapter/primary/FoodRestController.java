@@ -24,7 +24,7 @@ import de.birk.calory.usecase.food.FindFoodUsecase;
 @RestController
 @RequestMapping("/api/food")
 //TODO Marius Should be outsourced to env variable
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:4200")
 public class FoodRestController {
   private final FindFoodUsecase findFoodUsecase;
   private final CreateFoodUsecase createFoodUsecase;
