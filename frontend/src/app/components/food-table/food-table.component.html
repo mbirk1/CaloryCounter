@@ -1,6 +1,7 @@
 @if (this.data()) {
-<table class="w-3/4 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-  <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+<div class="flex justify-center">
+  <table class="w-2/4 text-sm text-left rtl:text-right text-gray-400">
+  <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-600 text-gray-400">
   <tr>
     <th scope="col" class="px-6 py-3">Name</th>
     <th scope="col" class="px-6 py-3">Calory</th>
@@ -9,39 +10,38 @@
   </tr>
   </thead>
   <tbody>
-    @for (item of this.data(); track this.data) {
+    @for (item of this.data(); track item) {
       <tr
         [attr.data-id]="item.uuid"
-        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+        class="bg-white border-b dark:bg-gray-700 dark:border-gray-700 hover:bg-gray-800"
       >
         <th
           scope="row"
-          class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+          class="px-6 py-4 font-medium text-gray-400 whitespace-nowrap"
         >
           {{ item.name }}
         </th>
         <td class="px-6 py-4">{{ item.calory }}</td>
         <td class="px-6 py-4">{{ item.grams }}</td>
-        <td>
-          <app-button
-            class="mr-8 cursor-pointer text-blue-500"
-            aria-label="Edit"
-            [text]="'Bearbeiten'"
-            [type]="'button'"
-          >
-            <fa-icon [icon]="faPen"></fa-icon>
-          </app-button>
-          <app-button
-            class="cursor-pointer text-red-500"
-            aria-label="Delete"
-            [text]="'Löschen'"
-            [type]="'button'"
-          >
-            <fa-icon [icon]="faTrash"></fa-icon>
-          </app-button>
+        <td class="px-6 py-4">
+          <div class="flex gap-4">
+            <span class="material-symbols-rounded">
+              edit
+            </span>
+            <span
+              [ngClass]="{
+                'text-gray-600 cursor-not-allowed': isInARecipe(item.uuid)
+              }"
+              class="material-symbols-rounded cursor-pointer"
+              (click)="delete(item.uuid)"
+            >
+              delete
+            </span>
+          </div>
         </td>
       </tr>
     }
   </tbody>
 </table>
+</div>
 }

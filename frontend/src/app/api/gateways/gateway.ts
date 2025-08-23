@@ -8,11 +8,15 @@ import { Injectable } from '@angular/core'
 export class Gateway<T> {
   constructor(private http: HttpClient) {}
 
-  async get<T>(url: string): Promise<Observable<T>> {
+  get<T>(url: string): Observable<T> {
     return this.http.get<T>(url)
   }
 
-  async post<T>(url: string, body: T): Promise<Observable<T>> {
+  post<T>(url: string, body: T): Observable<T> {
     return this.http.post<T>(url, body)
+  }
+
+  delete<T>(url: string, id: string): Observable<T> {
+    return this.http.delete<T>(url + '/' + id)
   }
 }

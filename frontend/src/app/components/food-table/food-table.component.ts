@@ -1,19 +1,34 @@
-import { Component, InputSignal, input } from '@angular/core'
-import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { FaIconComponent } from '@fortawesome/angular-fontawesome'
-import { ButtonComponent } from '../button/button.component'
+import { Component, computed, input, InputSignal, Signal } from '@angular/core'
+import { FoodModel } from '../../models/FoodModel'
+import { FoodStore } from '../../api/stores/food.store'
+import { NgClass } from '@angular/common'
+import { RecipeModel } from '../../models/RecipeModel'
+import { RecipeStore } from '../../api/stores/recipe.store'
 
 @Component({
   selector: 'app-food-table',
   standalone: true,
-  imports: [FaIconComponent, ButtonComponent],
+  imports: [NgClass],
   templateUrl: './food-table.component.html',
   styles: '',
 })
 export class FoodTableComponent {
-  data: InputSignal<any[]> = input.required()
+  data: Signal<FoodModel[]> = computed(() => this.foodStore.foods())
+  recipes: Signal<RecipeModel[]> = computed(() => this.recipeStore.recipes())
   columnHeaders: InputSignal<string[]> = input.required()
 
-  readonly faTrash = faTrash
-  readonly faPen = faPen
+  constructor(
+    private foodStore: FoodStore,
+    private recipeStore: RecipeStore,
+  ) {}
+
+  delete(id: string) {
+    this.foodStore.delete(id)
+  }
+
+  isInARecipe(foodId: string) {
+    return this.recipes().some((recipe: RecipeModel) =>
+      recipe.foods.some((food: FoodModel) => food.uuid === foodId),
+    )
+  }
 }
