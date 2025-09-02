@@ -3,10 +3,26 @@
   <table class="w-2/4 text-sm text-left rtl:text-right text-gray-400">
   <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-600 text-gray-400">
   <tr>
-    <th scope="col" class="px-6 py-3">Name</th>
-    <th scope="col" class="px-6 py-3">Calory</th>
-    <th scope="col" class="px-6 py-3">Grams</th>
-    <th scope="col" class="px-6 py-3">Actions</th>
+    <th scope="col" class="px-6 py-3">
+      <span class="flex justify-center">
+        Name
+      </span>
+    </th>
+    <th scope="col" class="px-6 py-3">
+      <span class="flex justify-center">
+        Calory
+      </span>
+    </th>
+    <th scope="col" class="px-6 py-3">
+      <span class="flex justify-center">
+        Grams
+      </span>
+    </th>
+    <th scope="col" class="px-6 py-3">
+      <span class="flex justify-center">
+        Actions
+      </span>
+    </th>
   </tr>
   </thead>
   <tbody>
@@ -17,14 +33,24 @@
       >
         <th
           scope="row"
-          class="px-6 py-4 font-medium text-gray-400 whitespace-nowrap"
+          class="px-6 py-4"
         >
-          {{ item.name }}
+          <span class="flex justify-center">
+            {{ item.name }}
+          </span>
         </th>
-        <td class="px-6 py-4">{{ item.calory }}</td>
-        <td class="px-6 py-4">{{ item.grams }}</td>
         <td class="px-6 py-4">
-          <div class="flex gap-4">
+          <span class="flex justify-center">
+            {{ item.calory }}
+          </span>
+        </td>
+        <td class="px-6 py-4">
+          <span class="flex justify-center">
+            {{ item.grams }}
+          </span>
+        </td>
+        <td class="px-6 py-4">
+          <div class="flex gap-4 flex justify-center">
             <span class="material-symbols-rounded">
               edit
             </span>

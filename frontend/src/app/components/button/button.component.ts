@@ -1,5 +1,4 @@
 import { Component, input, InputSignal } from '@angular/core'
-import { NgStyle } from '@angular/common'
 
 @Component({
   selector: 'app-button',

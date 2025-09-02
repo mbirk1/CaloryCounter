@@ -21,7 +21,6 @@ import { FoodStore } from '../../../api/stores/food.store'
   styles: '',
 })
 export class AddFoodDialogComponent extends Dialog {
-  dialogRef = inject<DialogRef<string>>(DialogRef<string>)
   data = inject(DIALOG_DATA)
   food: FormGroup
 
