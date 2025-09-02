@@ -1,0 +1,70 @@
+@if (this.data()) {
+  <div class="flex justify-center">
+    <table class="w-2/4 text-sm text-left rtl:text-right text-gray-400">
+      <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-600 text-gray-400">
+      <tr>
+        <th scope="col" class="px-6 py-3">
+      <span class="flex justify-center">
+        {{ this.columnHeaders()[0] }}
+      </span>
+        </th>
+        <th scope="col" class="px-6 py-3">
+      <span class="flex justify-center">
+        {{ this.columnHeaders()[1] }}
+      </span>
+        </th>
+        <th scope="col" class="px-6 py-3">
+      <span class="flex justify-center">
+        {{ this.columnHeaders()[2] }}
+      </span>
+        </th>
+        <th scope="col" class="px-6 py-3">
+      <span class="flex justify-center">
+        {{ this.columnHeaders()[3] }}
+      </span>
+        </th>
+        <th scope="col" class="px-6 py-3">
+      <span class="flex justify-center">
+        {{ this.columnHeaders()[4] }}
+      </span>
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (item of this.data(); track item) {
+          <tr
+            [attr.data-id]="item.uuid"
+            class="bg-white border-b dark:bg-gray-700 dark:border-gray-700 hover:bg-gray-800"
+          >
+            <th
+              scope="row"
+              class="px-6 py-4"
+            >
+          <span class="flex justify-center">
+            {{ item.name }}
+          </span>
+            </th>
+            <td class="px-6 py-4">
+          <span class="flex justify-center">
+            {{ item.foods }}
+          </span>
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex gap-4 flex justify-center">
+            <span class="material-symbols-rounded">
+              edit
+            </span>
+                <span
+                  class="material-symbols-rounded cursor-pointer"
+                  (click)="delete(item.uuid)"
+                >
+              delete
+            </span>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

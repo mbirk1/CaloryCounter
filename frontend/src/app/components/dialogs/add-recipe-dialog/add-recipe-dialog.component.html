@@ -1,0 +1,25 @@
+<form class="flex flex-col bg-white rounded-xl p-5 gap-5" [formGroup]="recipe" (submit)="onSubmit()">
+  <div class="mb-8">
+    <label class="text-[#444444] font-bold text-xl">Rezept hinzufügen</label>
+  </div>
+  <div class="grid grid-cols-2 gap-8" >
+    <div class="text-[#444444] font-bold">
+      <app-label [text]="'Name: '" />
+    </div>
+    <div class="">
+      <app-text-input [formControlName]="'name'" />
+    </div>
+    <div>
+      <span>Lebensmittel: </span>
+    <div>
+      <app-checkbox [text]="'test'"/> //TODO hier auch die Kalorie pro 100g angeben
+    </div>
+    <div>
+      Gewicht (ca): {{ this.addGrams() }}
+    </div>
+    </div>
+  </div>
+  <div class="mt-8">
+    <app-button [type]="'submit'" [text]="'Hinzufügen'" />
+  </div>
+</form>
