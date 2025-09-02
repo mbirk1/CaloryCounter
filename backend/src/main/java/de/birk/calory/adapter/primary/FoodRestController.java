@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.birk.calory.adapter.primary.annotations.DeleteRequest;
 import de.birk.calory.adapter.primary.annotations.GetRequest;
 import de.birk.calory.adapter.primary.annotations.PostRequest;
 import de.birk.calory.adapter.primary.model.FoodDetailsDto;
 import de.birk.calory.adapter.primary.model.FoodDto;
 import de.birk.calory.usecase.food.CreateFoodUsecase;
+import de.birk.calory.usecase.food.DeleteFoodUsecase;
 import de.birk.calory.usecase.food.FindFoodUsecase;
 
 /**
@@ -24,16 +26,27 @@ import de.birk.calory.usecase.food.FindFoodUsecase;
 @RestController
 @RequestMapping("/api/food")
 //TODO Marius Should be outsourced to env variable
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:4200")
 public class FoodRestController {
   private final FindFoodUsecase findFoodUsecase;
   private final CreateFoodUsecase createFoodUsecase;
+  private final DeleteFoodUsecase deleteFoodUsecase;
 
+
+  /**
+   *  Every necessary usecase needed to complete the incoming requests.
+   *
+   * @param findFoodUsecase Find Food Usecase
+   * @param createFoodUsecase Create Food Usecase
+   * @param deleteFoodUsecase Delete Foor Usecase
+   */
   public FoodRestController(
       FindFoodUsecase findFoodUsecase,
-      CreateFoodUsecase createFoodUsecase) {
+      CreateFoodUsecase createFoodUsecase,
+      DeleteFoodUsecase deleteFoodUsecase) {
     this.findFoodUsecase = findFoodUsecase;
     this.createFoodUsecase = createFoodUsecase;
+    this.deleteFoodUsecase = deleteFoodUsecase;
   }
 
   @GetRequest()
@@ -49,5 +62,10 @@ public class FoodRestController {
   @PostRequest
   public FoodDetailsDto createFood(@RequestBody FoodDto foodDto) {
     return this.createFoodUsecase.createFood(foodDto);
+  }
+
+  @DeleteRequest("/{id}")
+  public List<FoodDetailsDto> deleteFood(@PathVariable UUID id) {
+    return this.deleteFoodUsecase.deleteFood(id);
   }
 }
