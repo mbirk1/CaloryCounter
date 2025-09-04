@@ -11,11 +11,13 @@
     </div>
     <div>
       <span>Lebensmittel: </span>
-    <div>
-      <app-checkbox [text]="'test'"/> //TODO hier auch die Kalorie pro 100g angeben
-    </div>
-    <div>
-      Gewicht (ca): {{ this.addGrams() }}
+      @for (food of this.foods; track $index){
+        <div>
+          <app-checkbox [formControlName]="food.name" [text]="food.name+ ', ' + food.calory + 'cal, ' + food.grams + 'g'"/>
+        </div>
+      }
+    <div class="mt-8">
+      Gewicht (ca): {{ this.totalGrams() + 'g' }}
     </div>
     </div>
   </div>

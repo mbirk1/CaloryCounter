@@ -46,20 +46,30 @@
             </th>
             <td class="px-6 py-4">
           <span class="flex justify-center">
-            {{ item.foods }}
+            {{ this.addGrams(item.foods) }}
+          </span>
+            </td>
+            <td class="px-6 py-4">
+          <span class="flex justify-center">
+            {{ this.addCalories(item.foods) }}
+          </span>
+            </td>
+            <td class="px-6 py-4">
+          <span class="flex justify-center">
+            {{ this.listFoods(item.foods) }}
           </span>
             </td>
             <td class="px-6 py-4">
               <div class="flex gap-4 flex justify-center">
-            <span class="material-symbols-rounded">
-              edit
-            </span>
+                <span class="material-symbols-rounded">
+                  edit
+                </span>
                 <span
                   class="material-symbols-rounded cursor-pointer"
-                  (click)="delete(item.uuid)"
+                  (click)="delete(item.uuid!)"
                 >
-              delete
-            </span>
+                  delete
+                </span>
               </div>
             </td>
           </tr>
