@@ -1,1 +1,15 @@
-<p>recipe works!</p>
+<div class="p-4">
+  <div class="flex justify-end">
+    <app-button
+      [text]="'Rezept hinzufügen'"
+      class="right-0"
+      [type]="'button'"
+      (click)="handleRecipeDialog()"
+    />
+  </div>
+  <div class="pl-56">
+    <app-recipe-table
+      [columnHeaders]="['Name', 'Grams', 'Calory', 'Foods', 'Actions']"
+    />
+  </div>
+</div>

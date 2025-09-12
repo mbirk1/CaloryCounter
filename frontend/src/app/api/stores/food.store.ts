@@ -42,4 +42,8 @@ export class FoodStore {
       },
     )
   }
+
+  load(): boolean {
+    return this.foodResource.reload()
+  }
 }

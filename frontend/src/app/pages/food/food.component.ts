@@ -15,7 +15,6 @@ import { AddFoodDialogComponent } from '../../components/dialogs/add-food-dialog
 })
 export class FoodComponent implements OnInit {
   foodService: FoodService = inject(FoodService)
-  foodResource = this.foodService.getFood()
 
   constructor(private dialog: Dialog) {}
 
