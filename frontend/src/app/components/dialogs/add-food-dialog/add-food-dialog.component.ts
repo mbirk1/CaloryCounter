@@ -1,5 +1,12 @@
-import { Component, inject } from '@angular/core'
-import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog'
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  WritableSignal,
+} from '@angular/core'
+import { Dialog, DIALOG_DATA } from '@angular/cdk/dialog'
 import { TextInputComponent } from '../../inputs/text-input/text-input.component'
 import { ButtonComponent } from '../../button/button.component'
 import { LabelComponent } from '../../label/label.component'
@@ -23,6 +30,7 @@ import { FoodStore } from '../../../api/stores/food.store'
 export class AddFoodDialogComponent extends Dialog {
   data = inject(DIALOG_DATA)
   food: FormGroup
+  foodName: WritableSignal<string> = signal('')
 
   constructor(
     private formFactory: FormFactoryService,
@@ -35,9 +43,15 @@ export class AddFoodDialogComponent extends Dialog {
       .control('grams', '0', [Validators.required, Validators.minLength(1)])
       .control('calory', '0', [Validators.required, Validators.minLength(2)])
       .build()
+
+    effect(() => {})
   }
 
   onSubmit() {
     this.foodStore.save(this.food.value)
+  }
+
+  onChange(event: Event) {
+    this.foodName.set((event?.target as HTMLInputElement).value)
   }
 }
