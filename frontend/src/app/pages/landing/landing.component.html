@@ -1,0 +1,43 @@
+<div class="flex flex-col items-center px-4 py-16 text-center gap-6">
+  <app-logo [size]="80" />
+  <h1 class="text-3xl sm:text-4xl font-bold text-primary max-w-2xl">
+    Behalte deine Ernährung im Griff
+  </h1>
+  <p class="text-neutral-darkGray max-w-xl">
+    Dein Begleiter für eine gesündere Lebensweise. Tracke Lebensmittel, erstelle
+    Rezepte und behalte dein Aktivitätslevel und deinen Kalorienbedarf im Blick.
+  </p>
+  <div class="flex flex-col sm:flex-row gap-4 mt-2">
+    <a
+      routerLink="/register"
+      class="px-6 py-3 rounded-lg font-semibold text-white bg-button-primary hover:bg-button-primary-hover"
+    >
+      Registrieren
+    </a>
+    <a
+      routerLink="/login"
+      class="px-6 py-3 rounded-lg font-semibold text-primary border border-primary hover:bg-primary-light"
+    >
+      Login
+    </a>
+  </div>
+</div>
+
+<div class="px-4 pb-16">
+  <h2 class="text-center text-2xl font-bold text-neutral-darkGray mb-8">
+    Warum CaloryCounter?
+  </h2>
+  <div class="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6">
+    @for (feature of features; track feature.title) {
+      <app-card>
+        <span class="material-symbols-rounded text-3xl text-primary">{{
+          feature.icon
+        }}</span>
+        <span class="font-bold text-neutral-darkGray">{{ feature.title }}</span>
+        <span class="text-sm text-neutral-darkGray">{{
+          feature.description
+        }}</span>
+      </app-card>
+    }
+  </div>
+</div>

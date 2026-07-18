@@ -14,11 +14,11 @@ import { API_ENDPOINTS } from '../../../environment/endpoints'
   providedIn: 'root',
 })
 export class FoodStore {
-  constructor(private foodGateway: Gateway<FoodModel>) {}
+  constructor(private foodGateway: Gateway) {}
 
   foodResource: ResourceRef<FoodModel[] | undefined> = resource({
     loader: async (): Promise<FoodModel[]> =>
-      firstValueFrom(this.foodGateway.get(API_ENDPOINTS.food)),
+      firstValueFrom(this.foodGateway.get<FoodModel[]>(API_ENDPOINTS.food)),
   })
 
   readonly foods: Signal<FoodModel[]> = computed((): FoodModel[] => {
@@ -30,17 +30,17 @@ export class FoodStore {
   }
 
   public delete(id: string): void {
-    firstValueFrom(this.foodGateway.delete(API_ENDPOINTS.food, id)).then(() =>
-      this.foodResource.reload(),
-    )
+    firstValueFrom(
+      this.foodGateway.delete<FoodModel>(API_ENDPOINTS.food, id),
+    ).then(() => this.foodResource.reload())
   }
 
   async save(food: FoodModel) {
-    firstValueFrom(this.foodGateway.post(API_ENDPOINTS.food, food)).then(
-      (result: FoodModel): void => {
-        this.updateFoods(result)
-      },
-    )
+    firstValueFrom(
+      this.foodGateway.post<FoodModel>(API_ENDPOINTS.food, food),
+    ).then((result: FoodModel): void => {
+      this.updateFoods(result)
+    })
   }
 
   load(): boolean {

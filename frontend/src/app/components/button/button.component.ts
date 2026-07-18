@@ -11,4 +11,6 @@ export class ButtonComponent {
     'bg-button-primary hover:bg-button-primary-hover text-white rounded-lg p-2',
   )
   type: InputSignal<string> = input.required<string>()
+  disabled: InputSignal<boolean> = input<boolean>(false)
+  loading: InputSignal<boolean> = input<boolean>(false)
 }

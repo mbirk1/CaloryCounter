@@ -1,0 +1,36 @@
+<div class="min-h-screen flex flex-col">
+  <div
+    class="h-16 flex items-center justify-between bg-white border-b border-neutral-lightGray px-4"
+  >
+    <a
+      routerLink="/"
+      class="flex items-center gap-2"
+      aria-label="Zur Startseite"
+    >
+      <app-logo [size]="36" />
+      <span class="font-bold text-primary text-lg hidden sm:inline"
+        >CaloryCounter</span
+      >
+    </a>
+    <div class="flex items-center gap-3">
+      <a
+        routerLink="/login"
+        class="px-4 py-2 rounded-lg font-semibold text-primary border border-primary hover:bg-primary-light"
+      >
+        Login
+      </a>
+      <a
+        routerLink="/register"
+        class="px-4 py-2 rounded-lg font-semibold text-white bg-button-secondary hover:bg-button-secondary-hover"
+      >
+        Registrieren
+      </a>
+    </div>
+  </div>
+
+  <main class="flex-1">
+    <router-outlet />
+  </main>
+
+  <app-footer />
+</div>

@@ -1,8 +1,14 @@
-<form class="flex flex-col bg-white rounded-xl p-5 gap-5" [formGroup]="food" (submit)="onSubmit()">
+<form
+  class="flex flex-col bg-white rounded-xl p-5 gap-5"
+  [formGroup]="food"
+  (submit)="onSubmit()"
+>
   <div class="mb-8">
-    <label class="text-[#444444] font-bold text-xl">Lebensmittel hinzufügen</label>
+    <label class="text-[#444444] font-bold text-xl"
+      >Lebensmittel hinzufügen</label
+    >
   </div>
-  <div class="grid grid-cols-2 gap-8" >
+  <div class="grid grid-cols-2 gap-8">
     <div class="text-[#444444] font-bold">
       <app-label [text]="'Name: '" />
     </div>
@@ -13,13 +19,13 @@
       <app-label [text]="'Anzahl in Gramm: '" />
     </div>
     <div class="">
-      <app-number-input [placeholder]="'0'" [formControlName]="'grams'"/>
+      <app-number-input [placeholder]="'0'" [formControlName]="'grams'" />
     </div>
     <div class="text-[#444444] font-bold">
       <app-label [text]="'Anzahl in Kalorien: '" />
     </div>
     <div class="">
-      <app-number-input [placeholder]="'0'" [formControlName]="'calory'"/>
+      <app-number-input [placeholder]="'0'" [formControlName]="'calory'" />
     </div>
   </div>
   <div class="mt-8">

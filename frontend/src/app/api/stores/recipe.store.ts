@@ -15,11 +15,13 @@ import { RecipeModel } from '../../models/RecipeModel'
   providedIn: 'root',
 })
 export class RecipeStore {
-  constructor(private recipeGateway: Gateway<RecipeModel>) {}
+  constructor(private recipeGateway: Gateway) {}
 
   recipeResource: ResourceRef<RecipeModel[] | undefined> = resource({
     loader: async (): Promise<RecipeModel[]> =>
-      firstValueFrom(this.recipeGateway.get(API_ENDPOINTS.recipe)),
+      firstValueFrom(
+        this.recipeGateway.get<RecipeModel[]>(API_ENDPOINTS.recipe),
+      ),
   })
 
   readonly recipes: Signal<RecipeModel[]> = computed((): RecipeModel[] => {
@@ -31,16 +33,16 @@ export class RecipeStore {
   }
 
   public delete(id: string): void {
-    firstValueFrom(this.recipeGateway.delete(API_ENDPOINTS.recipe, id)).then(
-      () => this.recipeResource.reload(),
-    )
+    firstValueFrom(
+      this.recipeGateway.delete<RecipeModel>(API_ENDPOINTS.recipe, id),
+    ).then(() => this.recipeResource.reload())
   }
 
   async save(recipe: RecipeModel) {
-    firstValueFrom(this.recipeGateway.post(API_ENDPOINTS.recipe, recipe)).then(
-      (result: RecipeModel): void => {
-        this.updateRecipes(result)
-      },
-    )
+    firstValueFrom(
+      this.recipeGateway.post<RecipeModel>(API_ENDPOINTS.recipe, recipe),
+    ).then((result: RecipeModel): void => {
+      this.updateRecipes(result)
+    })
   }
 }

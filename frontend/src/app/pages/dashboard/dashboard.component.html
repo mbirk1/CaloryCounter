@@ -1,1 +1,60 @@
-<p>dashboard works!</p>
+<div class="max-w-5xl mx-auto px-4 py-8 flex flex-col gap-6">
+  <div>
+    <h1 class="text-2xl font-bold text-neutral-darkGray">
+      Hallo {{ user()?.email }}
+    </h1>
+    <p class="text-neutral-darkGray">
+      Willkommen zurück in deinem Gesundheits-Dashboard. Lass uns heute deine
+      Ziele erreichen.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <app-card [title]="'Aktueller BMI'">
+      @if (bmi(); as value) {
+        <span class="text-2xl font-bold text-primary">{{
+          value | number: '1.1-1'
+        }}</span>
+      } @else {
+        <span class="text-sm text-neutral-darkGray">Noch keine Angaben</span>
+      }
+    </app-card>
+
+    <app-card [title]="'Aktivitätslevel'">
+      <span
+        class="inline-block w-fit px-3 py-1 rounded-full text-sm font-semibold bg-secondary text-white"
+      >
+        {{ activityLabel() }}
+      </span>
+    </app-card>
+
+    <app-card [title]="'Lebensmittel erfasst'">
+      <span class="text-2xl font-bold text-primary">{{ foodCount() }}</span>
+    </app-card>
+
+    <app-card [title]="'Rezepte erfasst'">
+      <span class="text-2xl font-bold text-primary">{{ recipeCount() }}</span>
+    </app-card>
+  </div>
+
+  @if (!hasData()) {
+    <app-card [panelClass]="'bg-white rounded-xl p-8 items-center text-center'">
+      <span class="material-symbols-rounded text-4xl text-primary"
+        >restaurant</span
+      >
+      <span class="font-bold text-neutral-darkGray"
+        >Noch nichts getrackt heute?</span
+      >
+      <span class="text-sm text-neutral-darkGray max-w-md">
+        Fang jetzt an, deine Mahlzeiten zu protokollieren, um deine Ziele im
+        Auge zu behalten.
+      </span>
+      <a
+        routerLink="/food"
+        class="mt-2 px-4 py-2 rounded-lg font-semibold text-white bg-button-primary hover:bg-button-primary-hover w-fit"
+      >
+        Lebensmittel hinzufügen
+      </a>
+    </app-card>
+  }
+</div>
