@@ -2,6 +2,7 @@ import { environment } from './environment'
 
 export const API_ENDPOINTS = {
   food: `${environment.apiBaseUrl}/food`,
+  foodImport: `${environment.apiBaseUrl}/food/import`,
   recipe: `${environment.apiBaseUrl}/recipe`,
   auth: {
     register: `${environment.apiBaseUrl}/auth/register`,

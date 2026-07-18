@@ -49,17 +49,37 @@
               </span>
             </td>
             <td class="px-6 py-4">
-              <div class="flex gap-4 flex justify-center">
-                <span class="material-symbols-rounded"> edit </span>
-                <span
-                  [ngClass]="{
-                    'text-gray-600 cursor-not-allowed': isInARecipe(item.uuid!),
-                  }"
-                  class="material-symbols-rounded cursor-pointer"
-                  (click)="delete(item.uuid!)"
+              <div class="flex gap-4 justify-center items-center">
+                <button
+                  type="button"
+                  (click)="openDetails(item)"
+                  aria-label="Details anzeigen"
+                  class="text-gray-400 hover:text-white"
                 >
-                  delete
-                </span>
+                  <fa-icon [icon]="faEye" />
+                </button>
+                <button
+                  type="button"
+                  (click)="delete(item.uuid!)"
+                  [disabled]="isInARecipe(item.uuid!)"
+                  [attr.aria-label]="
+                    isInARecipe(item.uuid!)
+                      ? 'Löschen nicht möglich (Teil eines Rezepts)'
+                      : 'Löschen'
+                  "
+                  class="text-gray-400 hover:text-white disabled:text-gray-600 disabled:cursor-not-allowed disabled:hover:text-gray-600"
+                >
+                  <fa-icon [icon]="faTrash" />
+                </button>
+                <button
+                  type="button"
+                  disabled
+                  aria-label="Bald verfügbar"
+                  title="Bald verfügbar"
+                  class="text-gray-600 cursor-not-allowed"
+                >
+                  <fa-icon [icon]="faPen" />
+                </button>
               </div>
             </td>
           </tr>
@@ -67,4 +87,10 @@
       </tbody>
     </table>
   </div>
+  <app-pagination
+    [page]="currentPage()"
+    [totalPages]="totalPages()"
+    (previous)="previousPage()"
+    (next)="nextPage()"
+  />
 }

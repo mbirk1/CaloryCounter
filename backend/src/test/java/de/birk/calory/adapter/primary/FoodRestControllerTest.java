@@ -26,7 +26,7 @@ import de.birk.calory.IntegrationTest;
 public class FoodRestControllerTest extends AbstractTestBase {
 
   @Test
-  @DisplayName("creates and gets a Food Item")
+  @DisplayName("creates and gets a page of Food Items")
   public void createAndGetAllFoodTest() throws Exception {
     String accessToken = registerAndGetAccessToken();
     String content = readResourceAsString("/http-bodies/createFood.json");
@@ -42,14 +42,13 @@ public class FoodRestControllerTest extends AbstractTestBase {
     String id = context.read("$.uuid");
 
     this.mockMvc.perform(
-            get("/api/food", UUID.fromString(id))
+            get("/api/food")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
         )
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.[0].uuid").value(id))
-        .andExpect(jsonPath("$.[0].name").value("food"))
-        .andExpect(jsonPath("$.[0].calory").value(1312))
-        .andExpect(jsonPath("$.[0].grams").value(100));
+        .andExpect(jsonPath("$.content[?(@.uuid=='" + id + "')].name").value("food"))
+        .andExpect(jsonPath("$.content[?(@.uuid=='" + id + "')].calory").value(1312))
+        .andExpect(jsonPath("$.content[?(@.uuid=='" + id + "')].grams").value(100));
   }
 
   @Test
@@ -149,6 +148,77 @@ public class FoodRestControllerTest extends AbstractTestBase {
   public void getAllFoodsWithoutTokenTest() throws Exception {
     this.mockMvc.perform(get("/api/food"))
         .andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  @DisplayName("returns a page with the requested size and correct total counts")
+  public void getAllFoodsWithCustomPageSizeTest() throws Exception {
+    String accessToken = registerAndGetAccessToken();
+    String content = readResourceAsString("/http-bodies/createFood.json");
+
+    for (int i = 0; i < 3; i++) {
+      mockMvc.perform(
+          post("/api/food")
+              .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(content)
+      ).andReturn();
+    }
+
+    this.mockMvc.perform(
+            get("/api/food")
+                .param("page", "0")
+                .param("size", "2")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.content.length()").value(2))
+        .andExpect(jsonPath("$.page").value(0))
+        .andExpect(jsonPath("$.size").value(2))
+        .andExpect(jsonPath("$.totalElements").value(3))
+        .andExpect(jsonPath("$.totalPages").value(2))
+        .andExpect(jsonPath("$.last").value(false));
+  }
+
+  @Test
+  @DisplayName("returns the last page correctly")
+  public void getAllFoodsReturnsLastPageTest() throws Exception {
+    String accessToken = registerAndGetAccessToken();
+    String content = readResourceAsString("/http-bodies/createFood.json");
+
+    for (int i = 0; i < 3; i++) {
+      mockMvc.perform(
+          post("/api/food")
+              .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(content)
+      ).andReturn();
+    }
+
+    this.mockMvc.perform(
+            get("/api/food")
+                .param("page", "1")
+                .param("size", "2")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.content.length()").value(1))
+        .andExpect(jsonPath("$.page").value(1))
+        .andExpect(jsonPath("$.last").value(true));
+  }
+
+  @Test
+  @DisplayName("defaults to page 0 with size 20 when no parameters are given")
+  public void getAllFoodsUsesDefaultPageParametersTest() throws Exception {
+    String accessToken = registerAndGetAccessToken();
+
+    this.mockMvc.perform(
+            get("/api/food")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.page").value(0))
+        .andExpect(jsonPath("$.size").value(20));
   }
 
   private String registerAndGetAccessToken() throws Exception {

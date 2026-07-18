@@ -1,5 +1,20 @@
 <div class="p-4">
-  <div class="flex justify-end">
+  <div class="flex justify-end gap-4">
+    <input
+      #csvFileInput
+      type="file"
+      accept=".csv"
+      class="hidden"
+      (change)="onCsvFileSelected($event)"
+    />
+    <app-button
+      [type]="'button'"
+      [text]="'CSV importieren'"
+      [loading]="importing()"
+      [disabled]="importing()"
+      (click)="csvFileInput.click()"
+      class="right-0"
+    />
     <app-button
       [type]="'button'"
       [text]="'Lebensmittel hinzufügen'"
@@ -7,5 +22,27 @@
       class="right-0"
     />
   </div>
+  @if (importJob(); as job) {
+    <div class="flex justify-end mt-2">
+      <span class="text-sm text-gray-400">
+        @switch (job.state) {
+          @case ('RUNNING') {
+            Import läuft… {{ job.processedRows }} Zeilen verarbeitet ({{
+              job.importedCount
+            }}
+            importiert, {{ job.skippedCount }} übersprungen,
+            {{ job.errorCount }} Fehler)
+          }
+          @case ('COMPLETED') {
+            Import abgeschlossen: {{ job.importedCount }} importiert,
+            {{ job.skippedCount }} übersprungen, {{ job.errorCount }} Fehler
+          }
+          @case ('FAILED') {
+            Import fehlgeschlagen
+          }
+        }
+      </span>
+    </div>
+  }
   <app-food-table [columnHeaders]="['Name', 'Calory', 'Grams', 'Actions']" />
 </div>
