@@ -1,11 +1,7 @@
-<button
-  class="{{ style() }}"
-  type="{{ type() }}"
->
-  @if (this.text() !== ''){
+<button class="{{ style() }}" type="{{ type() }}">
+  @if (this.text() !== '') {
     {{ text() }}
   } @else {
     <ng-content></ng-content>
   }
-
 </button>
