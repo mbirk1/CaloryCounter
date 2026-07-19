@@ -1,4 +1,4 @@
-import { Component, computed, inject, Signal } from '@angular/core'
+import { Component, ChangeDetectionStrategy, computed, inject, Signal } from '@angular/core'
 import { DecimalPipe } from '@angular/common'
 import { RouterLink } from '@angular/router'
 import { AuthStore } from '../../api/stores/auth.store'
@@ -18,8 +18,8 @@ const ACTIVITY_LABELS: Record<string, string> = {
 @Component({
   selector: 'app-dashboard',
   imports: [RouterLink, DecimalPipe, CardComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent {
   authStore = inject(AuthStore)

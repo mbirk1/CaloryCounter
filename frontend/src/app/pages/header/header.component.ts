@@ -7,6 +7,7 @@ import { LogoComponent } from '../../components/logo/logo.component'
   selector: 'app-header',
   imports: [RouterLink, RouterLinkActive, LogoComponent],
   templateUrl: './header.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: '',
 })
 export class HeaderComponent {

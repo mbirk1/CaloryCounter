@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import {
   AbstractControlOptions,
   FormBuilder,
@@ -10,7 +10,7 @@ import {
   providedIn: 'root',
 })
 export class FormFactoryService {
-  constructor(private fb: FormBuilder) {}
+  private readonly fb = inject(FormBuilder)
 
   create(): DynamicFormBuilder {
     return new DynamicFormBuilder(this.fb)

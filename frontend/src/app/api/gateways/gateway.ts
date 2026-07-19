@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Observable } from 'rxjs'
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 
 // Not generic at the class level - a single request can return a different shape than the
 // resource type it's "about" (e.g. POST /auth/login sends a LoginRequest and returns an
@@ -9,8 +9,8 @@ import { Injectable } from '@angular/core'
 @Injectable({
   providedIn: 'root',
 })
-export class Gateway {
-  constructor(private http: HttpClient) {}
+export class Gateway<T> {
+  private readonly http = inject(HttpClient)
 
   get<T>(url: string): Observable<T> {
     return this.http.get<T>(url, { withCredentials: true })

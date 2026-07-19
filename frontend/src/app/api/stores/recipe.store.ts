@@ -1,5 +1,6 @@
 import {
   computed,
+  inject,
   Injectable,
   resource,
   ResourceRef,
@@ -15,7 +16,7 @@ import { RecipeModel } from '../../models/RecipeModel'
   providedIn: 'root',
 })
 export class RecipeStore {
-  constructor(private recipeGateway: Gateway) {}
+  private readonly recipeGateway = inject<Gateway<RecipeModel>>(Gateway)
 
   recipeResource: ResourceRef<RecipeModel[] | undefined> = resource({
     loader: async (): Promise<RecipeModel[]> =>

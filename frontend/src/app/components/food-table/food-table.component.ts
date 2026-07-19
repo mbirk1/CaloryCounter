@@ -1,4 +1,12 @@
-import { Component, computed, input, InputSignal, Signal } from '@angular/core'
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  InputSignal,
+  Signal,
+  ChangeDetectionStrategy,
+} from '@angular/core'
 import { FoodModel } from '../../models/FoodModel'
 import { FoodStore } from '../../api/stores/food.store'
 import { RecipeModel } from '../../models/RecipeModel'
@@ -14,9 +22,12 @@ import { PaginationComponent } from '../pagination/pagination.component'
   standalone: true,
   imports: [FontAwesomeModule, PaginationComponent],
   templateUrl: './food-table.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: '',
 })
 export class FoodTableComponent {
+  private readonly foodStore = inject(FoodStore)
+  private readonly recipeStore = inject(RecipeStore)
   data: Signal<FoodModel[]> = computed(() => this.foodStore.foods())
   recipes: Signal<RecipeModel[]> = computed(() => this.recipeStore.recipes())
   columnHeaders: InputSignal<string[]> = input.required()

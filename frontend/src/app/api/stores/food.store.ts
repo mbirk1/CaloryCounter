@@ -1,5 +1,6 @@
 import {
   computed,
+  inject,
   Injectable,
   resource,
   ResourceRef,
@@ -19,6 +20,8 @@ const DEFAULT_PAGE_SIZE = 20
   providedIn: 'root',
 })
 export class FoodStore {
+  private readonly foodGateway = inject<Gateway<FoodModel>>(Gateway)
+
   private readonly pageSignal: WritableSignal<number> = signal(0)
 
   constructor(private foodGateway: Gateway) {}

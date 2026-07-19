@@ -1,8 +1,14 @@
-import { Component, input, InputSignal } from '@angular/core'
+import {
+  Component,
+  input,
+  InputSignal,
+  ChangeDetectionStrategy,
+} from '@angular/core'
 
 @Component({
   selector: 'app-button',
   imports: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './button.component.html',
 })
 export class ButtonComponent {

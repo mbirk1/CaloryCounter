@@ -1,4 +1,9 @@
-import { Component, effect, inject } from '@angular/core'
+import {
+  Component,
+  effect,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core'
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog'
 import { TextInputComponent } from '../../inputs/text-input/text-input.component'
 import { ButtonComponent } from '../../button/button.component'
@@ -25,6 +30,7 @@ import { RecipeModel } from '../../../models/RecipeModel'
     CheckboxComponent,
   ],
   templateUrl: './add-recipe-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: '',
 })
 export class AddRecipeDialogComponent extends Dialog {
@@ -34,8 +40,9 @@ export class AddRecipeDialogComponent extends Dialog {
   foods: FoodModel[] = this.foodStore.foods()
   recipeStore: RecipeStore = inject(RecipeStore)
   grams = 0
+  private readonly formFactory = inject(FormFactoryService)
 
-  constructor(private formFactory: FormFactoryService) {
+  constructor() {
     super()
     let dynamic: DynamicFormBuilder = this.formFactory
       .create()
