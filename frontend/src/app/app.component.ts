@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, ChangeDetectionStrategy } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
 import { HeaderComponent } from './pages/header/header.component'
 import { FooterComponent } from './pages/footer/footer.component'
@@ -7,6 +7,7 @@ import { FooterComponent } from './pages/footer/footer.component'
   selector: 'app-root',
   imports: [HeaderComponent, FooterComponent, RouterOutlet],
   templateUrl: './app.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './app.component.css',
 })
 export class AppComponent {

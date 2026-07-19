@@ -1,5 +1,6 @@
 import {
   computed,
+  inject,
   Injectable,
   resource,
   ResourceRef,
@@ -14,7 +15,7 @@ import { API_ENDPOINTS } from '../../../environment/endpoints'
   providedIn: 'root',
 })
 export class FoodStore {
-  constructor(private foodGateway: Gateway<FoodModel>) {}
+  private readonly foodGateway = inject<Gateway<FoodModel>>(Gateway)
 
   foodResource: ResourceRef<FoodModel[] | undefined> = resource({
     loader: async (): Promise<FoodModel[]> =>

@@ -1,34 +1,29 @@
-// eslint.config.mjs
-import { FlatCompat } from '@eslint/eslintrc';
+// eslint.config.js
+import angular from 'angular-eslint';
+import prettierPlugin from 'eslint-plugin-prettier';
+import prettierConfig from 'eslint-config-prettier';
 
-const compat = new FlatCompat({
-  baseDirectory: import.meta.url,
-});
+const withFiles = (files, configs) => configs.map((c) => ({ ...c, files }));
 
 export default [
-  ...compat.config({
-    overrides: [
-      {
-        files: ['*.ts'],
-        extends: [
-          'plugin:@angular-eslint/recommended',
-          'plugin:prettier/recommended',
-        ],
-        parserOptions: {
-          project: ['tsconfig.json'],
-          createDefaultProgram: true,
-        },
-        rules: {
-          'prettier/prettier': 'error',
-        },
+  ...withFiles(['**/*.ts'], angular.configs.tsRecommended),
+  {
+    files: ['**/*.ts'],
+    languageOptions: {
+      parserOptions: {
+        project: ['tsconfig.json'],
+        createDefaultProgram: true,
       },
-      {
-        files: ['*.html'],
-        extends: ['plugin:@angular-eslint/template/recommended'],
-        rules: {},
-      },
-    ],
-  }),
+    },
+    plugins: {
+      prettier: prettierPlugin,
+    },
+    rules: {
+      ...prettierConfig.rules,
+      'prettier/prettier': 'error',
+    },
+  },
+  ...withFiles(['**/*.html'], angular.configs.templateRecommended),
   {
     ignores: ['node_modules', 'dist', 'build'],
   },

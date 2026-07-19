@@ -1,12 +1,11 @@
 <div class="p-4">
-<div class="flex justify-end">
-  <app-button
-    [type]="'button'"
-    [text]="'Lebensmittel hinzufügen'"
-    (click)="handleFoodDialog()"
-    class="right-0"/>
-</div>
-    <app-food-table
-      [columnHeaders]="['Name', 'Calory', 'Grams', 'Actions']"
+  <div class="flex justify-end">
+    <app-button
+      [type]="'button'"
+      [text]="'Lebensmittel hinzufügen'"
+      (click)="handleFoodDialog()"
+      class="right-0"
     />
+  </div>
+  <app-food-table [columnHeaders]="['Name', 'Calory', 'Grams', 'Actions']" />
 </div>

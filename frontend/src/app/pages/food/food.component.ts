@@ -1,4 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core'
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core'
 import { ButtonComponent } from '../../components/button/button.component'
 import { FoodService } from '../../services/food.service'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
@@ -10,13 +15,12 @@ import { AddFoodDialogComponent } from '../../components/dialogs/add-food-dialog
 @Component({
   selector: 'app-food',
   imports: [ButtonComponent, FontAwesomeModule, FoodTableComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './food.component.html',
-  styleUrl: './food.component.css',
 })
 export class FoodComponent implements OnInit {
+  private readonly dialog = inject(Dialog)
   foodService: FoodService = inject(FoodService)
-
-  constructor(private dialog: Dialog) {}
 
   ngOnInit(): void {
     this.foodService.reload()
