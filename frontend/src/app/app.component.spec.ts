@@ -22,11 +22,10 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('CaloryCounter')
   })
 
-  it('should render the header and footer', () => {
+  it('should render the router outlet', () => {
     const fixture = TestBed.createComponent(AppComponent)
     fixture.detectChanges()
     const compiled = fixture.nativeElement as HTMLElement
-    expect(compiled.querySelector('app-header')).toBeTruthy()
-    expect(compiled.querySelector('app-footer')).toBeTruthy()
+    expect(compiled.querySelector('router-outlet')).toBeTruthy()
   })
 })

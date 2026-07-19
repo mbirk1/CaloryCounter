@@ -1,9 +1,9 @@
 import {
   Component,
   inject,
-  OnInit,
+  signal,
+  WritableSignal,
   ChangeDetectionStrategy,
-  signal, WritableSignal
 } from '@angular/core'
 import { ButtonComponent } from '../../components/button/button.component'
 import { FoodTableComponent } from '../../components/food-table/food-table.component'
@@ -19,30 +19,17 @@ const POLL_INTERVAL_MS = 1000
 
 @Component({
   selector: 'app-food',
-  imports: [ButtonComponent, FontAwesomeModule, FoodTableComponent],
+  imports: [ButtonComponent, FoodTableComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './food.component.html',
 })
-export class FoodComponent  implements OnInit {
+export class FoodComponent {
   private readonly dialog = inject(Dialog)
-  foodService: FoodService = inject(FoodService)
+  private readonly foodGateway = inject<Gateway<unknown>>(Gateway)
+  private readonly foodStore = inject(FoodStore)
 
   importJob: WritableSignal<ImportJobStatus | null> = signal(null)
   importing: WritableSignal<boolean> = signal(false)
-
-  constructor(
-    private dialog: Dialog,
-    private foodGateway: Gateway,
-    private foodStore: FoodStore,
-  ) {}
-  ngOnInit(): void {
-    this.foodService.reload()
-  }
-
-  editFood(uuid: string) {}
-
-  deleteFood(foodId: string) {}
-
 
   handleFoodDialog() {
     this.dialog.open(AddFoodDialogComponent, {})

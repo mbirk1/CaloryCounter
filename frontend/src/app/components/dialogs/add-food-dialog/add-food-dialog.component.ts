@@ -1,12 +1,11 @@
 import {
+  ChangeDetectionStrategy,
   Component,
-  computed,
   effect,
   inject,
   signal,
   WritableSignal,
 } from '@angular/core'
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core'
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog'
 import { TextInputComponent } from '../../inputs/text-input/text-input.component'
 import { ButtonComponent } from '../../button/button.component'

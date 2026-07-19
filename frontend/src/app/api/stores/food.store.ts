@@ -24,11 +24,9 @@ export class FoodStore {
 
   private readonly pageSignal: WritableSignal<number> = signal(0)
 
-  constructor(private foodGateway: Gateway) {}
-
   foodResource: ResourceRef<PageResponse<FoodModel> | undefined> = resource({
-    request: () => this.pageSignal(),
-    loader: async ({ request: page }): Promise<PageResponse<FoodModel>> =>
+    params: () => this.pageSignal(),
+    loader: async ({ params: page }): Promise<PageResponse<FoodModel>> =>
       firstValueFrom(
         this.foodGateway.get<PageResponse<FoodModel>>(
           `${API_ENDPOINTS.food}?page=${page}&size=${DEFAULT_PAGE_SIZE}`,

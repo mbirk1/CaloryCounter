@@ -28,6 +28,7 @@ import { PaginationComponent } from '../pagination/pagination.component'
 export class FoodTableComponent {
   private readonly foodStore = inject(FoodStore)
   private readonly recipeStore = inject(RecipeStore)
+  private readonly dialog = inject(Dialog)
   data: Signal<FoodModel[]> = computed(() => this.foodStore.foods())
   recipes: Signal<RecipeModel[]> = computed(() => this.recipeStore.recipes())
   columnHeaders: InputSignal<string[]> = input.required()
@@ -38,12 +39,6 @@ export class FoodTableComponent {
   protected readonly faEye = faEye
   protected readonly faTrash = faTrash
   protected readonly faPen = faPen
-
-  constructor(
-    private foodStore: FoodStore,
-    private recipeStore: RecipeStore,
-    private dialog: Dialog,
-  ) {}
 
   delete(id: string) {
     this.foodStore.delete(id)

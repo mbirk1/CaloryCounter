@@ -1,5 +1,6 @@
 import {
   computed,
+  inject,
   Injectable,
   Signal,
   signal,
@@ -40,10 +41,8 @@ export class AuthStore {
     () => this.userSignal()?.profileCompleted ?? false,
   )
 
-  constructor(
-    private http: HttpClient,
-    private gateway: Gateway,
-  ) {}
+  private readonly http = inject(HttpClient)
+  private readonly gateway = inject<Gateway<unknown>>(Gateway)
 
   async register(request: RegisterRequest): Promise<void> {
     const response = await firstValueFrom(

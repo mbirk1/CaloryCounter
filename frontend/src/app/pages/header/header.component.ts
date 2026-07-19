@@ -1,4 +1,10 @@
-import { Component, inject, signal, WritableSignal } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+  WritableSignal,
+} from '@angular/core'
 import { Router, RouterLink, RouterLinkActive } from '@angular/router'
 import { AuthStore } from '../../api/stores/auth.store'
 import { LogoComponent } from '../../components/logo/logo.component'
