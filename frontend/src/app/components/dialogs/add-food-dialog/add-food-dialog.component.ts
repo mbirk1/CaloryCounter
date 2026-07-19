@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core'
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog'
 import { TextInputComponent } from '../../inputs/text-input/text-input.component'
 import { ButtonComponent } from '../../button/button.component'
@@ -18,16 +18,16 @@ import { FoodStore } from '../../../api/stores/food.store'
     NumberInputComponent,
   ],
   templateUrl: './add-food-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: '',
 })
 export class AddFoodDialogComponent extends Dialog {
   data = inject(DIALOG_DATA)
   food: FormGroup
+  private readonly formFactory = inject(FormFactoryService)
+  private readonly foodStore = inject(FoodStore)
 
-  constructor(
-    private formFactory: FormFactoryService,
-    private foodStore: FoodStore,
-  ) {
+  constructor() {
     super()
     this.food = this.formFactory
       .create()

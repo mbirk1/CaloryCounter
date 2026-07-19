@@ -1,4 +1,11 @@
-import { Component, forwardRef, Input } from '@angular/core'
+import {
+  ChangeDetectorRef,
+  Component,
+  forwardRef,
+  inject,
+  Input,
+  ChangeDetectionStrategy,
+} from '@angular/core'
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms'
 
 @Component({
@@ -6,6 +13,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms'
   imports: [],
   templateUrl: './number-input.component.html',
   styles: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -15,6 +23,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms'
   ],
 })
 export class NumberInputComponent implements ControlValueAccessor {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef)
+
   @Input() placeholder: string = ''
   @Input() type: string = 'text'
 
@@ -33,6 +43,7 @@ export class NumberInputComponent implements ControlValueAccessor {
 
   writeValue(value: string): void {
     this.value = value
+    this.changeDetectorRef.markForCheck()
   }
 
   registerOnChange(fn: (value: string) => void): void {
