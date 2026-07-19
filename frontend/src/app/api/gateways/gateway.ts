@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http'
 import { Observable } from 'rxjs'
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 
 @Injectable({
   providedIn: 'root',
 })
 export class Gateway<T> {
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient)
 
   get<T>(url: string): Observable<T> {
     return this.http.get<T>(url)

@@ -1,10 +1,19 @@
-import { Component, forwardRef, input, InputSignal } from '@angular/core'
+import {
+  ChangeDetectorRef,
+  Component,
+  forwardRef,
+  inject,
+  input,
+  InputSignal,
+  ChangeDetectionStrategy,
+} from '@angular/core'
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms'
 
 @Component({
   selector: 'app-checkbox',
   imports: [],
   templateUrl: './checkbox.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -14,6 +23,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms'
   ],
 })
 export class CheckboxComponent implements ControlValueAccessor {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef)
   text: InputSignal<string> = input.required<string>()
   value = false
   private onTouched = () => {}
@@ -21,6 +31,7 @@ export class CheckboxComponent implements ControlValueAccessor {
 
   writeValue(value: boolean): void {
     this.value = value
+    this.changeDetectorRef.markForCheck()
   }
 
   registerOnChange(fn: any): void {

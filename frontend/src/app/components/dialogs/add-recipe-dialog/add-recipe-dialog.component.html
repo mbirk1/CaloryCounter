@@ -1,8 +1,12 @@
-<form class="flex flex-col bg-white rounded-xl p-5 gap-5" [formGroup]="recipe" (submit)="onSubmit()">
+<form
+  class="flex flex-col bg-white rounded-xl p-5 gap-5"
+  [formGroup]="recipe"
+  (submit)="onSubmit()"
+>
   <div class="mb-8">
     <label class="text-[#444444] font-bold text-xl">Rezept hinzufügen</label>
   </div>
-  <div class="grid grid-cols-2 gap-8" >
+  <div class="grid grid-cols-2 gap-8">
     <div class="text-[#444444] font-bold">
       <app-label [text]="'Name: '" />
     </div>
@@ -11,14 +15,15 @@
     </div>
     <div>
       <span>Lebensmittel: </span>
-      @for (food of this.foods; track $index){
+      @for (food of this.foods; track $index) {
         <div>
-          <app-checkbox [formControlName]="food.name" [text]="food.name+ ', ' + food.calory + 'cal, ' + food.grams + 'g'"/>
+          <app-checkbox
+            [formControlName]="food.name"
+            [text]="food.name + ', ' + food.calory + 'cal, ' + food.grams + 'g'"
+          />
         </div>
       }
-    <div class="mt-8">
-      Gewicht (ca): {{ this.totalGrams() + 'g' }}
-    </div>
+      <div class="mt-8">Gewicht (ca): {{ this.totalGrams() + 'g' }}</div>
     </div>
   </div>
   <div class="mt-8">

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core'
 import { ButtonComponent } from '../../components/button/button.component'
 import { RecipeService } from '../../services/recipe.service'
 import { RecipeTableComponent } from '../../components/recipe-table/recipe-table.component'
@@ -9,14 +9,13 @@ import { FoodStore } from '../../api/stores/food.store'
 @Component({
   selector: 'app-recipe',
   imports: [ButtonComponent, RecipeTableComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './recipe.component.html',
-  styleUrl: './recipe.component.css',
 })
 export class RecipeComponent {
+  private readonly dialog = inject(Dialog)
   recipeService: RecipeService = inject(RecipeService)
   foodStore: FoodStore = inject(FoodStore)
-
-  constructor(private dialog: Dialog) {}
 
   handleRecipeDialog() {
     this.foodStore.load()

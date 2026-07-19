@@ -1,4 +1,12 @@
-import { Component, InputSignal, input, Signal, computed } from '@angular/core'
+import {
+  Component,
+  inject,
+  InputSignal,
+  input,
+  Signal,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core'
 import { NgClass } from '@angular/common'
 import { RecipeModel } from '../../models/RecipeModel'
 import { RecipeStore } from '../../api/stores/recipe.store'
@@ -9,13 +17,13 @@ import { FoodModel } from '../../models/FoodModel'
   standalone: true,
   imports: [],
   templateUrl: './recipe-table.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: '',
 })
 export class RecipeTableComponent {
+  private readonly recipeStore = inject(RecipeStore)
   data: Signal<RecipeModel[]> = computed(() => this.recipeStore.recipes())
   columnHeaders: InputSignal<string[]> = input.required()
-
-  constructor(private recipeStore: RecipeStore) {}
 
   delete(id: string) {
     this.recipeStore.delete(id)
