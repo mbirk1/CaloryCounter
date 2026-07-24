@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import de.birk.calory.exception.EmailAlreadyInUseException;
+import de.birk.calory.exception.InvalidCredentialsException;
+import de.birk.calory.exception.InvalidTokenException;
+import de.birk.calory.exception.TokenExpiredException;
 import de.birk.calory.exception.ValidationException;
 
 
@@ -45,6 +49,51 @@ public class ExceptionHandlerImpl extends ResponseEntityExceptionHandler {
         body,
         new HttpHeaders(),
         HttpStatus.NOT_ACCEPTABLE,
+        request
+    );
+  }
+
+  @ExceptionHandler(value = {EmailAlreadyInUseException.class})
+  protected ResponseEntity<Object> handleEmailAlreadyInUse(
+      RuntimeException e,
+      WebRequest request
+  ) {
+    String body = "Email is already in use.";
+    return handleExceptionInternal(
+        e,
+        body,
+        new HttpHeaders(),
+        HttpStatus.CONFLICT,
+        request
+    );
+  }
+
+  @ExceptionHandler(value = {InvalidCredentialsException.class})
+  protected ResponseEntity<Object> handleInvalidCredentials(
+      RuntimeException e,
+      WebRequest request
+  ) {
+    String body = "Invalid credentials.";
+    return handleExceptionInternal(
+        e,
+        body,
+        new HttpHeaders(),
+        HttpStatus.UNAUTHORIZED,
+        request
+    );
+  }
+
+  @ExceptionHandler(value = {InvalidTokenException.class, TokenExpiredException.class})
+  protected ResponseEntity<Object> handleInvalidToken(
+      RuntimeException e,
+      WebRequest request
+  ) {
+    String body = "Invalid or expired token.";
+    return handleExceptionInternal(
+        e,
+        body,
+        new HttpHeaders(),
+        HttpStatus.UNAUTHORIZED,
         request
     );
   }

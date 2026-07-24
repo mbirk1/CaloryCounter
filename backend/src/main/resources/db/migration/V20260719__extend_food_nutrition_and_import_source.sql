@@ -1,0 +1,14 @@
+ALTER TABLE tab_calory_food ADD COLUMN source varchar(50) NOT NULL DEFAULT 'MANUAL';
+ALTER TABLE tab_calory_food ADD COLUMN external_id varchar(64);
+ALTER TABLE tab_calory_food ADD COLUMN brand varchar(255);
+ALTER TABLE tab_calory_food ADD COLUMN category varchar(255);
+ALTER TABLE tab_calory_food ADD COLUMN fat numeric(6,2);
+ALTER TABLE tab_calory_food ADD COLUMN saturated_fat numeric(6,2);
+ALTER TABLE tab_calory_food ADD COLUMN carbohydrates numeric(6,2);
+ALTER TABLE tab_calory_food ADD COLUMN sugar numeric(6,2);
+ALTER TABLE tab_calory_food ADD COLUMN fiber numeric(6,2);
+ALTER TABLE tab_calory_food ADD COLUMN protein numeric(6,2);
+ALTER TABLE tab_calory_food ADD COLUMN salt numeric(6,2);
+ALTER TABLE tab_calory_food ADD COLUMN sodium numeric(6,2);
+ALTER TABLE tab_calory_food ADD COLUMN image_url varchar(500);
+ALTER TABLE tab_calory_food ADD CONSTRAINT ux_tab_calory_food_external_id UNIQUE (external_id);

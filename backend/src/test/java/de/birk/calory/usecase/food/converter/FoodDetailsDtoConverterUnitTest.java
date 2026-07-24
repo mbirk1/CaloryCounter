@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import de.birk.calory.adapter.primary.model.FoodDetailsDto;
 import de.birk.calory.domain.food.Food;
+import de.birk.calory.domain.food.FoodSource;
 import de.birk.calory.exception.ValidationException;
 
 public class FoodDetailsDtoConverterUnitTest {
@@ -141,5 +142,89 @@ public class FoodDetailsDtoConverterUnitTest {
     assertThat(food.getUuid()).isEqualTo(result.getFirst().getId());
     assertThat(food.getName()).isEqualTo(result.getFirst().getName());
     assertThat(food.getCalory()).isEqualTo(result.getFirst().getCalory());
+  }
+
+  @Test
+  public void convertFromEntityWithExtendedFieldsTest() {
+    // Arrange
+    Food food = new Food(
+        UUID.randomUUID(),
+        "Cola",
+        new BigDecimal("42.00"),
+        new BigDecimal("100"),
+        "Acme",
+        "Beverages",
+        new BigDecimal("0.00"),
+        new BigDecimal("0.00"),
+        new BigDecimal("10.60"),
+        new BigDecimal("10.60"),
+        new BigDecimal("0.00"),
+        new BigDecimal("0.00"),
+        new BigDecimal("0.01"),
+        new BigDecimal("0.00"),
+        "https://example.com/cola.png",
+        FoodSource.OPENFOODFACTS,
+        "1234567890123"
+    );
+    FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();
+
+    // Act
+    FoodDetailsDto result = foodDetailsDtoConverter.convertFromEntity(food);
+
+    // Assert
+    assertThat(result.getBrand()).isEqualTo("Acme");
+    assertThat(result.getCategory()).isEqualTo("Beverages");
+    assertThat(result.getImageUrl()).isEqualTo("https://example.com/cola.png");
+    assertThat(result.getSource()).isEqualTo("OPENFOODFACTS");
+    assertThat(result.getExternalId()).isEqualTo("1234567890123");
+  }
+
+  @Test
+  public void convertFromEntityWithNullSourceLeavesSourceNullTest() {
+    // Arrange
+    Food food = new Food(
+        UUID.randomUUID(), "Apple", new BigDecimal("52"), new BigDecimal("100"),
+        null, null, null, null, null, null, null, null, null, null, null, null, null
+    );
+    FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();
+
+    // Act
+    FoodDetailsDto result = foodDetailsDtoConverter.convertFromEntity(food);
+
+    // Assert
+    assertThat(result.getSource()).isNull();
+  }
+
+  @Test
+  public void convertFromDtoWithExtendedFieldsTest() {
+    // Arrange
+    FoodDetailsDto dto = new FoodDetailsDto(
+        UUID.randomUUID(),
+        "Cola",
+        new BigDecimal("42.00"),
+        new BigDecimal("100"),
+        "Acme",
+        "Beverages",
+        new BigDecimal("0.00"),
+        new BigDecimal("0.00"),
+        new BigDecimal("10.60"),
+        new BigDecimal("10.60"),
+        new BigDecimal("0.00"),
+        new BigDecimal("0.00"),
+        new BigDecimal("0.01"),
+        new BigDecimal("0.00"),
+        "https://example.com/cola.png",
+        "OPENFOODFACTS",
+        "1234567890123"
+    );
+    FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();
+
+    // Act
+    Food result = foodDetailsDtoConverter.convertFromDto(dto);
+
+    // Assert
+    assertThat(result.getBrand()).isEqualTo("Acme");
+    assertThat(result.getSource()).isEqualTo(FoodSource.OPENFOODFACTS);
+    assertThat(result.getExternalId()).isEqualTo("1234567890123");
   }
 }

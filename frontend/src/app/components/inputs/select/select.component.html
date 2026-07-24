@@ -1,0 +1,12 @@
+<select
+  [value]="value"
+  [disabled]="disabled"
+  (change)="onSelect($event)"
+  id="select-input"
+  class="w-full px-1 py-2 text-lg font-bold rounded-lg border focus:outline focus:outline-hidden focus:outline-offset-2 bg-[#ffffff] text-[#444444] focus:outline-[#aaaaaa] border-[#cccccc]"
+>
+  <option value="" disabled selected>{{ placeholder() }}</option>
+  @for (option of options(); track option.value) {
+    <option [value]="option.value">{{ option.label }}</option>
+  }
+</select>

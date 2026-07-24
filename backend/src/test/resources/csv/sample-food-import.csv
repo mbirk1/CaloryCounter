@@ -1,0 +1,11 @@
+code	product_name	brands	categories_en	energy-kcal_100g	energy_100g	fat_100g	saturated-fat_100g	carbohydrates_100g	sugars_100g	fiber_100g	proteins_100g	salt_100g	sodium_100g	image_url
+0001	Cola	Acme Beverages	Beverages, Soft Drinks	42		0	0	10.6	10.6	0	0	0.01	0	https://example.com/cola.png
+0002	Orange Juice	Fruit Co	Beverages, Juices		188.3	0.2	0	9	8.5	0.3	0.5	0	0	
+0003		Some Brand	Snacks	100										
+0004	Mystery Snack		Snacks	100										
+0005	Empty Calories	Acme	Snacks											
+0006	Plain Water	AquaCorp	Beverages	0										
+0007	Chips	Snacky, BrandX, BrandY	Snacks	536		32	4	50	2	4	7	1.2	0.48	https://example.com/chips.png
+0008	Broken Numbers	Acme	Snacks	abc										
+0009	Yogurt	DairyCo	Dairy	59		0.4	0.2	7.7	7	0	10	0.1	0.04	
+0010	Bread	BakeryX	Bakery	265		3.2	0.7	49	5	3	9	1.2	0.48	

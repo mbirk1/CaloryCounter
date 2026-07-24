@@ -3,9 +3,13 @@ package de.birk.calory.usecase.food;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import de.birk.calory.adapter.primary.model.FoodDetailsDto;
+import de.birk.calory.adapter.primary.model.PageResponseDto;
 import de.birk.calory.adapter.secondary.FoodRepository;
 import de.birk.calory.adapter.secondary.model.FoodPersistence;
 import de.birk.calory.domain.food.Food;
@@ -36,15 +40,23 @@ public class FindFoodUsecase {
   }
 
   /**
-   * Finds all food items in the database.
+   * Finds a page of food items, ordered by name.
    *
-   * @return all food items as a list
+   * @param page the zero-based page index
+   * @param size the page size
+   * @return the requested page of food items
    */
-  public List<FoodDetailsDto> findAllFoods() {
-    List<FoodPersistence> foodPersistence = this.foodRepository.findAll();
+  public PageResponseDto<FoodDetailsDto> findAllFoods(int page, int size) {
+    Page<FoodPersistence> result =
+        this.foodRepository.findAll(PageRequest.of(page, size, Sort.by("name")));
 
-    List<Food> foods = this.persistenceConverter.convertFromDtos(foodPersistence);
-    return this.detailsDtoConverter.convertFromEntities(foods);
+    List<Food> foods = this.persistenceConverter.convertFromDtos(result.getContent());
+    List<FoodDetailsDto> content = this.detailsDtoConverter.convertFromEntities(foods);
+
+    return new PageResponseDto<>(
+        content, result.getNumber(), result.getSize(), result.getTotalElements(),
+        result.getTotalPages(), result.isLast()
+    );
   }
 
   /**

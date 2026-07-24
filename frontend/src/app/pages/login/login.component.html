@@ -1,0 +1,61 @@
+<div class="flex justify-center px-4 py-12">
+  <form
+    class="flex flex-col bg-white rounded-xl p-8 gap-5 w-full max-w-sm"
+    [formGroup]="form"
+    (submit)="onSubmit()"
+  >
+    <div class="flex flex-col items-center gap-2 mb-2">
+      <app-logo [size]="48" />
+      <span class="text-xl font-bold text-neutral-darkGray"
+        >Willkommen zurück</span
+      >
+      <span class="text-sm text-neutral-darkGray text-center">
+        Melde dich an, um deine Fortschritte zu verfolgen.
+      </span>
+    </div>
+
+    @if (errorMessage() !== '') {
+      <app-alert [message]="errorMessage()" />
+    }
+
+    <div class="flex flex-col gap-1">
+      <app-label [text]="'E-Mail Adresse'" />
+      <app-text-input
+        [type]="'email'"
+        [placeholder]="'beispiel@mail.de'"
+        [formControlName]="'email'"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <div class="flex justify-between items-center">
+        <app-label [text]="'Passwort'" />
+        <button
+          type="button"
+          class="text-xs text-primary hover:underline disabled:text-neutral-lightGray disabled:no-underline"
+          disabled
+          title="Bald verfügbar"
+        >
+          Passwort vergessen?
+        </button>
+      </div>
+      <app-password-input [formControlName]="'password'" />
+    </div>
+
+    <app-button
+      [type]="'submit'"
+      [text]="'Anmelden'"
+      [disabled]="form.invalid"
+      [loading]="loading()"
+    />
+
+    <span class="text-center text-sm text-neutral-darkGray">
+      Noch keinen Account?
+      <a
+        routerLink="/register"
+        class="text-primary font-semibold hover:underline"
+        >Jetzt registrieren</a
+      >
+    </span>
+  </form>
+</div>

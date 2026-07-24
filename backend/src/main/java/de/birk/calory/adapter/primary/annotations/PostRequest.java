@@ -5,6 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.springframework.core.annotation.AliasFor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -22,4 +23,27 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface PostRequest {
+
+  /**
+   * Parameter for the name.
+   *
+   * @return the name
+   */
+  String name() default "";
+
+  /**
+   * Parameter for the path.
+   *
+   * @return the path
+   */
+  @AliasFor("path")
+  String[] value() default {};
+
+  /**
+   * Parameter for the value.
+   *
+   * @return the value
+   */
+  @AliasFor("value")
+  String[] path() default {};
 }

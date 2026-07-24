@@ -1,11 +1,21 @@
 /** @type {import('tailwindcss').Config} */
+
+// The brand blue used by the logo (src/app/static/logo.svg). primary/button.primary/navbar.background
+// used to be a slightly different, uncoordinated blue (#173083) - they now derive from the same
+// brand color so the logo and the rest of the UI are visually consistent.
+const brand = '#1E40AF'
+
 module.exports = {
   content: ['./src/**/*.{html,ts}'],
   theme: {
     extend: {
       colors: {
+        brand: {
+          DEFAULT: brand,
+          light: '#EEF2FF',
+        },
         primary: {
-          DEFAULT: '#173083',
+          DEFAULT: brand,
           dark: '#1E4A7A',
           light: '#E5E9F2',
         },
@@ -26,7 +36,7 @@ module.exports = {
         },
         button: {
           primary: {
-            DEFAULT: '#173083',
+            DEFAULT: brand,
             hover: '#1E4A7A',
           },
           secondary: {
@@ -40,7 +50,7 @@ module.exports = {
           disabled: '#E5E9F2',
         },
         navbar: {
-          background: '#173083',
+          background: brand,
           link: '#FFFFFF',
           linkHover: '#146074',
         },

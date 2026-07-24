@@ -1,4 +1,16 @@
-<button class="{{ style() }}" type="{{ type() }}">
+<button
+  class="{{
+    style()
+  }} disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+  type="{{ type() }}"
+  [disabled]="disabled() || loading()"
+>
+  @if (loading()) {
+    <span
+      class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
+      aria-hidden="true"
+    ></span>
+  }
   @if (this.text() !== '') {
     {{ text() }}
   } @else {
