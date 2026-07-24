@@ -18,9 +18,8 @@ import { LogoComponent } from '../../components/logo/logo.component'
 })
 export class HeaderComponent {
   authStore = inject(AuthStore)
+  private readonly router = inject(Router)
   menuOpen: WritableSignal<boolean> = signal(false)
-
-  constructor(private router: Router) {}
 
   toggleMenu(): void {
     this.menuOpen.update((open) => !open)

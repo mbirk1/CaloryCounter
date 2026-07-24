@@ -1,4 +1,4 @@
-import { Component, signal, WritableSignal } from '@angular/core'
+import { Component, inject, signal, WritableSignal } from '@angular/core'
 import { Router } from '@angular/router'
 import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { FormFactoryService } from '../../services/factory/form.factory'
@@ -25,6 +25,10 @@ import { AlertComponent } from '../../components/alert/alert.component'
   templateUrl: './onboarding.component.html',
 })
 export class OnboardingComponent {
+  private readonly formFactory = inject(FormFactoryService)
+  private readonly authStore = inject(AuthStore)
+  private readonly router = inject(Router)
+
   form: FormGroup
   loading: WritableSignal<boolean> = signal(false)
   errorMessage: WritableSignal<string> = signal('')
@@ -37,11 +41,7 @@ export class OnboardingComponent {
     { value: 'EXTRA_ACTIVE', label: 'Extrem aktiv' },
   ]
 
-  constructor(
-    private formFactory: FormFactoryService,
-    private authStore: AuthStore,
-    private router: Router,
-  ) {
+  constructor() {
     this.form = this.formFactory
       .create()
       .control('height', '', [Validators.required, Validators.min(1)])

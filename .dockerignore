@@ -1,0 +1,11 @@
+.git
+.github
+.claude
+**/node_modules
+**/node
+frontend/dist
+frontend/.angular
+frontend/test-results
+frontend/playwright-report
+backend/target
+**/*.log

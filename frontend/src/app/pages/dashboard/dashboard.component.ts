@@ -1,4 +1,10 @@
-import { Component, ChangeDetectionStrategy, computed, inject, Signal } from '@angular/core'
+import {
+  Component,
+  ChangeDetectionStrategy,
+  computed,
+  inject,
+  Signal,
+} from '@angular/core'
 import { DecimalPipe } from '@angular/common'
 import { RouterLink } from '@angular/router'
 import { AuthStore } from '../../api/stores/auth.store'

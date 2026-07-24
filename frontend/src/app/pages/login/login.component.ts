@@ -1,4 +1,4 @@
-import { Component, signal, WritableSignal } from '@angular/core'
+import { Component, inject, signal, WritableSignal } from '@angular/core'
 import { Router, RouterLink } from '@angular/router'
 import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { HttpErrorResponse } from '@angular/common/http'
@@ -26,15 +26,15 @@ import { AlertComponent } from '../../components/alert/alert.component'
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
+  private readonly formFactory = inject(FormFactoryService)
+  private readonly authStore = inject(AuthStore)
+  private readonly router = inject(Router)
+
   form: FormGroup
   loading: WritableSignal<boolean> = signal(false)
   errorMessage: WritableSignal<string> = signal('')
 
-  constructor(
-    private formFactory: FormFactoryService,
-    private authStore: AuthStore,
-    private router: Router,
-  ) {
+  constructor() {
     this.form = this.formFactory
       .create()
       .control('email', '', [Validators.required, Validators.email])
