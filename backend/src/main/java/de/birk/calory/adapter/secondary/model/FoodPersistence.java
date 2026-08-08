@@ -76,6 +76,9 @@ public class FoodPersistence {
   @Column(name = "import_job_id")
   private UUID importJobId;
 
+  @Column
+  private String diet;
+
   @ManyToMany(mappedBy = "foods")
   private Set<RecipePersistence> recipe;
 
@@ -85,8 +88,9 @@ public class FoodPersistence {
 
   /**
    * Constructor to create an instance of the object with only the core fields, all extended
-   * fields default to {@code null} (source defaults to {@code MANUAL} to satisfy the
-   * not-null database column). Used e.g. for the food items embedded in a recipe.
+   * fields default to {@code null} (source defaults to {@code MANUAL} and diet to
+   * {@code UNKNOWN} to satisfy the not-null database columns). Used e.g. for the food items
+   * embedded in a recipe.
    *
    * @param id the identifier
    * @param name the name
@@ -96,7 +100,8 @@ public class FoodPersistence {
   public FoodPersistence(UUID id, String name, BigDecimal calory, BigDecimal grams) {
     this(
         id, name, calory, grams,
-        null, null, null, null, null, null, null, null, null, null, null, "MANUAL", null
+        null, null, null, null, null, null, null, null, null, null, null, "MANUAL", null,
+        "UNKNOWN"
     );
   }
 
@@ -120,6 +125,7 @@ public class FoodPersistence {
    * @param imageUrl a URL pointing to a product image
    * @param source the name of the {@code FoodSource} enum constant this item came from
    * @param externalId the identifier used by the external data source, if any
+   * @param diet the name of the {@code Diet} enum constant this item is compatible with
    */
   public FoodPersistence(
       UUID id,
@@ -138,7 +144,8 @@ public class FoodPersistence {
       BigDecimal sodium,
       String imageUrl,
       String source,
-      String externalId) {
+      String externalId,
+      String diet) {
     this.id = id;
     this.name = name;
     this.calory = calory;
@@ -156,6 +163,7 @@ public class FoodPersistence {
     this.imageUrl = imageUrl;
     this.source = source;
     this.externalId = externalId;
+    this.diet = diet;
   }
 
   public UUID getId() {
@@ -232,5 +240,9 @@ public class FoodPersistence {
 
   public void setImportJobId(UUID importJobId) {
     this.importJobId = importJobId;
+  }
+
+  public String getDiet() {
+    return diet;
   }
 }

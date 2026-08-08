@@ -37,6 +37,7 @@ public class Food extends AbstractEntity<UUID> {
   private final String imageUrl;
   private final FoodSource source;
   private final String externalId;
+  private final Diet diet;
 
   /**
    * Default constructor with zero/empty values.
@@ -58,6 +59,7 @@ public class Food extends AbstractEntity<UUID> {
     imageUrl = null;
     source = FoodSource.MANUAL;
     externalId = null;
+    diet = Diet.UNKNOWN;
   }
 
   /**
@@ -85,7 +87,7 @@ public class Food extends AbstractEntity<UUID> {
     this(
         id, name, calory, grams,
         null, null, null, null, null, null, null, null, null, null, null,
-        FoodSource.MANUAL, null
+        FoodSource.MANUAL, null, Diet.UNKNOWN
     );
   }
 
@@ -110,6 +112,7 @@ public class Food extends AbstractEntity<UUID> {
    * @param imageUrl a URL pointing to a product image
    * @param source where this food item's data came from
    * @param externalId the identifier used by the external data source, if any
+   * @param diet the food item's vegan/vegetarian diet compatibility
    * @throws ValidationException validates the entity
    */
   public Food(
@@ -129,7 +132,8 @@ public class Food extends AbstractEntity<UUID> {
       BigDecimal sodium,
       String imageUrl,
       FoodSource source,
-      String externalId) throws ValidationException {
+      String externalId,
+      Diet diet) throws ValidationException {
     this.id = id;
     this.name = name;
     this.calory = calory;
@@ -147,6 +151,7 @@ public class Food extends AbstractEntity<UUID> {
     this.imageUrl = imageUrl;
     this.source = source;
     this.externalId = externalId;
+    this.diet = diet;
     validate();
   }
 
@@ -216,6 +221,10 @@ public class Food extends AbstractEntity<UUID> {
 
   public String getExternalId() {
     return externalId;
+  }
+
+  public Diet getDiet() {
+    return diet;
   }
 
   protected void validate() throws ValidationException {

@@ -1,6 +1,7 @@
 package de.birk.calory.usecase.food.converter;
 
 import de.birk.calory.adapter.primary.model.FoodDetailsDto;
+import de.birk.calory.domain.food.Diet;
 import de.birk.calory.domain.food.Food;
 import de.birk.calory.domain.food.FoodSource;
 import de.birk.calory.usecase.converter.Converter;
@@ -34,7 +35,8 @@ public class FoodDetailsDtoConverter extends Converter<FoodDetailsDto, Food> {
             dto.getSodium(),
             dto.getImageUrl(),
             dto.getSource() == null ? FoodSource.MANUAL : FoodSource.valueOf(dto.getSource()),
-            dto.getExternalId()
+            dto.getExternalId(),
+            dto.getDiet() == null ? Diet.UNKNOWN : Diet.valueOf(dto.getDiet())
         ),
         entity -> new FoodDetailsDto(
             entity.getId(),
@@ -53,7 +55,8 @@ public class FoodDetailsDtoConverter extends Converter<FoodDetailsDto, Food> {
             entity.getSodium(),
             entity.getImageUrl(),
             entity.getSource() == null ? null : entity.getSource().name(),
-            entity.getExternalId()
+            entity.getExternalId(),
+            entity.getDiet() == null ? null : entity.getDiet().name()
         )
     );
   }

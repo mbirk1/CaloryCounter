@@ -13,6 +13,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.junit.jupiter.api.Test;
 
 import de.birk.calory.adapter.secondary.model.FoodPersistence;
+import de.birk.calory.domain.food.Diet;
 import de.birk.calory.domain.food.FoodSource;
 
 public class FoodCsvRowMapperUnitTest {
@@ -20,6 +21,8 @@ public class FoodCsvRowMapperUnitTest {
   private static final String HEADER = "code\tproduct_name\tbrands\tcategories_en\t"
       + "energy-kcal_100g\tenergy_100g\tfat_100g\tsaturated-fat_100g\tcarbohydrates_100g\t"
       + "sugars_100g\tfiber_100g\tproteins_100g\tsalt_100g\tsodium_100g\timage_url";
+
+  private static final String HEADER_WITH_DIET = HEADER + "\tingredients_analysis_tags";
 
   private final FoodCsvRowMapper mapper = new FoodCsvRowMapper();
 
@@ -53,6 +56,7 @@ public class FoodCsvRowMapperUnitTest {
     assertThat(food.getImageUrl()).isEqualTo("https://example.com/cola.png");
     assertThat(food.getSource()).isEqualTo(FoodSource.OPENFOODFACTS.name());
     assertThat(food.getExternalId()).isEqualTo("1234567890123");
+    assertThat(food.getDiet()).isEqualTo(Diet.UNKNOWN.name());
   }
 
   @Test
@@ -243,6 +247,98 @@ public class FoodCsvRowMapperUnitTest {
     // Assert
     assertThat(result).isPresent();
     assertThat(result.get().getName()).isEqualTo("12\" Pizza Margherita");
+  }
+
+  @Test
+  public void derivesVeganDietFromIngredientsAnalysisTagsTest() throws IOException {
+    // Arrange - the tag list may carry both a vegan and a vegetarian tag together
+    CSVRecord record = parseRowWithDiet(
+        "123\tTofu\tAcme\tPlant-based\t120\t\t5\t1\t2\t1\t2\t12\t0.5\t0.2\t\ten:vegan,en:vegetarian"
+    );
+
+    // Act
+    Optional<FoodPersistence> result = mapper.map(record);
+
+    // Assert
+    assertThat(result).isPresent();
+    assertThat(result.get().getDiet()).isEqualTo(Diet.VEGAN.name());
+  }
+
+  @Test
+  public void derivesVegetarianDietWhenNotVeganTest() throws IOException {
+    // Arrange - "en:non-vegan" textually contains "vegan" but must NOT match TAG_VEGAN
+    CSVRecord record = parseRowWithDiet(
+        "123\tCheese\tAcme\tDairy\t350\t\t28\t18\t2\t1\t0\t22\t1.5\t0.6\t\t"
+            + "en:non-vegan,en:vegetarian"
+    );
+
+    // Act
+    Optional<FoodPersistence> result = mapper.map(record);
+
+    // Assert
+    assertThat(result).isPresent();
+    assertThat(result.get().getDiet()).isEqualTo(Diet.VEGETARIAN.name());
+  }
+
+  @Test
+  public void derivesNonVegetarianDietTest() throws IOException {
+    // Arrange
+    CSVRecord record = parseRowWithDiet(
+        "123\tChicken Breast\tAcme\tMeat\t165\t\t3.6\t1\t0\t0\t0\t31\t0.1\t0.07\t\t"
+            + "en:non-vegetarian,en:non-vegan"
+    );
+
+    // Act
+    Optional<FoodPersistence> result = mapper.map(record);
+
+    // Assert
+    assertThat(result).isPresent();
+    assertThat(result.get().getDiet()).isEqualTo(Diet.NON_VEGETARIAN.name());
+  }
+
+  @Test
+  public void defaultsToUnknownDietWhenTagsAreAmbiguousTest() throws IOException {
+    // Arrange - "maybe-vegan"/"vegan-status-unknown" are genuine uncertainty, not a real answer
+    CSVRecord record = parseRowWithDiet(
+        "123\tMystery Snack\tAcme\tSnacks\t250\t\t5\t1\t30\t10\t2\t5\t0.5\t0.2\t\t"
+            + "en:maybe-vegan,en:vegan-status-unknown"
+    );
+
+    // Act
+    Optional<FoodPersistence> result = mapper.map(record);
+
+    // Assert
+    assertThat(result).isPresent();
+    assertThat(result.get().getDiet()).isEqualTo(Diet.UNKNOWN.name());
+  }
+
+  @Test
+  public void defaultsToUnknownDietWhenTagsColumnIsMissingTest() throws IOException {
+    // Arrange - the plain HEADER (used everywhere else in this test class) has no
+    // ingredients_analysis_tags column at all
+    CSVRecord record = parseRow(
+        "123\tCola\tAcme\tBeverages\t42\t\t0\t0\t0\t0\t0\t0\t0\t0\t"
+    );
+
+    // Act
+    Optional<FoodPersistence> result = mapper.map(record);
+
+    // Assert
+    assertThat(result).isPresent();
+    assertThat(result.get().getDiet()).isEqualTo(Diet.UNKNOWN.name());
+  }
+
+  private CSVRecord parseRowWithDiet(String row) throws IOException {
+    String csv = HEADER_WITH_DIET + "\n" + row;
+    try (CSVParser parser = CSVFormat.DEFAULT
+        .withDelimiter('\t')
+        .withQuote(null)
+        .withFirstRecordAsHeader()
+        .withIgnoreHeaderCase()
+        .withTrim()
+        .parse(new StringReader(csv))) {
+      return parser.iterator().next();
+    }
   }
 
   private CSVRecord parseRow(String row) throws IOException {

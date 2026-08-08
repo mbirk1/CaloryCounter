@@ -102,6 +102,7 @@ public class FoodUnitTest {
     assertThat(food.getBrand()).isNull();
     assertThat(food.getSource()).isEqualTo(FoodSource.MANUAL);
     assertThat(food.getExternalId()).isNull();
+    assertThat(food.getDiet()).isEqualTo(Diet.UNKNOWN);
   }
 
   @Test
@@ -127,7 +128,8 @@ public class FoodUnitTest {
         new BigDecimal("0.00"),
         "https://example.com/cola.png",
         FoodSource.OPENFOODFACTS,
-        "1234567890123"
+        "1234567890123",
+        Diet.VEGAN
     );
 
     // Assert
@@ -145,5 +147,6 @@ public class FoodUnitTest {
     assertThat(food.getImageUrl()).isEqualTo("https://example.com/cola.png");
     assertThat(food.getSource()).isEqualTo(FoodSource.OPENFOODFACTS);
     assertThat(food.getExternalId()).isEqualTo("1234567890123");
+    assertThat(food.getDiet()).isEqualTo(Diet.VEGAN);
   }
 }

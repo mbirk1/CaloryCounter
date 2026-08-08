@@ -11,6 +11,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import de.birk.calory.adapter.primary.model.FoodDetailsDto;
+import de.birk.calory.domain.food.Diet;
 import de.birk.calory.domain.food.Food;
 import de.birk.calory.domain.food.FoodSource;
 import de.birk.calory.exception.ValidationException;
@@ -164,7 +165,8 @@ public class FoodDetailsDtoConverterUnitTest {
         new BigDecimal("0.00"),
         "https://example.com/cola.png",
         FoodSource.OPENFOODFACTS,
-        "1234567890123"
+        "1234567890123",
+        Diet.VEGAN
     );
     FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();
 
@@ -177,6 +179,7 @@ public class FoodDetailsDtoConverterUnitTest {
     assertThat(result.getImageUrl()).isEqualTo("https://example.com/cola.png");
     assertThat(result.getSource()).isEqualTo("OPENFOODFACTS");
     assertThat(result.getExternalId()).isEqualTo("1234567890123");
+    assertThat(result.getDiet()).isEqualTo("VEGAN");
   }
 
   @Test
@@ -184,7 +187,7 @@ public class FoodDetailsDtoConverterUnitTest {
     // Arrange
     Food food = new Food(
         UUID.randomUUID(), "Apple", new BigDecimal("52"), new BigDecimal("100"),
-        null, null, null, null, null, null, null, null, null, null, null, null, null
+        null, null, null, null, null, null, null, null, null, null, null, null, null, null
     );
     FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();
 
@@ -215,7 +218,8 @@ public class FoodDetailsDtoConverterUnitTest {
         new BigDecimal("0.00"),
         "https://example.com/cola.png",
         "OPENFOODFACTS",
-        "1234567890123"
+        "1234567890123",
+        "VEGETARIAN"
     );
     FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();
 
@@ -226,5 +230,6 @@ public class FoodDetailsDtoConverterUnitTest {
     assertThat(result.getBrand()).isEqualTo("Acme");
     assertThat(result.getSource()).isEqualTo(FoodSource.OPENFOODFACTS);
     assertThat(result.getExternalId()).isEqualTo("1234567890123");
+    assertThat(result.getDiet()).isEqualTo(Diet.VEGETARIAN);
   }
 }

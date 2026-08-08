@@ -138,6 +138,36 @@ public class FoodCsvImportUsecaseUnitTest {
     verify(foodRepository, times(2)).save(any(FoodPersistence.class));
     assertThat(status.getImportedCount()).isEqualTo(1);
     assertThat(status.getSkippedCount()).isEqualTo(1);
+    // Backfill: the duplicate row's diet is written to the already-existing row, since a
+    // re-import is the deliberately chosen way to backfill diet onto pre-existing rows.
+    verify(foodRepository).updateDietByExternalId("2", "UNKNOWN");
+  }
+
+  @Test
+  public void backfillsDietOntoAnAlreadyImportedVeganProductOnReImportTest() throws IOException {
+    // Arrange - a re-import of a row that already exists (duplicate external_id) must backfill
+    // its now-derivable diet onto the existing row, since a plain re-import otherwise only skips
+    // duplicates without updating them. This is the deliberately chosen backfill mechanism (see
+    // FoodCsvImportUsecase#persistOneByOne): no separate script or endpoint is needed, a normal
+    // re-import of the original file is enough.
+    FoodCsvImportUsecase usecase =
+        new FoodCsvImportUsecase(foodRepository, jobRegistry, dispatcher, 10);
+    String headerWithDiet = HEADER + "\tingredients_analysis_tags";
+    List<CSVRecord> records = parseRowsWithHeader(
+        headerWithDiet, "42\tTofu\tAcme\t120\ten:vegan,en:vegetarian"
+    );
+    doThrow(new DataIntegrityViolationException("duplicate external_id"))
+        .when(foodRepository).saveAll(anyList());
+    doThrow(new DataIntegrityViolationException("duplicate external_id"))
+        .when(foodRepository).save(any(FoodPersistence.class));
+    FoodImportJobStatus status = new FoodImportJobStatus(UUID.randomUUID(), 0);
+
+    // Act
+    usecase.processRecords(records, status);
+
+    // Assert
+    assertThat(status.getSkippedCount()).isEqualTo(1);
+    verify(foodRepository).updateDietByExternalId("42", "VEGAN");
   }
 
   @Test
@@ -311,7 +341,11 @@ public class FoodCsvImportUsecaseUnitTest {
   }
 
   private List<CSVRecord> parseRows(String... rows) throws IOException {
-    StringBuilder csv = new StringBuilder(HEADER);
+    return parseRowsWithHeader(HEADER, rows);
+  }
+
+  private List<CSVRecord> parseRowsWithHeader(String header, String... rows) throws IOException {
+    StringBuilder csv = new StringBuilder(header);
     for (String row : rows) {
       csv.append('\n').append(row);
     }

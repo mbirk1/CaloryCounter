@@ -2,12 +2,15 @@ package de.birk.calory.usecase.food.importer;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.csv.CSVRecord;
 
 import de.birk.calory.adapter.secondary.model.FoodPersistence;
+import de.birk.calory.domain.food.Diet;
 import de.birk.calory.domain.food.FoodSource;
 
 /**
@@ -39,6 +42,11 @@ public class FoodCsvRowMapper {
   private static final String COLUMN_SODIUM = "sodium_100g";
   private static final String COLUMN_IMAGE_URL = "image_url";
   private static final String COLUMN_CODE = "code";
+  private static final String COLUMN_INGREDIENTS_ANALYSIS_TAGS = "ingredients_analysis_tags";
+
+  private static final String TAG_VEGAN = "en:vegan";
+  private static final String TAG_VEGETARIAN = "en:vegetarian";
+  private static final String TAG_NON_VEGETARIAN = "en:non-vegetarian";
 
   private static final BigDecimal KCAL_PER_KJ = new BigDecimal("4.184");
   private static final BigDecimal FIXED_GRAMS = new BigDecimal("100");
@@ -96,8 +104,43 @@ public class FoodCsvRowMapper {
         macroGrams(record, COLUMN_SODIUM),
         trimToNull(get(record, COLUMN_IMAGE_URL)),
         FoodSource.OPENFOODFACTS.name(),
-        trimToNull(get(record, COLUMN_CODE))
+        trimToNull(get(record, COLUMN_CODE)),
+        diet(record).name()
     ));
+  }
+
+  /**
+   * Derives the vegan/vegetarian diet compatibility from OpenFoodFacts's
+   * {@code ingredients_analysis_tags} column, a comma-separated tag list that may contain up to
+   * one vegan-related and one vegetarian-related tag (e.g. {@code en:vegan,en:vegetarian} or
+   * {@code en:non-vegetarian,en:vegan-status-unknown}). Tags are matched exactly against the
+   * split, trimmed list rather than via substring search: {@code en:non-vegan} and {@code
+   * en:maybe-vegan} both textually contain "vegan" but must NOT be mistaken for {@code en:vegan}.
+   * Any uncertainty (missing tag, {@code en:maybe-vegan}, {@code en:vegan-status-unknown}, ...)
+   * deliberately falls through to {@link Diet#UNKNOWN} rather than guessing.
+   *
+   * @param record the parsed CSV row
+   * @return the derived diet, or {@link Diet#UNKNOWN} if it can't be determined
+   */
+  private Diet diet(CSVRecord record) {
+    String raw = trimToNull(get(record, COLUMN_INGREDIENTS_ANALYSIS_TAGS));
+    if (raw == null) {
+      return Diet.UNKNOWN;
+    }
+    List<String> tags = Arrays.stream(raw.split(","))
+        .map(String::trim)
+        .map(String::toLowerCase)
+        .toList();
+    if (tags.contains(TAG_VEGAN)) {
+      return Diet.VEGAN;
+    }
+    if (tags.contains(TAG_VEGETARIAN)) {
+      return Diet.VEGETARIAN;
+    }
+    if (tags.contains(TAG_NON_VEGETARIAN)) {
+      return Diet.NON_VEGETARIAN;
+    }
+    return Diet.UNKNOWN;
   }
 
   private BigDecimal calories(CSVRecord record) {

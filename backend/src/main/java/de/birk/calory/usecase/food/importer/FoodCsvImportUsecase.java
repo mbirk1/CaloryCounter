@@ -125,6 +125,9 @@ public class FoodCsvImportUsecase {
     file.transferTo(tempFile);
 
     FoodImportJobStatus status = this.jobRegistry.createJob(Files.size(tempFile));
+    LOG.info(
+        "CSV-Import-Job {} gestartet: Datei '{}', {} Bytes",
+        status.getJobId(), file.getOriginalFilename(), status.getTotalBytes());
     this.dispatcher.dispatch(this, tempFile, status);
     return this.statusDtoConverter.toDto(status);
   }
@@ -167,6 +170,11 @@ public class FoodCsvImportUsecase {
             .parse(reader)) {
       processRecords(parser, status);
       status.complete();
+      LOG.info(
+          "CSV-Import-Job {} abgeschlossen: {} Zeilen verarbeitet, {} importiert, "
+              + "{} uebersprungen (Duplikate), {} Fehler",
+          status.getJobId(), status.getProcessedRows(), status.getImportedCount(),
+          status.getSkippedCount(), status.getErrorCount());
     } catch (IOException e) {
       LOG.error("CSV-Import-Job {} beim Lesen der Datei fehlgeschlagen", status.getJobId(), e);
       rollbackAndFail(status);
@@ -262,16 +270,43 @@ public class FoodCsvImportUsecase {
       this.foodRepository.saveAll(batch);
       status.incrementImported(batch.size());
     } catch (DataAccessException e) {
+      LOG.debug(
+          "CSV-Import-Job {}: Batch mit {} Zeilen konnte nicht als Ganzes gespeichert werden "
+              + "({}), Fallback auf zeilenweises Speichern",
+          status.getJobId(), batch.size(), e.getMostSpecificCause().getMessage());
       persistOneByOne(batch, status);
     }
   }
 
+  /**
+   * Persists rows one at a time, so a single bad row in an otherwise-good batch can be skipped
+   * without discarding the rest.
+   *
+   * <p>Backfill note: a row that fails here because it duplicates an already-imported {@code
+   * external_id} additionally has its {@code diet} column updated on the existing row (see
+   * {@link FoodRepository#updateDietByExternalId}). This is the deliberately chosen way to
+   * backfill the diet field onto rows that were imported before the diet column existed: a
+   * plain re-import of the same file already reaches every previously-imported row via this
+   * duplicate-handling path, so no separate backfill script or endpoint is needed - re-running
+   * the import is enough. Only the diet column is touched, never a full-row upsert, so an
+   * interrupted or partial re-import can't silently overwrite other, already-correct columns.
+   *
+   * @param batch the batch to persist record by record
+   * @param status the job status to update
+   */
   private void persistOneByOne(List<FoodPersistence> batch, FoodImportJobStatus status) {
     for (FoodPersistence food : batch) {
       try {
         this.foodRepository.save(food);
         status.incrementImported(1);
       } catch (DataAccessException e) {
+        if (food.getExternalId() != null) {
+          LOG.debug(
+              "CSV-Import-Job {}: Duplikat fuer externalId '{}' erkannt, Diaet-Backfill auf "
+                  + "'{}' wird angewendet",
+              status.getJobId(), food.getExternalId(), food.getDiet());
+          this.foodRepository.updateDietByExternalId(food.getExternalId(), food.getDiet());
+        }
         status.incrementSkipped(1);
       }
     }

@@ -27,6 +27,7 @@ public class FoodDetailsDto {
   private String imageUrl;
   private String source;
   private String externalId;
+  private String diet;
 
   public FoodDetailsDto() {
   }
@@ -43,7 +44,7 @@ public class FoodDetailsDto {
   public FoodDetailsDto(UUID uuid, String name, BigDecimal calory, BigDecimal grams) {
     this(
         uuid, name, calory, grams,
-        null, null, null, null, null, null, null, null, null, null, null, null, null
+        null, null, null, null, null, null, null, null, null, null, null, null, null, null
     );
   }
 
@@ -67,6 +68,7 @@ public class FoodDetailsDto {
    * @param imageUrl a URL pointing to a product image
    * @param source the name of the {@code FoodSource} enum constant this item came from
    * @param externalId the identifier used by the external data source, if any
+   * @param diet the name of the {@code Diet} enum constant this item is compatible with
    */
   public FoodDetailsDto(
       UUID uuid,
@@ -85,7 +87,8 @@ public class FoodDetailsDto {
       BigDecimal sodium,
       String imageUrl,
       String source,
-      String externalId) {
+      String externalId,
+      String diet) {
     this.uuid = uuid;
     this.name = name;
     this.calory = calory;
@@ -103,6 +106,7 @@ public class FoodDetailsDto {
     this.imageUrl = imageUrl;
     this.source = source;
     this.externalId = externalId;
+    this.diet = diet;
   }
 
   public UUID getUuid() {
@@ -171,5 +175,9 @@ public class FoodDetailsDto {
 
   public String getExternalId() {
     return externalId;
+  }
+
+  public String getDiet() {
+    return diet;
   }
 }

@@ -27,6 +27,12 @@
     <div class="">
       <app-number-input [placeholder]="'0'" [formControlName]="'calory'" />
     </div>
+    <div class="text-[#444444] font-bold">
+      <app-label [text]="'Diät: '" />
+    </div>
+    <div class="">
+      <app-select [options]="dietOptions" [formControlName]="'diet'" />
+    </div>
   </div>
   <div class="mt-8">
     <app-button [type]="'submit'" [text]="'Hinzufügen'" />

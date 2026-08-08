@@ -221,6 +221,162 @@ public class FoodRestControllerTest extends AbstractTestBase {
         .andExpect(jsonPath("$.size").value(20));
   }
 
+  @Test
+  @DisplayName("search filters by a case-insensitive substring of the name")
+  public void getAllFoodsFiltersByCaseInsensitiveSearchTest() throws Exception {
+    String accessToken = registerAndGetAccessToken();
+    createFood(accessToken, "Vollmilch", "0");
+    createFood(accessToken, "Hafermilch", "0");
+    createFood(accessToken, "Apfelsaft", "0");
+
+    this.mockMvc.perform(
+            get("/api/food")
+                .param("search", "MILCH")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.content.length()").value(2))
+        .andExpect(jsonPath("$.content[?(@.name=='Vollmilch')]").exists())
+        .andExpect(jsonPath("$.content[?(@.name=='Hafermilch')]").exists())
+        .andExpect(jsonPath("$.content[?(@.name=='Apfelsaft')]").doesNotExist());
+  }
+
+  @Test
+  @DisplayName("an empty search returns every food item again")
+  public void getAllFoodsWithBlankSearchReturnsEverythingTest() throws Exception {
+    String accessToken = registerAndGetAccessToken();
+    createFood(accessToken, "Vollmilch", "0");
+    createFood(accessToken, "Apfelsaft", "0");
+
+    this.mockMvc.perform(
+            get("/api/food")
+                .param("search", "")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.content.length()").value(2));
+  }
+
+  @Test
+  @DisplayName("diet filter only returns food items with a matching diet")
+  public void getAllFoodsFiltersByDietTest() throws Exception {
+    String accessToken = registerAndGetAccessToken();
+    createFood(accessToken, "Tofu", "VEGAN");
+    createFood(accessToken, "Kaese", "VEGETARIAN");
+    createFood(accessToken, "Steak", "NON_VEGETARIAN");
+
+    this.mockMvc.perform(
+            get("/api/food")
+                .param("diet", "VEGAN")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.content.length()").value(1))
+        .andExpect(jsonPath("$.content[0].name").value("Tofu"))
+        .andExpect(jsonPath("$.content[0].diet").value("VEGAN"));
+  }
+
+  @Test
+  @DisplayName("search and diet filter combine with AND, not OR")
+  public void getAllFoodsCombinesSearchAndDietFilterTest() throws Exception {
+    String accessToken = registerAndGetAccessToken();
+    createFood(accessToken, "Vegane Wurst", "VEGAN");
+    createFood(accessToken, "Vegane Milch", "VEGAN");
+    createFood(accessToken, "Fleischwurst", "NON_VEGETARIAN");
+
+    this.mockMvc.perform(
+            get("/api/food")
+                .param("search", "wurst")
+                .param("diet", "VEGAN")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.content.length()").value(1))
+        .andExpect(jsonPath("$.content[0].name").value("Vegane Wurst"));
+  }
+
+  @Test
+  @DisplayName("sorts by calory descending when requested")
+  public void getAllFoodsSortsByCaloryDescendingTest() throws Exception {
+    String accessToken = registerAndGetAccessToken();
+    createFoodWithCalory(accessToken, "Low", 10);
+    createFoodWithCalory(accessToken, "High", 900);
+    createFoodWithCalory(accessToken, "Mid", 500);
+
+    this.mockMvc.perform(
+            get("/api/food")
+                .param("sort", "calory")
+                .param("direction", "desc")
+                .param("size", "3")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.content[0].name").value("High"))
+        .andExpect(jsonPath("$.content[1].name").value("Mid"))
+        .andExpect(jsonPath("$.content[2].name").value("Low"));
+  }
+
+  @Test
+  @DisplayName("rejects an unknown sort field with 400 instead of a 500")
+  public void getAllFoodsRejectsAnInvalidSortFieldTest() throws Exception {
+    String accessToken = registerAndGetAccessToken();
+
+    this.mockMvc.perform(
+            get("/api/food")
+                .param("sort", "externalId")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        )
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  @DisplayName("rejects an unknown sort direction with 400 instead of a 500")
+  public void getAllFoodsRejectsAnInvalidSortDirectionTest() throws Exception {
+    String accessToken = registerAndGetAccessToken();
+
+    this.mockMvc.perform(
+            get("/api/food")
+                .param("direction", "sideways")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        )
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  @DisplayName("rejects an unknown diet filter with 400 instead of a 500")
+  public void getAllFoodsRejectsAnInvalidDietFilterTest() throws Exception {
+    String accessToken = registerAndGetAccessToken();
+
+    this.mockMvc.perform(
+            get("/api/food")
+                .param("diet", "PESCATARIAN")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        )
+        .andExpect(status().isBadRequest());
+  }
+
+  private void createFood(String accessToken, String name, String diet) throws Exception {
+    String content = "{\"name\":\"" + name + "\",\"calory\":100,\"grams\":100,\"diet\":\""
+        + diet + "\"}";
+    mockMvc.perform(
+        post("/api/food")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(content)
+    ).andReturn();
+  }
+
+  private void createFoodWithCalory(String accessToken, String name, int calory)
+      throws Exception {
+    String content = "{\"name\":\"" + name + "\",\"calory\":" + calory + ",\"grams\":100}";
+    mockMvc.perform(
+        post("/api/food")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(content)
+    ).andReturn();
+  }
+
   private String registerAndGetAccessToken() throws Exception {
     String content = readResourceAsString("/http-bodies/registerUser.json");
     MvcResult mvcResult = this.mockMvc.perform(

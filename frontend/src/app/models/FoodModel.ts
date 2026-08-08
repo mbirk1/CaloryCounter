@@ -16,4 +16,5 @@ export interface FoodModel extends BaseModel {
   imageUrl?: string
   source?: string
   externalId?: string
+  diet?: string
 }

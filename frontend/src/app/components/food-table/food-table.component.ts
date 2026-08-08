@@ -8,12 +8,24 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core'
 import { FoodModel } from '../../models/FoodModel'
-import { FoodStore } from '../../api/stores/food.store'
+import {
+  FoodStore,
+  SortDirection,
+  SortField,
+} from '../../api/stores/food.store'
 import { RecipeModel } from '../../models/RecipeModel'
 import { RecipeStore } from '../../api/stores/recipe.store'
 import { Dialog } from '@angular/cdk/dialog'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
-import { faEye, faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
+import {
+  faEye,
+  faPen,
+  faSort,
+  faSortDown,
+  faSortUp,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons'
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import { FoodDetailDialogComponent } from '../dialogs/food-detail-dialog/food-detail-dialog.component'
 import { PaginationComponent } from '../pagination/pagination.component'
 
@@ -35,6 +47,8 @@ export class FoodTableComponent {
 
   currentPage: Signal<number> = computed(() => this.foodStore.currentPage())
   totalPages: Signal<number> = computed(() => this.foodStore.totalPages())
+  sort: Signal<SortField> = computed(() => this.foodStore.sort())
+  direction: Signal<SortDirection> = computed(() => this.foodStore.direction())
 
   protected readonly faEye = faEye
   protected readonly faTrash = faTrash
@@ -60,5 +74,23 @@ export class FoodTableComponent {
 
   nextPage(): void {
     this.foodStore.nextPage()
+  }
+
+  onSort(field: SortField): void {
+    this.foodStore.setSort(field)
+  }
+
+  ariaSortFor(field: SortField): 'ascending' | 'descending' | 'none' {
+    if (this.sort() !== field) {
+      return 'none'
+    }
+    return this.direction() === 'asc' ? 'ascending' : 'descending'
+  }
+
+  sortIconFor(field: SortField): IconDefinition {
+    if (this.sort() !== field) {
+      return faSort
+    }
+    return this.direction() === 'asc' ? faSortUp : faSortDown
   }
 }

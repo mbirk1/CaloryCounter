@@ -5,20 +5,50 @@
         class="text-xs uppercase bg-gray-50 dark:bg-gray-600 text-gray-400"
       >
         <tr>
-          <th scope="col" class="px-6 py-3">
-            <span class="flex justify-center">
+          <th
+            scope="col"
+            class="px-6 py-3"
+            [attr.aria-sort]="ariaSortFor('name')"
+          >
+            <button
+              type="button"
+              (click)="onSort('name')"
+              [attr.aria-label]="'Sortieren nach ' + this.columnHeaders()[0]"
+              class="flex w-full justify-center items-center gap-1 hover:text-white"
+            >
               {{ this.columnHeaders()[0] }}
-            </span>
+              <fa-icon [icon]="sortIconFor('name')" />
+            </button>
           </th>
-          <th scope="col" class="px-6 py-3">
-            <span class="flex justify-center">
+          <th
+            scope="col"
+            class="px-6 py-3"
+            [attr.aria-sort]="ariaSortFor('calory')"
+          >
+            <button
+              type="button"
+              (click)="onSort('calory')"
+              [attr.aria-label]="'Sortieren nach ' + this.columnHeaders()[1]"
+              class="flex w-full justify-center items-center gap-1 hover:text-white"
+            >
               {{ this.columnHeaders()[1] }}
-            </span>
+              <fa-icon [icon]="sortIconFor('calory')" />
+            </button>
           </th>
-          <th scope="col" class="px-6 py-3">
-            <span class="flex justify-center">
+          <th
+            scope="col"
+            class="px-6 py-3"
+            [attr.aria-sort]="ariaSortFor('grams')"
+          >
+            <button
+              type="button"
+              (click)="onSort('grams')"
+              [attr.aria-label]="'Sortieren nach ' + this.columnHeaders()[2]"
+              class="flex w-full justify-center items-center gap-1 hover:text-white"
+            >
               {{ this.columnHeaders()[2] }}
-            </span>
+              <fa-icon [icon]="sortIconFor('grams')" />
+            </button>
           </th>
           <th scope="col" class="px-6 py-3">
             <span class="flex justify-center">

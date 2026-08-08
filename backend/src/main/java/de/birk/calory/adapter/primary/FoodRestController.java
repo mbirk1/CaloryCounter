@@ -69,17 +69,27 @@ public class FoodRestController {
   }
 
   /**
-   * Returns a page of food items, ordered by name.
+   * Returns a page of food items, optionally filtered by name and/or diet, sorted by a
+   * server-validated field and direction.
    *
    * @param page the zero-based page index, defaults to 0
    * @param size the page size, defaults to 20
+   * @param search a case-insensitive substring to match against the name, optional
+   * @param diet the name of the {@code Diet} enum constant to filter by, optional
+   * @param sort the field to sort by ({@code name}, {@code calory} or {@code grams}), defaults
+   *     to {@code name}
+   * @param direction the sort direction ({@code asc}/{@code desc}), defaults to {@code asc}
    * @return the requested page of food items
    */
   @GetRequest()
   public PageResponseDto<FoodDetailsDto> getAllFoods(
       @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "20") int size) {
-    return this.findFoodUsecase.findAllFoods(page, size);
+      @RequestParam(defaultValue = "20") int size,
+      @RequestParam(required = false) String search,
+      @RequestParam(required = false) String diet,
+      @RequestParam(defaultValue = "name") String sort,
+      @RequestParam(defaultValue = "asc") String direction) {
+    return this.findFoodUsecase.findAllFoods(page, size, search, diet, sort, direction);
   }
 
   @GetRequest("/{id}")

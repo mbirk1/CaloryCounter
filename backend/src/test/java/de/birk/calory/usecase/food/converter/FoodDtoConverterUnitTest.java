@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import de.birk.calory.adapter.primary.model.FoodDetailsDto;
 import de.birk.calory.adapter.primary.model.FoodDto;
+import de.birk.calory.domain.food.Diet;
 import de.birk.calory.domain.food.Food;
 import de.birk.calory.exception.ValidationException;
 
@@ -22,7 +23,8 @@ public class FoodDtoConverterUnitTest {
     FoodDto foodDto = new FoodDto(
         "Apple",
         new BigDecimal("100"),
-        new BigDecimal("100")
+        new BigDecimal("100"),
+        null
     );
     FoodDtoConverter foodDtoConverter = new FoodDtoConverter();
 
@@ -32,6 +34,42 @@ public class FoodDtoConverterUnitTest {
     // Assert
     assertThat(foodDto.getName()).isEqualTo(result.getName());
     assertThat(foodDto.getCalory()).isEqualTo(result.getCalory());
+  }
+
+  @Test
+  public void convertToEntityWithNullDietDefaultsToUnknownTest() {
+    // Arrange
+    FoodDto foodDto = new FoodDto(
+        "Apple",
+        new BigDecimal("100"),
+        new BigDecimal("100"),
+        null
+    );
+    FoodDtoConverter foodDtoConverter = new FoodDtoConverter();
+
+    // Act
+    Food result = foodDtoConverter.convertFromDto(foodDto);
+
+    // Assert
+    assertThat(result.getDiet()).isEqualTo(Diet.UNKNOWN);
+  }
+
+  @Test
+  public void convertToEntityWithExplicitDietTest() {
+    // Arrange
+    FoodDto foodDto = new FoodDto(
+        "Tofu",
+        new BigDecimal("100"),
+        new BigDecimal("100"),
+        "VEGAN"
+    );
+    FoodDtoConverter foodDtoConverter = new FoodDtoConverter();
+
+    // Act
+    Food result = foodDtoConverter.convertFromDto(foodDto);
+
+    // Assert
+    assertThat(result.getDiet()).isEqualTo(Diet.VEGAN);
   }
 
 
@@ -80,7 +118,8 @@ public class FoodDtoConverterUnitTest {
     FoodDto foodDto = new FoodDto(
         null,
         new BigDecimal("100"),
-        new BigDecimal("100")
+        new BigDecimal("100"),
+        null
     );
     FoodDtoConverter foodDtoConverter = new FoodDtoConverter();
 
@@ -96,7 +135,8 @@ public class FoodDtoConverterUnitTest {
     FoodDto foodDto = new FoodDto(
         "Apple",
         null,
-        new BigDecimal("100")
+        new BigDecimal("100"),
+        null
     );
     FoodDtoConverter foodDtoConverter = new FoodDtoConverter();
 
@@ -111,6 +151,7 @@ public class FoodDtoConverterUnitTest {
     FoodDto foodDto = new FoodDto(
         "Apple",
         new BigDecimal("100"),
+        null,
         null
     );
     FoodDtoConverter foodDtoConverter = new FoodDtoConverter();

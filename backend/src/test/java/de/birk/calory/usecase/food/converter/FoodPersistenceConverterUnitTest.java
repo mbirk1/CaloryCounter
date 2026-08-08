@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import de.birk.calory.adapter.secondary.model.FoodPersistence;
+import de.birk.calory.domain.food.Diet;
 import de.birk.calory.domain.food.Food;
 import de.birk.calory.domain.food.FoodSource;
 
@@ -33,7 +34,8 @@ public class FoodPersistenceConverterUnitTest {
         new BigDecimal("0.00"),
         "https://example.com/cola.png",
         "OPENFOODFACTS",
-        "1234567890123"
+        "1234567890123",
+        "VEGAN"
     );
     FoodPersistenceConverter converter = new FoodPersistenceConverter();
 
@@ -54,6 +56,7 @@ public class FoodPersistenceConverterUnitTest {
     assertThat(result.getImageUrl()).isEqualTo("https://example.com/cola.png");
     assertThat(result.getSource()).isEqualTo(FoodSource.OPENFOODFACTS);
     assertThat(result.getExternalId()).isEqualTo("1234567890123");
+    assertThat(result.getDiet()).isEqualTo(Diet.VEGAN);
   }
 
   @Test
@@ -70,6 +73,7 @@ public class FoodPersistenceConverterUnitTest {
     assertThat(result.getSource()).isEqualTo(FoodSource.MANUAL);
     assertThat(result.getBrand()).isNull();
     assertThat(result.getExternalId()).isNull();
+    assertThat(result.getDiet()).isEqualTo(Diet.UNKNOWN);
   }
 
   @Test
@@ -92,7 +96,8 @@ public class FoodPersistenceConverterUnitTest {
         new BigDecimal("0.00"),
         "https://example.com/cola.png",
         FoodSource.OPENFOODFACTS,
-        "1234567890123"
+        "1234567890123",
+        Diet.VEGAN
     );
     FoodPersistenceConverter converter = new FoodPersistenceConverter();
 
@@ -105,6 +110,7 @@ public class FoodPersistenceConverterUnitTest {
     assertThat(result.getImageUrl()).isEqualTo("https://example.com/cola.png");
     assertThat(result.getSource()).isEqualTo("OPENFOODFACTS");
     assertThat(result.getExternalId()).isEqualTo("1234567890123");
+    assertThat(result.getDiet()).isEqualTo("VEGAN");
   }
 
   @Test
@@ -118,6 +124,7 @@ public class FoodPersistenceConverterUnitTest {
 
     // Assert
     assertThat(result.getSource()).isEqualTo("MANUAL");
+    assertThat(result.getDiet()).isEqualTo("UNKNOWN");
   }
 
   @Test
@@ -125,7 +132,7 @@ public class FoodPersistenceConverterUnitTest {
     // Arrange
     Food food = new Food(
         UUID.randomUUID(), "Apple", new BigDecimal("52"), new BigDecimal("100"),
-        null, null, null, null, null, null, null, null, null, null, null, null, null
+        null, null, null, null, null, null, null, null, null, null, null, null, null, null
     );
     FoodPersistenceConverter converter = new FoodPersistenceConverter();
 

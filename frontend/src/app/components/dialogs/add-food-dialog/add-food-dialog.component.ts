@@ -13,6 +13,10 @@ import { LabelComponent } from '../../label/label.component'
 import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { FormFactoryService } from '../../../services/factory/form.factory'
 import { NumberInputComponent } from '../../inputs/number-input/number-input.component'
+import {
+  SelectComponent,
+  SelectOption,
+} from '../../inputs/select/select.component'
 import { FoodStore } from '../../../api/stores/food.store'
 
 @Component({
@@ -23,6 +27,7 @@ import { FoodStore } from '../../../api/stores/food.store'
     LabelComponent,
     ReactiveFormsModule,
     NumberInputComponent,
+    SelectComponent,
   ],
   templateUrl: './add-food-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +40,13 @@ export class AddFoodDialogComponent extends Dialog {
   private readonly foodStore = inject(FoodStore)
   foodName: WritableSignal<string> = signal('')
 
+  protected readonly dietOptions: SelectOption[] = [
+    { value: 'UNKNOWN', label: 'Unbekannt' },
+    { value: 'VEGAN', label: 'Vegan' },
+    { value: 'VEGETARIAN', label: 'Vegetarisch' },
+    { value: 'NON_VEGETARIAN', label: 'Nicht vegetarisch' },
+  ]
+
   constructor() {
     super()
     this.food = this.formFactory
@@ -42,6 +54,7 @@ export class AddFoodDialogComponent extends Dialog {
       .control('name', '', [Validators.required, Validators.minLength(3)])
       .control('grams', '0', [Validators.required, Validators.minLength(1)])
       .control('calory', '0', [Validators.required, Validators.minLength(2)])
+      .control('diet', 'UNKNOWN', [])
       .build()
 
     effect(() => {})

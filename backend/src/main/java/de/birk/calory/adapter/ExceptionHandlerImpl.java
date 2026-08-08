@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import de.birk.calory.exception.EmailAlreadyInUseException;
 import de.birk.calory.exception.InvalidCredentialsException;
+import de.birk.calory.exception.InvalidSortParameterException;
 import de.birk.calory.exception.InvalidTokenException;
 import de.birk.calory.exception.TokenExpiredException;
 import de.birk.calory.exception.ValidationException;
@@ -79,6 +80,20 @@ public class ExceptionHandlerImpl extends ResponseEntityExceptionHandler {
         body,
         new HttpHeaders(),
         HttpStatus.UNAUTHORIZED,
+        request
+    );
+  }
+
+  @ExceptionHandler(value = {InvalidSortParameterException.class})
+  protected ResponseEntity<Object> handleInvalidSortParameter(
+      RuntimeException e,
+      WebRequest request
+  ) {
+    return handleExceptionInternal(
+        e,
+        e.getMessage(),
+        new HttpHeaders(),
+        HttpStatus.BAD_REQUEST,
         request
     );
   }
