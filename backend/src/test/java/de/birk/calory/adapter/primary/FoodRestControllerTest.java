@@ -225,9 +225,9 @@ public class FoodRestControllerTest extends AbstractTestBase {
   @DisplayName("search filters by a case-insensitive substring of the name")
   public void getAllFoodsFiltersByCaseInsensitiveSearchTest() throws Exception {
     String accessToken = registerAndGetAccessToken();
-    createFood(accessToken, "Vollmilch", "0");
-    createFood(accessToken, "Hafermilch", "0");
-    createFood(accessToken, "Apfelsaft", "0");
+    createFood(accessToken, "Vollmilch", "UNKNOWN");
+    createFood(accessToken, "Hafermilch", "UNKNOWN");
+    createFood(accessToken, "Apfelsaft", "UNKNOWN");
 
     this.mockMvc.perform(
             get("/api/food")
@@ -245,8 +245,8 @@ public class FoodRestControllerTest extends AbstractTestBase {
   @DisplayName("an empty search returns every food item again")
   public void getAllFoodsWithBlankSearchReturnsEverythingTest() throws Exception {
     String accessToken = registerAndGetAccessToken();
-    createFood(accessToken, "Vollmilch", "0");
-    createFood(accessToken, "Apfelsaft", "0");
+    createFood(accessToken, "Vollmilch", "UNKNOWN");
+    createFood(accessToken, "Apfelsaft", "UNKNOWN");
 
     this.mockMvc.perform(
             get("/api/food")
