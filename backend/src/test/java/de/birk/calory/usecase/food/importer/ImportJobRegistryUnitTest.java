@@ -15,10 +15,11 @@ public class ImportJobRegistryUnitTest {
     ImportJobRegistry registry = new ImportJobRegistry();
 
     // Act
-    FoodImportJobStatus status = registry.createJob();
+    FoodImportJobStatus status = registry.createJob(1024L);
 
     // Assert
     assertThat(status.getState()).isEqualTo(ImportJobState.RUNNING);
+    assertThat(status.getTotalBytes()).isEqualTo(1024L);
     assertThat(registry.findJob(status.getJobId())).contains(status);
   }
 

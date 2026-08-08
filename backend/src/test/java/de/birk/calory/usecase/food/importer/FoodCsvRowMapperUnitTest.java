@@ -142,6 +142,74 @@ public class FoodCsvRowMapperUnitTest {
   }
 
   @Test
+  public void rejectsRowWithImplausiblyHighCaloriesTest() throws IOException {
+    // Arrange - 10447.76 kcal/100g is physically impossible, malformed source data
+    CSVRecord record = parseRow(
+        "123\tCola\tAcme\tBeverages\t10447.76\t\t0\t0\t0\t0\t0\t0\t0\t0\t"
+    );
+
+    // Act
+    Optional<FoodPersistence> result = mapper.map(record);
+
+    // Assert
+    assertThat(result).isEmpty();
+  }
+
+  @Test
+  public void rejectsRowWithNegativeCaloriesTest() throws IOException {
+    // Arrange
+    CSVRecord record = parseRow(
+        "123\tCola\tAcme\tBeverages\t-1\t\t0\t0\t0\t0\t0\t0\t0\t0\t"
+    );
+
+    // Act
+    Optional<FoodPersistence> result = mapper.map(record);
+
+    // Assert
+    assertThat(result).isEmpty();
+  }
+
+  @Test
+  public void acceptsCaloriesAtThePlausibleBoundariesTest() throws IOException {
+    // Arrange - 0 and 900 are both inclusive boundaries of the plausible range
+    CSVRecord zeroCalories = parseRow(
+        "123\tWater\tAcme\tBeverages\t0\t\t0\t0\t0\t0\t0\t0\t0\t0\t"
+    );
+    CSVRecord maxCalories = parseRow(
+        "124\tOil\tAcme\tOils\t900\t\t0\t0\t0\t0\t0\t0\t0\t0\t"
+    );
+
+    // Act
+    Optional<FoodPersistence> zeroResult = mapper.map(zeroCalories);
+    Optional<FoodPersistence> maxResult = mapper.map(maxCalories);
+
+    // Assert
+    assertThat(zeroResult).isPresent();
+    assertThat(zeroResult.get().getCalory()).isEqualByComparingTo("0.00");
+    assertThat(maxResult).isPresent();
+    assertThat(maxResult.get().getCalory()).isEqualByComparingTo("900.00");
+  }
+
+  @Test
+  public void nullsOutASingleImplausibleMacroWithoutRejectingTheRowTest() throws IOException {
+    // Arrange - fat_100g of 140 is implausible (can't exceed the 100g the product is measured
+    // in), but the rest of the row (name, brand, calories) is still valid.
+    CSVRecord record = parseRow(
+        "123\tCola\tAcme\tBeverages\t42\t\t140\t0\t10.6\t10.6\t0\t0\t0.01\t0\t"
+    );
+
+    // Act
+    Optional<FoodPersistence> result = mapper.map(record);
+
+    // Assert
+    assertThat(result).isPresent();
+    FoodPersistence food = result.get();
+    assertThat(food.getCalory()).isEqualByComparingTo("42.00");
+    assertThat(food.getFat()).isNull();
+    assertThat(food.getCarbohydrates()).isEqualByComparingTo("10.60");
+  }
+
+  @Test
   public void leavesOptionalFieldsNullWhenBlankTest() throws IOException {
     // Arrange
     CSVRecord record = parseRow(
@@ -160,10 +228,31 @@ public class FoodCsvRowMapperUnitTest {
     assertThat(food.getImageUrl()).isNull();
   }
 
+  @Test
+  public void parsesAProductNameWithAnEmbeddedQuoteCharacterAsLiteralTextTest()
+      throws IOException {
+    // Arrange - a `"` in free text (e.g. an inch mark) is not CSV field encapsulation in this
+    // raw, unescaped TSV export; the row must parse normally instead of crashing the tokenizer.
+    CSVRecord record = parseRow(
+        "123\t12\" Pizza Margherita\tAcme\tFrozen Food\t250\t\t0\t0\t0\t0\t0\t0\t0\t0\t"
+    );
+
+    // Act
+    Optional<FoodPersistence> result = mapper.map(record);
+
+    // Assert
+    assertThat(result).isPresent();
+    assertThat(result.get().getName()).isEqualTo("12\" Pizza Margherita");
+  }
+
   private CSVRecord parseRow(String row) throws IOException {
     String csv = HEADER + "\n" + row;
+    // Mirrors FoodCsvImportUsecase's parser config exactly, including the disabled quote
+    // character - the OpenFoodFacts export is a raw TSV without CSV-style quote-escaping, so a
+    // `"` in free text must parse as a literal character, not a field encapsulation marker.
     try (CSVParser parser = CSVFormat.DEFAULT
         .withDelimiter('\t')
+        .withQuote(null)
         .withFirstRecordAsHeader()
         .withIgnoreHeaderCase()
         .withTrim()

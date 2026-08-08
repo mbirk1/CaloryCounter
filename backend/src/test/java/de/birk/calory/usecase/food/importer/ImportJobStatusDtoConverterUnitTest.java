@@ -13,7 +13,8 @@ public class ImportJobStatusDtoConverterUnitTest {
   @Test
   public void toDtoCopiesAllFieldsTest() {
     // Arrange
-    FoodImportJobStatus status = new FoodImportJobStatus(UUID.randomUUID());
+    FoodImportJobStatus status = new FoodImportJobStatus(UUID.randomUUID(), 2000);
+    status.incrementBytesRead(1500);
     status.incrementProcessed(10);
     status.incrementImported(6);
     status.incrementSkipped(3);
@@ -27,6 +28,8 @@ public class ImportJobStatusDtoConverterUnitTest {
     // Assert
     assertThat(dto.getJobId()).isEqualTo(status.getJobId());
     assertThat(dto.getState()).isEqualTo("COMPLETED");
+    assertThat(dto.getTotalBytes()).isEqualTo(2000);
+    assertThat(dto.getBytesRead()).isEqualTo(1500);
     assertThat(dto.getProcessedRows()).isEqualTo(10);
     assertThat(dto.getImportedCount()).isEqualTo(6);
     assertThat(dto.getSkippedCount()).isEqualTo(3);

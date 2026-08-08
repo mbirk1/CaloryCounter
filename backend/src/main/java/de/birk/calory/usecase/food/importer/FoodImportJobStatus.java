@@ -16,6 +16,8 @@ public class FoodImportJobStatus {
 
   private final UUID jobId;
   private final Instant startedAt;
+  private final long totalBytes;
+  private final AtomicLong bytesRead = new AtomicLong();
   private final AtomicLong processedRows = new AtomicLong();
   private final AtomicLong importedCount = new AtomicLong();
   private final AtomicLong skippedCount = new AtomicLong();
@@ -23,13 +25,35 @@ public class FoodImportJobStatus {
   private volatile ImportJobState state = ImportJobState.RUNNING;
   private volatile Instant finishedAt;
 
-  public FoodImportJobStatus(UUID jobId) {
+  /**
+   * Creates a new, running job status.
+   *
+   * @param jobId the job identifier
+   * @param totalBytes the size in bytes of the staged upload, used as the denominator for a
+   *     processing-progress percentage on the client (row counts alone can't be turned into a
+   *     percentage up front, since the total row count of a CSV isn't known without reading the
+   *     whole file first)
+   */
+  public FoodImportJobStatus(UUID jobId, long totalBytes) {
     this.jobId = jobId;
+    this.totalBytes = totalBytes;
     this.startedAt = Instant.now();
   }
 
   public UUID getJobId() {
     return jobId;
+  }
+
+  public long getTotalBytes() {
+    return totalBytes;
+  }
+
+  public long getBytesRead() {
+    return bytesRead.get();
+  }
+
+  public void incrementBytesRead(long delta) {
+    bytesRead.addAndGet(delta);
   }
 
   public Instant getStartedAt() {

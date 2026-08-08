@@ -73,6 +73,9 @@ public class FoodPersistence {
   @Column(name = "external_id")
   private String externalId;
 
+  @Column(name = "import_job_id")
+  private UUID importJobId;
+
   @ManyToMany(mappedBy = "foods")
   private Set<RecipePersistence> recipe;
 
@@ -221,5 +224,13 @@ public class FoodPersistence {
 
   public String getExternalId() {
     return externalId;
+  }
+
+  public UUID getImportJobId() {
+    return importJobId;
+  }
+
+  public void setImportJobId(UUID importJobId) {
+    this.importJobId = importJobId;
   }
 }

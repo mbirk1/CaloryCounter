@@ -12,6 +12,8 @@ public class ImportJobStatusDto {
 
   private UUID jobId;
   private String state;
+  private long totalBytes;
+  private long bytesRead;
   private long processedRows;
   private long importedCount;
   private long skippedCount;
@@ -27,6 +29,8 @@ public class ImportJobStatusDto {
    *
    * @param jobId the job identifier
    * @param state the name of the {@code ImportJobState} enum constant
+   * @param totalBytes the size in bytes of the staged upload
+   * @param bytesRead the number of bytes of the staged upload read so far
    * @param processedRows the number of CSV rows read so far
    * @param importedCount the number of rows successfully imported
    * @param skippedCount the number of rows skipped due to the quality filter or a duplicate
@@ -37,6 +41,8 @@ public class ImportJobStatusDto {
   public ImportJobStatusDto(
       UUID jobId,
       String state,
+      long totalBytes,
+      long bytesRead,
       long processedRows,
       long importedCount,
       long skippedCount,
@@ -45,6 +51,8 @@ public class ImportJobStatusDto {
       Instant finishedAt) {
     this.jobId = jobId;
     this.state = state;
+    this.totalBytes = totalBytes;
+    this.bytesRead = bytesRead;
     this.processedRows = processedRows;
     this.importedCount = importedCount;
     this.skippedCount = skippedCount;
@@ -59,6 +67,14 @@ public class ImportJobStatusDto {
 
   public String getState() {
     return state;
+  }
+
+  public long getTotalBytes() {
+    return totalBytes;
+  }
+
+  public long getBytesRead() {
+    return bytesRead;
   }
 
   public long getProcessedRows() {

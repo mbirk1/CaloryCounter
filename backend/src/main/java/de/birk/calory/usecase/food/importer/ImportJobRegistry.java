@@ -22,10 +22,11 @@ public class ImportJobRegistry {
   /**
    * Creates and registers a new job, in {@code RUNNING} state.
    *
+   * @param totalBytes the size in bytes of the staged upload
    * @return the newly created job status
    */
-  public FoodImportJobStatus createJob() {
-    FoodImportJobStatus status = new FoodImportJobStatus(UUID.randomUUID());
+  public FoodImportJobStatus createJob(long totalBytes) {
+    FoodImportJobStatus status = new FoodImportJobStatus(UUID.randomUUID(), totalBytes);
     this.jobs.put(status.getJobId(), status);
     return status;
   }

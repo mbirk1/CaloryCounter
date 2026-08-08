@@ -23,6 +23,8 @@ public class ImportJobStatusDtoConverter {
     return new ImportJobStatusDto(
         status.getJobId(),
         status.getState().name(),
+        status.getTotalBytes(),
+        status.getBytesRead(),
         status.getProcessedRows(),
         status.getImportedCount(),
         status.getSkippedCount(),

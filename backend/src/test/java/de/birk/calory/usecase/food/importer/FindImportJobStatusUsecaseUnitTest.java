@@ -25,7 +25,7 @@ public class FindImportJobStatusUsecaseUnitTest {
   public void findsAnExistingJobTest() {
     // Arrange
     UUID jobId = UUID.randomUUID();
-    FoodImportJobStatus status = new FoodImportJobStatus(jobId);
+    FoodImportJobStatus status = new FoodImportJobStatus(jobId, 0);
     when(jobRegistry.findJob(jobId)).thenReturn(Optional.of(status));
     FindImportJobStatusUsecase usecase = new FindImportJobStatusUsecase(jobRegistry);
 

@@ -21,7 +21,7 @@ public class FoodCsvImportDispatcherUnitTest {
     // Arrange
     FoodCsvImportDispatcher dispatcher = new FoodCsvImportDispatcher();
     Path filePath = Path.of("does-not-matter.csv");
-    FoodImportJobStatus status = new FoodImportJobStatus(UUID.randomUUID());
+    FoodImportJobStatus status = new FoodImportJobStatus(UUID.randomUUID(), 0);
 
     // Act
     dispatcher.dispatch(usecase, filePath, status);

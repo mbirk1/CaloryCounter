@@ -44,10 +44,10 @@ import de.birk.calory.adapter.secondary.model.FoodPersistence;
 @Transactional
 public class FoodImportRestControllerTest extends AbstractTestBase {
 
-  // Matches src/test/resources/csv/sample-food-import.csv: the external ids of the six rows
+  // Matches src/test/resources/csv/sample-food-import.csv: the external ids of the seven rows
   // that pass the quality filter and are expected to be imported.
   private static final List<String> IMPORTED_EXTERNAL_IDS =
-      List.of("0001", "0002", "0006", "0007", "0009", "0010");
+      List.of("0001", "0002", "0006", "0007", "0009", "0010", "0011");
 
   @Autowired
   private FoodRepository foodRepository;
@@ -79,14 +79,21 @@ public class FoodImportRestControllerTest extends AbstractTestBase {
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
     ).andExpect(status().isAccepted()).andReturn();
 
+    // The staged upload's total size is known immediately, before any row has been processed -
+    // clients need it from the very first response to render a processing-progress percentage.
+    long totalBytes = ((Number) asJson(startResult).read("$.totalBytes")).longValue();
+    assertThat(totalBytes).isEqualTo(csvBytes.length);
+
     String jobId = asJson(startResult).read("$.jobId");
     ReadContext finalStatus = pollUntilFinished(jobId, accessToken);
 
     assertThat((String) finalStatus.read("$.state")).isEqualTo("COMPLETED");
-    assertThat((Integer) finalStatus.read("$.processedRows")).isEqualTo(10);
-    assertThat((Integer) finalStatus.read("$.importedCount")).isEqualTo(6);
+    assertThat((Integer) finalStatus.read("$.processedRows")).isEqualTo(11);
+    assertThat((Integer) finalStatus.read("$.importedCount")).isEqualTo(7);
     assertThat((Integer) finalStatus.read("$.skippedCount")).isEqualTo(4);
     assertThat((Integer) finalStatus.read("$.errorCount")).isEqualTo(0);
+    assertThat(((Number) finalStatus.read("$.totalBytes")).longValue()).isEqualTo(totalBytes);
+    assertThat(((Number) finalStatus.read("$.bytesRead")).longValue()).isEqualTo(totalBytes);
 
     Optional<FoodPersistence> cola = this.foodRepository.findByExternalId("0001");
     assertThat(cola).isPresent();
@@ -98,6 +105,12 @@ public class FoodImportRestControllerTest extends AbstractTestBase {
     Optional<FoodPersistence> multiBrand = this.foodRepository.findByExternalId("0007");
     assertThat(multiBrand).isPresent();
     assertThat(multiBrand.get().getBrand()).isEqualTo("Snacky");
+
+    // Reproduces the real Lexer crash: a `"` in free text (this raw TSV export has no CSV-style
+    // quote-escaping) must parse as a literal character instead of aborting the whole import.
+    Optional<FoodPersistence> embeddedQuote = this.foodRepository.findByExternalId("0011");
+    assertThat(embeddedQuote).isPresent();
+    assertThat(embeddedQuote.get().getName()).isEqualTo("12\" Pizza Margherita");
 
     assertThat(this.foodRepository.findByExternalId("0003")).isEmpty();
     assertThat(this.foodRepository.findByExternalId("0004")).isEmpty();

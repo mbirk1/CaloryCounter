@@ -9,3 +9,4 @@ code	product_name	brands	categories_en	energy-kcal_100g	energy_100g	fat_100g	sat
 0008	Broken Numbers	Acme	Snacks	abc										
 0009	Yogurt	DairyCo	Dairy	59		0.4	0.2	7.7	7	0	10	0.1	0.04	
 0010	Bread	BakeryX	Bakery	265		3.2	0.7	49	5	3	9	1.2	0.48	
+0011	12" Pizza Margherita	PizzaCo	Frozen Food	250		8	3	28	2	2	11	1	0.4	

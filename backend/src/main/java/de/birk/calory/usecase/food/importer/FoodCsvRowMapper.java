@@ -15,9 +15,10 @@ import de.birk.calory.domain.food.FoodSource;
  *
  * <p>A row is only mapped if the mandatory quality filter is satisfied: a non-blank product
  * name, a non-blank brand and either {@code energy-kcal_100g} or a convertible
- * {@code energy_100g} (kJ) value. All other fields are optional and simply left {@code null}
- * when missing. Numeric values are rounded to 2 decimal places to match the database column
- * precision.
+ * {@code energy_100g} (kJ) value that is also plausible (0-900 kcal per 100g). All other fields
+ * are optional and simply left {@code null} when missing, unparsable, or - for per-100g
+ * macronutrients - implausible (outside 0-100g). Numeric values are rounded to 2 decimal places
+ * to match the database column precision.
  *
  * @author Marius Birk
  */
@@ -42,6 +43,19 @@ public class FoodCsvRowMapper {
   private static final BigDecimal KCAL_PER_KJ = new BigDecimal("4.184");
   private static final BigDecimal FIXED_GRAMS = new BigDecimal("100");
   private static final int SCALE = 2;
+
+  /**
+   * Upper bound for a plausible {@code energy-kcal_100g} value. Pure fat/oil, the most
+   * energy-dense food there is, tops out around 900 kcal per 100g - values above this are
+   * malformed source data (e.g. a units mix-up), not real products.
+   */
+  private static final BigDecimal MAX_PLAUSIBLE_CALORIES = new BigDecimal("900");
+
+  /**
+   * Upper bound for a plausible per-100g macronutrient value: a nutrient can never weigh more
+   * than the 100g of product it's measured in.
+   */
+  private static final BigDecimal MAX_PLAUSIBLE_MACRO_GRAMS = new BigDecimal("100");
 
   /**
    * Maps a single CSV record to a food item, if it satisfies the mandatory quality filter.
@@ -72,14 +86,14 @@ public class FoodCsvRowMapper {
         FIXED_GRAMS,
         brand,
         firstOf(get(record, COLUMN_CATEGORIES)),
-        decimal(record, COLUMN_FAT),
-        decimal(record, COLUMN_SATURATED_FAT),
-        decimal(record, COLUMN_CARBOHYDRATES),
-        decimal(record, COLUMN_SUGAR),
-        decimal(record, COLUMN_FIBER),
-        decimal(record, COLUMN_PROTEIN),
-        decimal(record, COLUMN_SALT),
-        decimal(record, COLUMN_SODIUM),
+        macroGrams(record, COLUMN_FAT),
+        macroGrams(record, COLUMN_SATURATED_FAT),
+        macroGrams(record, COLUMN_CARBOHYDRATES),
+        macroGrams(record, COLUMN_SUGAR),
+        macroGrams(record, COLUMN_FIBER),
+        macroGrams(record, COLUMN_PROTEIN),
+        macroGrams(record, COLUMN_SALT),
+        macroGrams(record, COLUMN_SODIUM),
         trimToNull(get(record, COLUMN_IMAGE_URL)),
         FoodSource.OPENFOODFACTS.name(),
         trimToNull(get(record, COLUMN_CODE))
@@ -89,13 +103,35 @@ public class FoodCsvRowMapper {
   private BigDecimal calories(CSVRecord record) {
     BigDecimal kcal = decimal(record, COLUMN_ENERGY_KCAL);
     if (kcal != null) {
-      return kcal;
+      return isInRange(kcal, MAX_PLAUSIBLE_CALORIES) ? kcal : null;
     }
     BigDecimal kilojoule = decimal(record, COLUMN_ENERGY_KJ);
     if (kilojoule == null) {
       return null;
     }
-    return kilojoule.divide(KCAL_PER_KJ, SCALE, RoundingMode.HALF_UP);
+    BigDecimal convertedKcal = kilojoule.divide(KCAL_PER_KJ, SCALE, RoundingMode.HALF_UP);
+    return isInRange(convertedKcal, MAX_PLAUSIBLE_CALORIES) ? convertedKcal : null;
+  }
+
+  /**
+   * Reads a per-100g macronutrient value, additionally discarding it (leaving the field
+   * {@code null}) if it falls outside {@link #MAX_PLAUSIBLE_MACRO_GRAMS} - unlike an implausible
+   * calorie value, a single bad macronutrient reading doesn't invalidate the rest of the row.
+   *
+   * @param record the parsed CSV row
+   * @param column the name of the macronutrient column to read
+   * @return the plausible value, or {@code null} if missing, unparsable or implausible
+   */
+  private BigDecimal macroGrams(CSVRecord record, String column) {
+    BigDecimal value = decimal(record, column);
+    if (value == null) {
+      return null;
+    }
+    return isInRange(value, MAX_PLAUSIBLE_MACRO_GRAMS) ? value : null;
+  }
+
+  private boolean isInRange(BigDecimal value, BigDecimal max) {
+    return value.compareTo(BigDecimal.ZERO) >= 0 && value.compareTo(max) <= 0;
   }
 
   private BigDecimal decimal(CSVRecord record, String column) {
