@@ -10,7 +10,9 @@
     "test": "ng test",
     "lint": "npx eslint \"src/**/*.{ts,html}\" --debug\n",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"src/**/*.{ts,html,scss,css,json}\""
+    "format": "prettier --write \"src/**/*.{ts,html,scss,css,json}\"",
+    "e2e": "playwright test",
+    "e2e:backend": "mvn -f ../backend/pom.xml spring-boot:run"
   },
   "private": true,
   "dependencies": {
@@ -38,6 +40,7 @@
     "@angular-devkit/build-angular": "^22.0.7",
     "@angular/cli": "^22.0.7",
     "@angular/compiler-cli": "^22.0.7",
+    "@playwright/test": "^1.61.1",
     "@types/jasmine": "^6.0.0",
     "angular-eslint": "^22.1.0",
     "autoprefixer": "^10.5.4",

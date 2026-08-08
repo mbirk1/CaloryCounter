@@ -11,6 +11,7 @@ public class FoodDto {
   private String name;
   private BigDecimal calory;
   private BigDecimal grams;
+  private String diet;
 
   public FoodDto() {
   }
@@ -21,11 +22,14 @@ public class FoodDto {
    * @param name the name
    * @param calory amount of calories for the grams
    * @param grams amount of grams
+   * @param diet the name of the {@code Diet} enum constant, optional - {@code null} defaults
+   *     to {@code UNKNOWN}
    */
-  public FoodDto(String name, BigDecimal calory, BigDecimal grams) {
+  public FoodDto(String name, BigDecimal calory, BigDecimal grams, String diet) {
     this.name = name;
     this.calory = calory;
     this.grams = grams;
+    this.diet = diet;
   }
 
   public String getName() {
@@ -38,5 +42,9 @@ public class FoodDto {
 
   public BigDecimal getGrams() {
     return grams;
+  }
+
+  public String getDiet() {
+    return diet;
   }
 }

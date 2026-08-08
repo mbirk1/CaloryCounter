@@ -1,0 +1,12 @@
+<div
+  role="alert"
+  class="rounded-lg px-4 py-3 text-sm font-semibold"
+  [class.bg-red-50]="variant() === 'error'"
+  [class.text-red-700]="variant() === 'error'"
+  [class.bg-tertiary]="variant() === 'success'"
+  [class.text-white]="variant() === 'success'"
+  [class.bg-primary-light]="variant() === 'info'"
+  [class.text-primary]="variant() === 'info'"
+>
+  {{ message() }}
+</div>

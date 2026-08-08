@@ -1,0 +1,92 @@
+<div class="flex flex-col bg-white rounded-xl p-6 gap-5 w-full max-w-md">
+  <label class="text-[#444444] font-bold text-xl">CSV-Import</label>
+
+  @if (csvImportService.fileName(); as name) {
+    <div class="text-sm text-gray-500 truncate">{{ name }}</div>
+  }
+
+  @switch (csvImportService.phase()) {
+    @case ('uploading') {
+      <div class="flex flex-col gap-2">
+        <span class="text-sm font-semibold text-[#444444]">Hochladen…</span>
+        <div
+          class="h-2 w-full rounded-full bg-neutral-lightGray overflow-hidden"
+        >
+          <div
+            class="h-full bg-button-primary transition-all"
+            [style.width.%]="csvImportService.uploadProgress()"
+          ></div>
+        </div>
+        <span class="text-xs text-gray-500">
+          {{ csvImportService.uploadProgress() }}%
+        </span>
+      </div>
+    }
+    @case ('processing') {
+      <div class="flex flex-col gap-2">
+        <span class="text-sm font-semibold text-[#444444]">Verarbeiten…</span>
+        <div
+          class="h-2 w-full rounded-full bg-neutral-lightGray overflow-hidden"
+        >
+          <div
+            class="h-full bg-button-primary transition-all"
+            [style.width.%]="csvImportService.processingProgress()"
+          ></div>
+        </div>
+        @if (csvImportService.jobStatus(); as job) {
+          <span class="text-xs text-gray-500">
+            {{ csvImportService.processingProgress() }}% ·
+            {{ job.processedRows }} Zeilen verarbeitet ({{
+              job.importedCount
+            }}
+            importiert, {{ job.skippedCount }} übersprungen,
+            {{ job.errorCount }} Fehler)
+          </span>
+        }
+      </div>
+    }
+    @case ('completed') {
+      @if (csvImportService.jobStatus(); as job) {
+        <app-alert
+          [variant]="'success'"
+          [message]="
+            'Import abgeschlossen: ' +
+            job.importedCount +
+            ' importiert, ' +
+            job.skippedCount +
+            ' übersprungen, ' +
+            job.errorCount +
+            ' Fehler'
+          "
+        />
+      }
+      <div class="flex justify-end">
+        <app-button [type]="'button'" [text]="'Schließen'" (click)="close()" />
+      </div>
+    }
+    @case ('failed') {
+      <app-alert
+        [variant]="'error'"
+        [message]="
+          csvImportService.errorMessage() ?? 'Der Import ist fehlgeschlagen.'
+        "
+      />
+      <div class="flex justify-end gap-3">
+        <app-button
+          [type]="'button'"
+          [text]="'Schließen'"
+          [style]="'text-[#444444] hover:underline rounded-lg p-2'"
+          (click)="close()"
+        />
+        <app-button
+          [type]="'button'"
+          [text]="'Erneut versuchen'"
+          (click)="retry()"
+        />
+      </div>
+    }
+    @default {
+      <span class="text-sm text-gray-500">Bereit.</span>
+    }
+  }
+</div>

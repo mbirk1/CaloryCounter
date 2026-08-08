@@ -1,0 +1,58 @@
+<div class="flex flex-col bg-white rounded-xl p-5 gap-5 max-w-lg">
+  <div class="mb-4 flex items-center justify-between gap-4">
+    <label class="text-[#444444] font-bold text-xl">{{ data.name }}</label>
+    @if (data.imageUrl) {
+      <img
+        [src]="data.imageUrl"
+        alt=""
+        class="h-16 w-16 object-cover rounded-lg"
+      />
+    }
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+    <div class="text-[#444444] font-bold">
+      <app-label [text]="'Marke:'" />
+    </div>
+    <div>{{ data.brand ?? '–' }}</div>
+    <div class="text-[#444444] font-bold">
+      <app-label [text]="'Kategorie:'" />
+    </div>
+    <div>{{ data.category ?? '–' }}</div>
+    <div class="text-[#444444] font-bold">
+      <app-label [text]="'Kalorien (je ' + data.grams + 'g):'" />
+    </div>
+    <div>{{ data.calory }}</div>
+    <div class="text-[#444444] font-bold">
+      <app-label [text]="'Fett:'" />
+    </div>
+    <div>{{ data.fat ?? '–' }}</div>
+    <div class="text-[#444444] font-bold">
+      <app-label [text]="'davon gesättigt:'" />
+    </div>
+    <div>{{ data.saturatedFat ?? '–' }}</div>
+    <div class="text-[#444444] font-bold">
+      <app-label [text]="'Kohlenhydrate:'" />
+    </div>
+    <div>{{ data.carbohydrates ?? '–' }}</div>
+    <div class="text-[#444444] font-bold">
+      <app-label [text]="'davon Zucker:'" />
+    </div>
+    <div>{{ data.sugar ?? '–' }}</div>
+    <div class="text-[#444444] font-bold">
+      <app-label [text]="'Ballaststoffe:'" />
+    </div>
+    <div>{{ data.fiber ?? '–' }}</div>
+    <div class="text-[#444444] font-bold">
+      <app-label [text]="'Eiweiß:'" />
+    </div>
+    <div>{{ data.protein ?? '–' }}</div>
+    <div class="text-[#444444] font-bold">
+      <app-label [text]="'Salz:'" />
+    </div>
+    <div>{{ data.salt ?? '–' }}</div>
+    <div class="text-[#444444] font-bold">
+      <app-label [text]="'Natrium:'" />
+    </div>
+    <div>{{ data.sodium ?? '–' }}</div>
+  </div>
+</div>

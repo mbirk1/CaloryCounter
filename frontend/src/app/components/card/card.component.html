@@ -1,0 +1,9 @@
+<div class="{{ panelClass() }} flex flex-col gap-2">
+  @if (title() !== '') {
+    <span
+      class="text-neutral-darkGray font-bold text-sm uppercase tracking-wide"
+      >{{ title() }}</span
+    >
+  }
+  <ng-content></ng-content>
+</div>

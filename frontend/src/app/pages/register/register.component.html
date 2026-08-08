@@ -1,0 +1,75 @@
+<div class="flex justify-center px-4 py-12">
+  <form
+    class="flex flex-col bg-white rounded-xl p-8 gap-5 w-full max-w-sm"
+    [formGroup]="form"
+    (submit)="onSubmit()"
+  >
+    <div class="flex flex-col items-center gap-2 mb-2">
+      <app-logo [size]="48" />
+      <span class="text-xl font-bold text-neutral-darkGray"
+        >Konto erstellen</span
+      >
+      <span class="text-sm text-neutral-darkGray text-center">
+        Starte noch heute mit dem Tracken deiner Ernährung.
+      </span>
+    </div>
+
+    @if (errorMessage() !== '') {
+      <app-alert [message]="errorMessage()" />
+    }
+
+    <div class="flex flex-col gap-1">
+      <app-label [text]="'E-Mail Adresse'" />
+      <app-text-input
+        [type]="'email'"
+        [placeholder]="'beispiel@mail.de'"
+        [formControlName]="'email'"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <app-label [text]="'Passwort'" />
+      <app-password-input [formControlName]="'password'" />
+      <div
+        class="h-1.5 w-full rounded-full bg-neutral-lightGray overflow-hidden mt-1"
+      >
+        <div
+          class="h-full transition-all"
+          [class.bg-red-400]="passwordStrength <= 1"
+          [class.bg-secondary]="passwordStrength === 2"
+          [class.bg-tertiary]="passwordStrength >= 3"
+          [style.width.%]="(passwordStrength / 3) * 100"
+        ></div>
+      </div>
+      <span class="text-xs text-neutral-darkGray"
+        >Mind. 8 Zeichen, Buchstaben und Zahlen empfohlen.</span
+      >
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <app-label [text]="'Passwort bestätigen'" />
+      <app-password-input [formControlName]="'confirmPassword'" />
+      @if (
+        form.errors?.['passwordMismatch'] && form.get('confirmPassword')?.value
+      ) {
+        <span class="text-xs text-red-600"
+          >Die Passwörter stimmen nicht überein.</span
+        >
+      }
+    </div>
+
+    <app-button
+      [type]="'submit'"
+      [text]="'Registrieren'"
+      [disabled]="form.invalid"
+      [loading]="loading()"
+    />
+
+    <span class="text-center text-sm text-neutral-darkGray">
+      Bereits registriert?
+      <a routerLink="/login" class="text-primary font-semibold hover:underline"
+        >Jetzt anmelden</a
+      >
+    </span>
+  </form>
+</div>

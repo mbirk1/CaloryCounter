@@ -1,11 +1,49 @@
 <div class="p-4">
-  <div class="flex justify-end">
-    <app-button
-      [type]="'button'"
-      [text]="'Lebensmittel hinzufügen'"
-      (click)="handleFoodDialog()"
-      class="right-0"
-    />
+  <div class="flex justify-between items-center gap-4 flex-wrap">
+    <div class="w-64">
+      <app-text-input
+        [formControl]="searchControl"
+        [placeholder]="'Lebensmittel suchen...'"
+        [type]="'search'"
+      />
+    </div>
+    <div class="flex gap-4">
+      <input
+        #csvFileInput
+        type="file"
+        accept=".csv"
+        class="hidden"
+        (change)="onCsvFileSelected($event)"
+      />
+      <app-button
+        [type]="'button'"
+        [text]="'CSV importieren'"
+        [disabled]="csvImportService.isActive()"
+        (click)="csvFileInput.click()"
+        class="right-0"
+      />
+      <app-button
+        [type]="'button'"
+        [text]="'Lebensmittel hinzufügen'"
+        (click)="handleFoodDialog()"
+        class="right-0"
+      />
+    </div>
+  </div>
+  <div class="flex gap-3 mt-4" role="group" aria-label="Diät-Filter">
+    @for (option of dietOptions; track option.value) {
+      <app-button
+        [type]="'button'"
+        [text]="option.label"
+        [attr.aria-pressed]="isDietActive(option.value)"
+        [style]="
+          isDietActive(option.value)
+            ? 'bg-button-primary text-white rounded-lg px-3 py-1 text-sm'
+            : 'bg-neutral-lightGray hover:bg-gray-300 text-[#444444] rounded-lg px-3 py-1 text-sm'
+        "
+        (click)="onDietFilterSelected(option.value)"
+      />
+    }
   </div>
   <app-food-table [columnHeaders]="['Name', 'Calory', 'Grams', 'Actions']" />
 </div>
