@@ -1,58 +1,86 @@
-<div class="flex flex-col bg-white rounded-xl p-5 gap-5 max-w-lg">
-  <div class="mb-4 flex items-center justify-between gap-4">
-    <label class="text-[#444444] font-bold text-xl">{{ data.name }}</label>
+<div class="flex flex-col bg-white rounded-xl p-5 gap-5 max-w-lg w-full">
+  <div class="flex items-start justify-between gap-4">
+    <div class="flex items-center gap-2 min-w-0">
+      <app-diet-badge [diet]="data.diet" />
+      <span class="text-[#444444] font-bold text-xl truncate">{{
+        data.name
+      }}</span>
+    </div>
+    <button
+      type="button"
+      (click)="close()"
+      aria-label="Schließen"
+      class="text-gray-400 hover:text-gray-700 shrink-0"
+    >
+      <fa-icon [icon]="faXmark" />
+    </button>
+  </div>
+
+  <div class="flex flex-col sm:flex-row gap-4">
     @if (data.imageUrl) {
       <img
         [src]="data.imageUrl"
         alt=""
-        class="h-16 w-16 object-cover rounded-lg"
+        class="h-24 w-24 object-cover rounded-lg shrink-0 self-start"
       />
     }
+    <div class="flex flex-col gap-3 min-w-0">
+      @if (data.brand || data.category || sourceLabel) {
+        <div class="flex flex-wrap gap-2">
+          @if (data.brand) {
+            <span
+              class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-700"
+              >{{ data.brand }}</span
+            >
+          }
+          @if (data.category) {
+            <span
+              class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-700"
+              >{{ data.category }}</span
+            >
+          }
+          @if (sourceLabel) {
+            <span
+              class="px-2 py-1 text-xs font-medium rounded-full bg-gray-50 text-gray-500"
+              >{{ sourceLabel }}</span
+            >
+          }
+        </div>
+      }
+
+      <div class="flex items-baseline gap-2">
+        <span class="text-secondary">
+          <fa-icon [icon]="faFire" />
+        </span>
+        <span class="text-3xl font-bold text-[#444444]">{{ data.calory }}</span>
+        <span class="text-sm text-gray-500">kcal je {{ data.grams }} g</span>
+      </div>
+    </div>
   </div>
-  <div class="grid grid-cols-2 gap-4">
-    <div class="text-[#444444] font-bold">
-      <app-label [text]="'Marke:'" />
+
+  <app-card title="Nährwerte" panelClass="bg-gray-50 rounded-xl p-4">
+    <div class="flex flex-col gap-3">
+      @for (row of nutrientRows; track row.label) {
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center justify-between text-sm gap-2">
+            <span class="flex items-center gap-2 text-[#444444] min-w-0">
+              <span class="text-gray-400 w-4 shrink-0">
+                <fa-icon [icon]="row.icon" />
+              </span>
+              <span class="truncate">{{ row.label }}</span>
+            </span>
+            <span class="font-medium text-[#444444] shrink-0">
+              {{ row.value ?? '–' }}{{ unit(row.value) }}
+            </span>
+          </div>
+          <div class="h-1.5 w-full bg-gray-200 rounded-full overflow-hidden">
+            <div
+              class="h-full bg-primary rounded-full"
+              [style.width.%]="barWidth(row.value)"
+            ></div>
+          </div>
+        </div>
+      }
     </div>
-    <div>{{ data.brand ?? '–' }}</div>
-    <div class="text-[#444444] font-bold">
-      <app-label [text]="'Kategorie:'" />
-    </div>
-    <div>{{ data.category ?? '–' }}</div>
-    <div class="text-[#444444] font-bold">
-      <app-label [text]="'Kalorien (je ' + data.grams + 'g):'" />
-    </div>
-    <div>{{ data.calory }}</div>
-    <div class="text-[#444444] font-bold">
-      <app-label [text]="'Fett:'" />
-    </div>
-    <div>{{ data.fat ?? '–' }}</div>
-    <div class="text-[#444444] font-bold">
-      <app-label [text]="'davon gesättigt:'" />
-    </div>
-    <div>{{ data.saturatedFat ?? '–' }}</div>
-    <div class="text-[#444444] font-bold">
-      <app-label [text]="'Kohlenhydrate:'" />
-    </div>
-    <div>{{ data.carbohydrates ?? '–' }}</div>
-    <div class="text-[#444444] font-bold">
-      <app-label [text]="'davon Zucker:'" />
-    </div>
-    <div>{{ data.sugar ?? '–' }}</div>
-    <div class="text-[#444444] font-bold">
-      <app-label [text]="'Ballaststoffe:'" />
-    </div>
-    <div>{{ data.fiber ?? '–' }}</div>
-    <div class="text-[#444444] font-bold">
-      <app-label [text]="'Eiweiß:'" />
-    </div>
-    <div>{{ data.protein ?? '–' }}</div>
-    <div class="text-[#444444] font-bold">
-      <app-label [text]="'Salz:'" />
-    </div>
-    <div>{{ data.salt ?? '–' }}</div>
-    <div class="text-[#444444] font-bold">
-      <app-label [text]="'Natrium:'" />
-    </div>
-    <div>{{ data.sodium ?? '–' }}</div>
-  </div>
+  </app-card>
 </div>

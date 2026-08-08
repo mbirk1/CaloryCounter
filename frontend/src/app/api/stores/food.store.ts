@@ -8,11 +8,13 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core'
+import { HttpErrorResponse } from '@angular/common/http'
 import { FoodModel } from '../../models/FoodModel'
 import { PageResponse } from '../../models/PageResponse'
 import { Gateway } from '../gateways/gateway'
 import { firstValueFrom } from 'rxjs'
 import { API_ENDPOINTS } from '../../../environment/endpoints'
+import { ToastService } from '../../services/toast.service'
 
 const DEFAULT_PAGE_SIZE = 20
 
@@ -32,6 +34,7 @@ interface FoodQuery {
 })
 export class FoodStore {
   private readonly foodGateway = inject<Gateway<FoodModel>>(Gateway)
+  private readonly toastService = inject(ToastService)
 
   private readonly pageSignal: WritableSignal<number> = signal(0)
   private readonly searchSignal: WritableSignal<string | null> = signal(null)
@@ -39,6 +42,14 @@ export class FoodStore {
   private readonly sortSignal: WritableSignal<SortField> = signal('name')
   private readonly directionSignal: WritableSignal<SortDirection> =
     signal('asc')
+
+  // Tracks ids with a delete request currently in flight. The table reload after a successful
+  // delete isn't instant (it's a fresh network round trip), so without this a row stays
+  // clickable in the gap between confirming the delete and the table actually losing that row -
+  // a user re-clicking "Löschen" on what looks like an unresponsive button would otherwise fire
+  // a second delete for an already-gone item and get a confusing "already deleted" error toast.
+  private readonly pendingDeletesSignal: WritableSignal<ReadonlySet<string>> =
+    signal(new Set())
 
   foodResource: ResourceRef<PageResponse<FoodModel> | undefined> = resource({
     params: (): FoodQuery => ({
@@ -79,16 +90,77 @@ export class FoodStore {
   readonly sort: Signal<SortField> = this.sortSignal.asReadonly()
   readonly direction: Signal<SortDirection> = this.directionSignal.asReadonly()
 
+  isDeleting(id: string): boolean {
+    return this.pendingDeletesSignal().has(id)
+  }
+
   public delete(id: string): void {
-    firstValueFrom(
-      this.foodGateway.delete<FoodModel>(API_ENDPOINTS.food, id),
-    ).then(() => this.foodResource.reload())
+    if (this.isDeleting(id)) {
+      return
+    }
+    this.addPendingDelete(id)
+    firstValueFrom(this.foodGateway.delete<FoodModel>(API_ENDPOINTS.food, id))
+      .then(() => {
+        this.toastService.success('Lebensmittel wurde erfolgreich gelöscht.')
+        this.foodResource.reload()
+      })
+      .catch((error: unknown) => {
+        this.toastService.error(
+          this.mapErrorToMessage(
+            error,
+            'Löschen fehlgeschlagen. Bitte versuche es erneut.',
+          ),
+        )
+      })
+      .finally(() => this.removePendingDelete(id))
   }
 
   async save(food: FoodModel) {
     firstValueFrom(
       this.foodGateway.post<FoodModel>(API_ENDPOINTS.food, food),
     ).then(() => this.foodResource.reload())
+  }
+
+  // Returns whether the update succeeded, so the edit dialog knows whether to close itself
+  // (success) or stay open with the entered values intact (failure).
+  async update(id: string, food: FoodModel): Promise<boolean> {
+    try {
+      await firstValueFrom(
+        this.foodGateway.put<FoodModel>(`${API_ENDPOINTS.food}/${id}`, food),
+      )
+      this.toastService.success('Lebensmittel wurde aktualisiert.')
+      this.foodResource.reload()
+      return true
+    } catch (error) {
+      this.toastService.error(
+        this.mapErrorToMessage(
+          error,
+          'Aktualisieren fehlgeschlagen. Bitte versuche es erneut.',
+        ),
+      )
+      return false
+    }
+  }
+
+  // Maps a failed request's HTTP status to a clear, German, end-user-facing message rather
+  // than relying on parsing the raw response body - the backend's error bodies are plain text
+  // meant for developers reading logs, not guaranteed stable copy to show end users.
+  private mapErrorToMessage(error: unknown, genericMessage: string): string {
+    if (!(error instanceof HttpErrorResponse)) {
+      return genericMessage
+    }
+    switch (error.status) {
+      case 409:
+        return 'Dieses Lebensmittel ist Teil eines Rezepts und kann nicht gelöscht werden.'
+      case 404:
+        return 'Dieses Lebensmittel wurde bereits gelöscht.'
+      case 406:
+        return 'Bitte überprüfe deine Eingaben - ein Wert liegt außerhalb des gültigen Bereichs.'
+      case 0:
+        return 'Verbindung zum Server fehlgeschlagen. Bitte versuche es erneut.'
+      default:
+        return genericMessage
+    }
   }
 
   load(): boolean {
@@ -135,6 +207,18 @@ export class FoodStore {
       this.sortSignal.set(field)
       this.directionSignal.set('asc')
     }
+  }
+
+  private addPendingDelete(id: string): void {
+    this.pendingDeletesSignal.update((ids) => new Set(ids).add(id))
+  }
+
+  private removePendingDelete(id: string): void {
+    this.pendingDeletesSignal.update((ids) => {
+      const next = new Set(ids)
+      next.delete(id)
+      return next
+    })
   }
 
   private buildUrl(query: FoodQuery): string {

@@ -1,0 +1,14 @@
+{
+  "name": "food updated",
+  "calory": 250,
+  "grams": 120,
+  "diet": "VEGETARIAN",
+  "fat": 5,
+  "saturatedFat": 1,
+  "carbohydrates": 30,
+  "sugar": 10,
+  "fiber": 3,
+  "protein": 8,
+  "salt": 1.2,
+  "sodium": 0.5
+}

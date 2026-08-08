@@ -1,0 +1,79 @@
+<form
+  class="flex flex-col bg-white rounded-xl p-5 gap-5 max-w-lg w-full"
+  [formGroup]="food"
+  (submit)="onSubmit()"
+>
+  <div class="mb-4">
+    <label class="text-[#444444] font-bold text-xl"
+      >Lebensmittel bearbeiten</label
+    >
+  </div>
+
+  <app-card title="Basisdaten" panelClass="bg-gray-50 rounded-xl p-4">
+    <div class="grid grid-cols-2 gap-4 items-center">
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Name: '" />
+      </div>
+      <app-text-input [formControlName]="'name'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Anzahl in Gramm: '" />
+      </div>
+      <app-number-input [placeholder]="'0'" [formControlName]="'grams'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Anzahl in Kalorien: '" />
+      </div>
+      <app-number-input [placeholder]="'0'" [formControlName]="'calory'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Diät: '" />
+      </div>
+      <app-select [options]="dietOptions" [formControlName]="'diet'" />
+    </div>
+  </app-card>
+
+  <app-card title="Makronährstoffe" panelClass="bg-gray-50 rounded-xl p-4">
+    <div class="grid grid-cols-2 gap-4 items-center">
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Fett (g): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'fat'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'davon gesättigt (g): '" />
+      </div>
+      <app-number-input
+        [placeholder]="'–'"
+        [formControlName]="'saturatedFat'"
+      />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Kohlenhydrate (g): '" />
+      </div>
+      <app-number-input
+        [placeholder]="'–'"
+        [formControlName]="'carbohydrates'"
+      />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'davon Zucker (g): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'sugar'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Ballaststoffe (g): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'fiber'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Eiweiß (g): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'protein'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Salz (g): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'salt'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Natrium (g): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'sodium'" />
+    </div>
+  </app-card>
+
+  <div class="mt-4">
+    <app-button [type]="'submit'" [text]="'Speichern'" />
+  </div>
+</form>

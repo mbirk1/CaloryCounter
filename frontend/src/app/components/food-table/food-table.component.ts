@@ -27,6 +27,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import { FoodDetailDialogComponent } from '../dialogs/food-detail-dialog/food-detail-dialog.component'
+import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component'
+import { EditFoodDialogComponent } from '../dialogs/edit-food-dialog/edit-food-dialog.component'
 import { PaginationComponent } from '../pagination/pagination.component'
 
 @Component({
@@ -54,14 +56,38 @@ export class FoodTableComponent {
   protected readonly faTrash = faTrash
   protected readonly faPen = faPen
 
-  delete(id: string) {
-    this.foodStore.delete(id)
+  confirmDelete(food: FoodModel): void {
+    if (this.foodStore.isDeleting(food.uuid!)) {
+      return
+    }
+    const dialogRef = this.dialog.open<boolean>(ConfirmDialogComponent, {
+      data: {
+        title: 'Lebensmittel löschen',
+        message:
+          `Möchtest du "${food.name}" wirklich löschen? ` +
+          'Diese Aktion kann nicht rückgängig gemacht werden.',
+        confirmText: 'Löschen',
+      },
+    })
+    dialogRef.closed.subscribe((confirmed) => {
+      if (confirmed) {
+        this.foodStore.delete(food.uuid!)
+      }
+    })
+  }
+
+  openEdit(food: FoodModel): void {
+    this.dialog.open(EditFoodDialogComponent, { data: food })
   }
 
   isInARecipe(foodId: string) {
     return this.recipes().some((recipe: RecipeModel) =>
       recipe.foods.some((food: FoodModel) => food.uuid === foodId),
     )
+  }
+
+  isDeleting(foodId: string): boolean {
+    return this.foodStore.isDeleting(foodId)
   }
 
   openDetails(food: FoodModel): void {

@@ -4,6 +4,7 @@
   }} disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
   type="{{ type() }}"
   [disabled]="disabled() || loading()"
+  [attr.aria-label]="ariaLabel() || null"
 >
   @if (loading()) {
     <span

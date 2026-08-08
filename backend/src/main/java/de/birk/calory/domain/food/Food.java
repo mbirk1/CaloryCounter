@@ -20,6 +20,19 @@ import de.birk.calory.exception.ValidationException;
  */
 public class Food extends AbstractEntity<UUID> {
 
+  /**
+   * Upper bound for a plausible calory value, matching the bound {@code FoodCsvRowMapper}
+   * already enforces on import. Pure fat/oil, the most energy-dense food there is, tops out
+   * around 900 kcal per 100g.
+   */
+  private static final BigDecimal MAX_PLAUSIBLE_CALORIES = new BigDecimal("900");
+
+  /**
+   * Upper bound for a plausible macronutrient value: a nutrient can never weigh more than the
+   * 100g of food it's a part of.
+   */
+  private static final BigDecimal MAX_PLAUSIBLE_MACRO_GRAMS = new BigDecimal("100");
+
   private UUID id;
   private final String name;
   private final BigDecimal calory;
@@ -235,6 +248,42 @@ public class Food extends AbstractEntity<UUID> {
       throw new ValidationException();
     }
     if (this.calory == null) {
+      throw new ValidationException();
+    }
+  }
+
+  /**
+   * Additionally checks that {@code calory} and every present macronutrient value falls within
+   * a plausible range (0-900 kcal, 0-100g respectively) - the same bounds {@code
+   * FoodCsvRowMapper} already enforces on CSV import.
+   *
+   * <p>Deliberately NOT folded into {@link #validate()}, which every constructor call runs
+   * unconditionally, including when a {@code Food} is merely being reconstructed from
+   * already-persisted data (e.g. every time a page of foods is read). Some existing rows -
+   * created before this check existed, or imported before the CSV importer's own plausibility
+   * filter was added - already fall outside these bounds; folding this into {@code validate()}
+   * would make simply reading such a row throw. This method is instead called explicitly, only
+   * by usecases that persist newly entered or edited data.
+   *
+   * @throws ValidationException if calory or any macronutrient is negative or implausibly high
+   */
+  public void validatePlausibility() throws ValidationException {
+    requireInRange(this.calory, MAX_PLAUSIBLE_CALORIES);
+    requireInRange(this.fat, MAX_PLAUSIBLE_MACRO_GRAMS);
+    requireInRange(this.saturatedFat, MAX_PLAUSIBLE_MACRO_GRAMS);
+    requireInRange(this.carbohydrates, MAX_PLAUSIBLE_MACRO_GRAMS);
+    requireInRange(this.sugar, MAX_PLAUSIBLE_MACRO_GRAMS);
+    requireInRange(this.fiber, MAX_PLAUSIBLE_MACRO_GRAMS);
+    requireInRange(this.protein, MAX_PLAUSIBLE_MACRO_GRAMS);
+    requireInRange(this.salt, MAX_PLAUSIBLE_MACRO_GRAMS);
+    requireInRange(this.sodium, MAX_PLAUSIBLE_MACRO_GRAMS);
+  }
+
+  private void requireInRange(BigDecimal value, BigDecimal max) throws ValidationException {
+    if (value == null) {
+      return;
+    }
+    if (value.compareTo(BigDecimal.ZERO) < 0 || value.compareTo(max) > 0) {
       throw new ValidationException();
     }
   }

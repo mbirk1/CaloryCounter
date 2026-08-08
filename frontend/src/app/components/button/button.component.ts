@@ -19,4 +19,5 @@ export class ButtonComponent {
   type: InputSignal<string> = input.required<string>()
   disabled: InputSignal<boolean> = input<boolean>(false)
   loading: InputSignal<boolean> = input<boolean>(false)
+  ariaLabel: InputSignal<string> = input<string>('')
 }

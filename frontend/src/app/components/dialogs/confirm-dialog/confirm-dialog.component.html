@@ -1,0 +1,20 @@
+<div class="flex flex-col bg-white rounded-xl p-5 gap-5 max-w-md w-full">
+  <span class="text-[#444444] font-bold text-xl">{{ data.title }}</span>
+  <p class="text-[#444444]">{{ data.message }}</p>
+  <div class="flex justify-end gap-3">
+    <app-button
+      [type]="'button'"
+      [text]="cancelText"
+      [style]="'bg-gray-200 hover:bg-gray-300 text-[#444444] rounded-lg p-2'"
+      [ariaLabel]="cancelText"
+      (click)="cancel()"
+    />
+    <app-button
+      [type]="'button'"
+      [text]="confirmText"
+      [style]="'bg-red-600 hover:bg-red-700 text-white rounded-lg p-2'"
+      [ariaLabel]="confirmText"
+      (click)="confirm()"
+    />
+  </div>
+</div>

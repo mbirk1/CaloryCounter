@@ -1,0 +1,5 @@
+@if (presentation(); as p) {
+  <span [attr.aria-label]="p.label" [title]="p.label" [class]="p.colorClass">
+    <fa-icon [icon]="p.icon" />
+  </span>
+}

@@ -3,6 +3,8 @@ package de.birk.calory.adapter.primary;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -140,7 +142,120 @@ public class FoodRestControllerTest extends AbstractTestBase {
             delete("/api/food/{id}", UUID.randomUUID())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
         )
+        .andExpect(status().isNotFound())
+        .andExpect(content().string("Dieses Lebensmittel wurde bereits gelöscht."));
+  }
+
+  @Test
+  @DisplayName("rejects deleting a food item that is still part of a recipe")
+  public void deleteFoodThatIsPartOfARecipeReturnsConflictTest() throws Exception {
+    String accessToken = registerAndGetAccessToken();
+    String foodContent = readResourceAsString("/http-bodies/createFood.json");
+
+    MvcResult foodResult = mockMvc.perform(
+        post("/api/food")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(foodContent)
+    ).andReturn();
+    String foodId = asJson(foodResult).read("$.uuid");
+
+    String recipeContent = readResourceAsString("/http-bodies/createRecipe.json")
+        .replace("PLACEHOLDER", foodId);
+    mockMvc.perform(
+        post("/api/recipe")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(recipeContent)
+    ).andExpect(status().isCreated());
+
+    this.mockMvc.perform(
+            delete("/api/food/{id}", UUID.fromString(foodId))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        )
+        .andExpect(status().isConflict())
+        .andExpect(content().string(
+            "Dieses Lebensmittel ist Teil eines Rezepts und kann nicht gelöscht werden."));
+  }
+
+  @Test
+  @DisplayName("updates a Food Item's editable fields")
+  public void updatesAFoodItemTest() throws Exception {
+    String accessToken = registerAndGetAccessToken();
+    String createContent = readResourceAsString("/http-bodies/createFood.json");
+
+    MvcResult createResult = mockMvc.perform(
+        post("/api/food")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(createContent)
+    ).andReturn();
+    String id = asJson(createResult).read("$.uuid");
+
+    String updateContent = readResourceAsString("/http-bodies/updateFood.json");
+
+    this.mockMvc.perform(
+            put("/api/food/{id}", UUID.fromString(id))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(updateContent)
+        )
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.uuid").value(id))
+        .andExpect(jsonPath("$.name").value("food updated"))
+        .andExpect(jsonPath("$.calory").value(250))
+        .andExpect(jsonPath("$.grams").value(120))
+        .andExpect(jsonPath("$.diet").value("VEGETARIAN"))
+        .andExpect(jsonPath("$.fat").value(5));
+
+    this.mockMvc.perform(
+            get("/api/food/{id}", UUID.fromString(id))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.name").value("food updated"))
+        .andExpect(jsonPath("$.calory").value(250));
+  }
+
+  @Test
+  @DisplayName("tries to update a non existing Fooditem")
+  public void updateNonExistingFoodAndCatchExceptionTest() throws Exception {
+    String accessToken = registerAndGetAccessToken();
+    String updateContent = readResourceAsString("/http-bodies/updateFood.json");
+
+    this.mockMvc.perform(
+            put("/api/food/{id}", UUID.randomUUID())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(updateContent)
+        )
         .andExpect(status().isNotFound());
+  }
+
+  @Test
+  @DisplayName("rejects updating a food item with an implausibly high calory value")
+  public void updateFoodWithImplausibleCaloryIsRejectedTest() throws Exception {
+    String accessToken = registerAndGetAccessToken();
+    String createContent = readResourceAsString("/http-bodies/createFood.json");
+
+    MvcResult createResult = mockMvc.perform(
+        post("/api/food")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(createContent)
+    ).andReturn();
+    String id = asJson(createResult).read("$.uuid");
+
+    String updateContent = readResourceAsString("/http-bodies/updateFood.json")
+        .replace("\"calory\": 250", "\"calory\": 1000");
+
+    this.mockMvc.perform(
+            put("/api/food/{id}", UUID.fromString(id))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(updateContent)
+        )
+        .andExpect(status().isNotAcceptable());
   }
 
   @Test

@@ -19,13 +19,16 @@ import org.springframework.web.multipart.MultipartFile;
 import de.birk.calory.adapter.primary.annotations.DeleteRequest;
 import de.birk.calory.adapter.primary.annotations.GetRequest;
 import de.birk.calory.adapter.primary.annotations.PostRequest;
+import de.birk.calory.adapter.primary.annotations.PutRequest;
 import de.birk.calory.adapter.primary.model.FoodDetailsDto;
 import de.birk.calory.adapter.primary.model.FoodDto;
 import de.birk.calory.adapter.primary.model.ImportJobStatusDto;
 import de.birk.calory.adapter.primary.model.PageResponseDto;
+import de.birk.calory.adapter.primary.model.UpdateFoodDto;
 import de.birk.calory.usecase.food.CreateFoodUsecase;
 import de.birk.calory.usecase.food.DeleteFoodUsecase;
 import de.birk.calory.usecase.food.FindFoodUsecase;
+import de.birk.calory.usecase.food.UpdateFoodUsecase;
 import de.birk.calory.usecase.food.importer.FindImportJobStatusUsecase;
 import de.birk.calory.usecase.food.importer.FoodCsvImportUsecase;
 
@@ -41,6 +44,7 @@ import de.birk.calory.usecase.food.importer.FoodCsvImportUsecase;
 public class FoodRestController {
   private final FindFoodUsecase findFoodUsecase;
   private final CreateFoodUsecase createFoodUsecase;
+  private final UpdateFoodUsecase updateFoodUsecase;
   private final DeleteFoodUsecase deleteFoodUsecase;
   private final FoodCsvImportUsecase foodCsvImportUsecase;
   private final FindImportJobStatusUsecase findImportJobStatusUsecase;
@@ -51,6 +55,7 @@ public class FoodRestController {
    *
    * @param findFoodUsecase Find Food Usecase
    * @param createFoodUsecase Create Food Usecase
+   * @param updateFoodUsecase Update Food Usecase
    * @param deleteFoodUsecase Delete Foor Usecase
    * @param foodCsvImportUsecase Food Csv Import Usecase
    * @param findImportJobStatusUsecase Find Import Job Status Usecase
@@ -58,11 +63,13 @@ public class FoodRestController {
   public FoodRestController(
       FindFoodUsecase findFoodUsecase,
       CreateFoodUsecase createFoodUsecase,
+      UpdateFoodUsecase updateFoodUsecase,
       DeleteFoodUsecase deleteFoodUsecase,
       FoodCsvImportUsecase foodCsvImportUsecase,
       FindImportJobStatusUsecase findImportJobStatusUsecase) {
     this.findFoodUsecase = findFoodUsecase;
     this.createFoodUsecase = createFoodUsecase;
+    this.updateFoodUsecase = updateFoodUsecase;
     this.deleteFoodUsecase = deleteFoodUsecase;
     this.foodCsvImportUsecase = foodCsvImportUsecase;
     this.findImportJobStatusUsecase = findImportJobStatusUsecase;
@@ -100,6 +107,12 @@ public class FoodRestController {
   @PostRequest
   public FoodDetailsDto createFood(@RequestBody FoodDto foodDto) {
     return this.createFoodUsecase.createFood(foodDto);
+  }
+
+  @PutRequest("/{id}")
+  public FoodDetailsDto updateFood(
+      @PathVariable UUID id, @RequestBody UpdateFoodDto updateFoodDto) {
+    return this.updateFoodUsecase.updateFood(id, updateFoodDto);
   }
 
   @DeleteRequest("/{id}")

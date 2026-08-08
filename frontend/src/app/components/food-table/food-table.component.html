@@ -90,12 +90,14 @@
                 </button>
                 <button
                   type="button"
-                  (click)="delete(item.uuid!)"
-                  [disabled]="isInARecipe(item.uuid!)"
+                  (click)="confirmDelete(item)"
+                  [disabled]="isInARecipe(item.uuid!) || isDeleting(item.uuid!)"
                   [attr.aria-label]="
                     isInARecipe(item.uuid!)
                       ? 'Löschen nicht möglich (Teil eines Rezepts)'
-                      : 'Löschen'
+                      : isDeleting(item.uuid!)
+                        ? 'Wird gelöscht...'
+                        : 'Löschen'
                   "
                   class="text-gray-400 hover:text-white disabled:text-gray-600 disabled:cursor-not-allowed disabled:hover:text-gray-600"
                 >
@@ -103,10 +105,9 @@
                 </button>
                 <button
                   type="button"
-                  disabled
-                  aria-label="Bald verfügbar"
-                  title="Bald verfügbar"
-                  class="text-gray-600 cursor-not-allowed"
+                  (click)="openEdit(item)"
+                  aria-label="Bearbeiten"
+                  class="text-gray-400 hover:text-white"
                 >
                   <fa-icon [icon]="faPen" />
                 </button>
