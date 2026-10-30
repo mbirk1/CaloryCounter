@@ -3,12 +3,11 @@ package de.birk.calory.adapter.secondary.model;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 /**
@@ -27,27 +26,29 @@ public class RecipePersistence {
   @Column
   private String name;
 
-  @ManyToMany
-  @JoinTable(
-          name = "tab_calory_recipe_food",
-          joinColumns = @JoinColumn(name = "recipe_id"),
-          inverseJoinColumns = @JoinColumn(name = "food_id"))
-  private List<FoodPersistence> foods;
+  @Column
+  private int servings;
+
+  // Entries don't exist independently of their recipe (orphanRemoval), and are always saved/
+  // deleted together with it (cascade = ALL) - the join-table-turned-entity is entirely owned
+  // by the recipe side.
+  @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<RecipeFoodEntryPersistence> foodEntries;
+
+  public RecipePersistence() {
+  }
 
   /**
    * Creates an instance of a persistence object for the database.
    *
    * @param id the identifier
    * @param name the name
-   * @param foods the list of foods
+   * @param servings the number of servings this recipe yields
    */
-  public RecipePersistence(UUID id, String name, List<FoodPersistence> foods) {
+  public RecipePersistence(UUID id, String name, int servings) {
     this.id = id;
     this.name = name;
-    this.foods = foods;
-  }
-
-  public RecipePersistence() {
+    this.servings = servings;
   }
 
   public UUID getId() {
@@ -58,7 +59,15 @@ public class RecipePersistence {
     return name;
   }
 
-  public List<FoodPersistence> getFoods() {
-    return foods;
+  public int getServings() {
+    return servings;
+  }
+
+  public List<RecipeFoodEntryPersistence> getFoodEntries() {
+    return foodEntries;
+  }
+
+  public void setFoodEntries(List<RecipeFoodEntryPersistence> foodEntries) {
+    this.foodEntries = foodEntries;
   }
 }

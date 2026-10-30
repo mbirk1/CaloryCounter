@@ -51,6 +51,13 @@ export class FoodStore {
   private readonly pendingDeletesSignal: WritableSignal<ReadonlySet<string>> =
     signal(new Set())
 
+  // True while any delete is in flight - used to block interaction with the whole table (not
+  // just the row being deleted) behind a loading overlay, so a user can't act on other rows
+  // while the list is mid-mutation and about to reload.
+  readonly isDeleteInProgress: Signal<boolean> = computed(
+    () => this.pendingDeletesSignal().size > 0,
+  )
+
   foodResource: ResourceRef<PageResponse<FoodModel> | undefined> = resource({
     params: (): FoodQuery => ({
       page: this.pageSignal(),
@@ -94,6 +101,28 @@ export class FoodStore {
     return this.pendingDeletesSignal().has(id)
   }
 
+  // A standalone, one-shot search used by callers (e.g. the recipe dialog's food picker) that
+  // need to look foods up WITHOUT touching the shared search/page/diet/sort signals above -
+  // those drive the main food table, and reusing setSearch() here would make the dialog's
+  // search and the table's search overwrite each other's filter state.
+  async searchFoods(query: string): Promise<FoodModel[]> {
+    const params = new URLSearchParams()
+    params.set('page', '0')
+    params.set('size', String(DEFAULT_PAGE_SIZE))
+    params.set('sort', 'name')
+    params.set('direction', 'asc')
+    const trimmed = query.trim()
+    if (trimmed) {
+      params.set('search', trimmed)
+    }
+    const response = await firstValueFrom(
+      this.foodGateway.get<PageResponse<FoodModel>>(
+        `${API_ENDPOINTS.food}?${params.toString()}`,
+      ),
+    )
+    return response.content
+  }
+
   public delete(id: string): void {
     if (this.isDeleting(id)) {
       return
@@ -115,10 +144,25 @@ export class FoodStore {
       .finally(() => this.removePendingDelete(id))
   }
 
-  async save(food: FoodModel) {
-    firstValueFrom(
-      this.foodGateway.post<FoodModel>(API_ENDPOINTS.food, food),
-    ).then(() => this.foodResource.reload())
+  // Returns whether the creation succeeded, so the add dialog knows whether to close itself
+  // (success) or stay open with the entered values intact (failure) - mirrors update().
+  async save(food: FoodModel): Promise<boolean> {
+    try {
+      await firstValueFrom(
+        this.foodGateway.post<FoodModel>(API_ENDPOINTS.food, food),
+      )
+      this.toastService.success('Lebensmittel wurde erfolgreich angelegt.')
+      this.foodResource.reload()
+      return true
+    } catch (error) {
+      this.toastService.error(
+        this.mapErrorToMessage(
+          error,
+          'Anlegen fehlgeschlagen. Bitte versuche es erneut.',
+        ),
+      )
+      return false
+    }
   }
 
   // Returns whether the update succeeded, so the edit dialog knows whether to close itself

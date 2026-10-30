@@ -7,6 +7,7 @@ import {
 import { FoodStore } from './food.store'
 import { ToastService } from '../../services/toast.service'
 import { API_ENDPOINTS } from '../../../environment/endpoints'
+import { FoodModel } from '../../models/FoodModel'
 
 describe('FoodStore', () => {
   let store: FoodStore
@@ -206,6 +207,47 @@ describe('FoodStore', () => {
     }))
   })
 
+  describe('isDeleteInProgress()', () => {
+    it('is false when nothing is being deleted', () => {
+      expect(store.isDeleteInProgress()).toBe(false)
+    })
+
+    it('is true while any delete is in flight, regardless of which id', fakeAsync(() => {
+      store.delete('food-1')
+      expect(store.isDeleteInProgress()).toBe(true)
+
+      const req = httpMock.expectOne({
+        url: `${API_ENDPOINTS.food}/food-1`,
+        method: 'DELETE',
+      })
+      req.flush({})
+      tick()
+
+      expect(store.isDeleteInProgress()).toBe(false)
+    }))
+
+    it('stays true until the last of several concurrent deletes finishes', fakeAsync(() => {
+      store.delete('food-1')
+      store.delete('food-2')
+
+      const req1 = httpMock.expectOne({
+        url: `${API_ENDPOINTS.food}/food-1`,
+        method: 'DELETE',
+      })
+      const req2 = httpMock.expectOne({
+        url: `${API_ENDPOINTS.food}/food-2`,
+        method: 'DELETE',
+      })
+      req1.flush({})
+      tick()
+      expect(store.isDeleteInProgress()).toBe(true)
+
+      req2.flush({})
+      tick()
+      expect(store.isDeleteInProgress()).toBe(false)
+    }))
+  })
+
   describe('update()', () => {
     it('resolves true and shows a success toast when the update succeeds', fakeAsync(() => {
       let result: boolean | undefined
@@ -254,6 +296,138 @@ describe('FoodStore', () => {
 
       expect(result).toBe(false)
       expect(toastService.toasts()[0].variant).toBe('error')
+    }))
+  })
+
+  describe('save()', () => {
+    it('resolves true and shows a success toast when the creation succeeds', fakeAsync(() => {
+      let result: boolean | undefined
+      store
+        .save({ name: 'Tofu', calory: 100, grams: 100 })
+        .then((r) => (result = r))
+
+      const req = httpMock.expectOne({
+        url: API_ENDPOINTS.food,
+        method: 'POST',
+      })
+      req.flush({ uuid: 'food-1', name: 'Tofu', calory: 100, grams: 100 })
+      tick()
+
+      expect(result).toBe(true)
+      expect(toastService.toasts()[0].variant).toBe('success')
+      expect(toastService.toasts()[0].message).toBe(
+        'Lebensmittel wurde erfolgreich angelegt.',
+      )
+    }))
+
+    it('resolves false and shows a validation-specific error toast on 406', fakeAsync(() => {
+      let result: boolean | undefined
+      store
+        .save({ name: 'Tofu', calory: 5000, grams: 100 })
+        .then((r) => (result = r))
+
+      const req = httpMock.expectOne({
+        url: API_ENDPOINTS.food,
+        method: 'POST',
+      })
+      req.flush('not acceptable', {
+        status: 406,
+        statusText: 'Not Acceptable',
+      })
+      tick()
+
+      expect(result).toBe(false)
+      expect(toastService.toasts()[0].variant).toBe('error')
+      expect(toastService.toasts()[0].message).toBe(
+        'Bitte überprüfe deine Eingaben - ein Wert liegt außerhalb des gültigen Bereichs.',
+      )
+    }))
+
+    it('resolves false and shows a connection error toast on a network failure', fakeAsync(() => {
+      let result: boolean | undefined
+      store
+        .save({ name: 'Tofu', calory: 100, grams: 100 })
+        .then((r) => (result = r))
+
+      const req = httpMock.expectOne({
+        url: API_ENDPOINTS.food,
+        method: 'POST',
+      })
+      req.error(new ProgressEvent('error'), { status: 0 })
+      tick()
+
+      expect(result).toBe(false)
+      expect(toastService.toasts()[0].message).toBe(
+        'Verbindung zum Server fehlgeschlagen. Bitte versuche es erneut.',
+      )
+    }))
+
+    it('resolves false and shows a generic error toast for any other status', fakeAsync(() => {
+      let result: boolean | undefined
+      store
+        .save({ name: 'Tofu', calory: 100, grams: 100 })
+        .then((r) => (result = r))
+
+      const req = httpMock.expectOne({
+        url: API_ENDPOINTS.food,
+        method: 'POST',
+      })
+      req.flush('boom', { status: 500, statusText: 'Internal Server Error' })
+      tick()
+
+      expect(result).toBe(false)
+      expect(toastService.toasts()[0].message).toBe(
+        'Anlegen fehlgeschlagen. Bitte versuche es erneut.',
+      )
+    }))
+  })
+
+  describe('searchFoods()', () => {
+    it('resolves the returned content without touching the shared search/page signals', fakeAsync(() => {
+      let result: FoodModel[] | undefined
+      store.searchFoods('Tofu').then((r) => (result = r))
+
+      const req = httpMock.expectOne(
+        (request) =>
+          request.method === 'GET' &&
+          request.url.startsWith(API_ENDPOINTS.food) &&
+          request.url.includes('search=Tofu'),
+      )
+      req.flush({
+        content: [{ uuid: 'food-1', name: 'Tofu', calory: 120, grams: 100 }],
+        page: 0,
+        size: 20,
+        totalElements: 1,
+        totalPages: 1,
+        last: true,
+      })
+      tick()
+
+      expect(result).toEqual([
+        { uuid: 'food-1', name: 'Tofu', calory: 120, grams: 100 },
+      ])
+      expect(store.search()).toBeNull()
+      expect(store.foods()).toEqual([])
+    }))
+
+    it('omits the search param entirely for a blank query', fakeAsync(() => {
+      store.searchFoods('   ')
+
+      const req = httpMock.expectOne(
+        (request) =>
+          request.method === 'GET' &&
+          request.url.startsWith(API_ENDPOINTS.food) &&
+          !request.url.includes('search='),
+      )
+      req.flush({
+        content: [],
+        page: 0,
+        size: 20,
+        totalElements: 0,
+        totalPages: 0,
+        last: true,
+      })
+      tick()
     }))
   })
 })

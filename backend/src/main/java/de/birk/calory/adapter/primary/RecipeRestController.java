@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.birk.calory.adapter.primary.annotations.DeleteRequest;
 import de.birk.calory.adapter.primary.annotations.GetRequest;
 import de.birk.calory.adapter.primary.annotations.PostRequest;
 import de.birk.calory.adapter.primary.model.RecipeDetailsDto;
 import de.birk.calory.adapter.primary.model.RecipeDto;
 import de.birk.calory.usecase.recipe.CreateRecipeUsecase;
+import de.birk.calory.usecase.recipe.DeleteRecipeUsecase;
 import de.birk.calory.usecase.recipe.FindRecipeUsecase;
 
 /**
@@ -25,20 +27,30 @@ import de.birk.calory.usecase.recipe.FindRecipeUsecase;
  */
 @RestController
 @RequestMapping("/api/recipe")
-//TODO Marius Should be outsourced to env variable
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:4200")
 public class RecipeRestController {
 
-  private FindRecipeUsecase findRecipeUsecase;
+  private final FindRecipeUsecase findRecipeUsecase;
 
-  private CreateRecipeUsecase createRecipeUsecase;
+  private final CreateRecipeUsecase createRecipeUsecase;
 
+  private final DeleteRecipeUsecase deleteRecipeUsecase;
+
+  /**
+   * Constructor injecting all recipe usecases.
+   *
+   * @param findRecipeUsecase usecase to find recipes
+   * @param createRecipeUsecase usecase to create a recipe
+   * @param deleteRecipeUsecase usecase to delete a recipe
+   */
   public RecipeRestController(
           FindRecipeUsecase findRecipeUsecase,
-          CreateRecipeUsecase createRecipeUsecase
+          CreateRecipeUsecase createRecipeUsecase,
+          DeleteRecipeUsecase deleteRecipeUsecase
   ) {
     this.findRecipeUsecase = findRecipeUsecase;
     this.createRecipeUsecase = createRecipeUsecase;
+    this.deleteRecipeUsecase = deleteRecipeUsecase;
   }
 
   @GetRequest("/{id}")
@@ -55,5 +67,10 @@ public class RecipeRestController {
   public ResponseEntity<RecipeDetailsDto> createRecipe(@RequestBody RecipeDto recipeDto) {
     RecipeDetailsDto dto = this.createRecipeUsecase.createRecipe(recipeDto);
     return new ResponseEntity<>(dto, HttpStatus.CREATED);
+  }
+
+  @DeleteRequest("/{id}")
+  public void deleteRecipe(@PathVariable UUID id) {
+    this.deleteRecipeUsecase.deleteRecipe(id);
   }
 }

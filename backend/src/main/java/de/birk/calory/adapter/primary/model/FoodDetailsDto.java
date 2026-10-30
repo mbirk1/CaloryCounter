@@ -28,6 +28,22 @@ public class FoodDetailsDto {
   private String source;
   private String externalId;
   private String diet;
+  private BigDecimal vitaminA;
+  private BigDecimal vitaminD;
+  private BigDecimal vitaminE;
+  private BigDecimal vitaminK;
+  private BigDecimal vitaminB1;
+  private BigDecimal vitaminB2;
+  private BigDecimal vitaminB6;
+  private BigDecimal vitaminB12;
+  private BigDecimal vitaminC;
+  private BigDecimal folate;
+  private BigDecimal potassium;
+  private BigDecimal calcium;
+  private BigDecimal magnesium;
+  private BigDecimal iron;
+  private BigDecimal zinc;
+  private BigDecimal iodine;
 
   public FoodDetailsDto() {
   }
@@ -44,7 +60,9 @@ public class FoodDetailsDto {
   public FoodDetailsDto(UUID uuid, String name, BigDecimal calory, BigDecimal grams) {
     this(
         uuid, name, calory, grams,
-        null, null, null, null, null, null, null, null, null, null, null, null, null, null
+        null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+        null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+        null, null
     );
   }
 
@@ -69,6 +87,22 @@ public class FoodDetailsDto {
    * @param source the name of the {@code FoodSource} enum constant this item came from
    * @param externalId the identifier used by the external data source, if any
    * @param diet the name of the {@code Diet} enum constant this item is compatible with
+   * @param vitaminA amount of vitamin A (µg) per {@code grams}
+   * @param vitaminD amount of vitamin D (µg) per {@code grams}
+   * @param vitaminE amount of vitamin E (mg) per {@code grams}
+   * @param vitaminK amount of vitamin K (µg) per {@code grams}
+   * @param vitaminB1 amount of vitamin B1 (mg) per {@code grams}
+   * @param vitaminB2 amount of vitamin B2 (mg) per {@code grams}
+   * @param vitaminB6 amount of vitamin B6 (µg) per {@code grams}
+   * @param vitaminB12 amount of vitamin B12 (µg) per {@code grams}
+   * @param vitaminC amount of vitamin C (mg) per {@code grams}
+   * @param folate amount of folate (µg) per {@code grams}
+   * @param potassium amount of potassium (mg) per {@code grams}
+   * @param calcium amount of calcium (mg) per {@code grams}
+   * @param magnesium amount of magnesium (mg) per {@code grams}
+   * @param iron amount of iron (mg) per {@code grams}
+   * @param zinc amount of zinc (mg) per {@code grams}
+   * @param iodine amount of iodine (µg) per {@code grams}
    */
   public FoodDetailsDto(
       UUID uuid,
@@ -88,7 +122,23 @@ public class FoodDetailsDto {
       String imageUrl,
       String source,
       String externalId,
-      String diet) {
+      String diet,
+      BigDecimal vitaminA,
+      BigDecimal vitaminD,
+      BigDecimal vitaminE,
+      BigDecimal vitaminK,
+      BigDecimal vitaminB1,
+      BigDecimal vitaminB2,
+      BigDecimal vitaminB6,
+      BigDecimal vitaminB12,
+      BigDecimal vitaminC,
+      BigDecimal folate,
+      BigDecimal potassium,
+      BigDecimal calcium,
+      BigDecimal magnesium,
+      BigDecimal iron,
+      BigDecimal zinc,
+      BigDecimal iodine) {
     this.uuid = uuid;
     this.name = name;
     this.calory = calory;
@@ -107,6 +157,22 @@ public class FoodDetailsDto {
     this.source = source;
     this.externalId = externalId;
     this.diet = diet;
+    this.vitaminA = vitaminA;
+    this.vitaminD = vitaminD;
+    this.vitaminE = vitaminE;
+    this.vitaminK = vitaminK;
+    this.vitaminB1 = vitaminB1;
+    this.vitaminB2 = vitaminB2;
+    this.vitaminB6 = vitaminB6;
+    this.vitaminB12 = vitaminB12;
+    this.vitaminC = vitaminC;
+    this.folate = folate;
+    this.potassium = potassium;
+    this.calcium = calcium;
+    this.magnesium = magnesium;
+    this.iron = iron;
+    this.zinc = zinc;
+    this.iodine = iodine;
   }
 
   public UUID getUuid() {
@@ -179,5 +245,69 @@ public class FoodDetailsDto {
 
   public String getDiet() {
     return diet;
+  }
+
+  public BigDecimal getVitaminA() {
+    return vitaminA;
+  }
+
+  public BigDecimal getVitaminD() {
+    return vitaminD;
+  }
+
+  public BigDecimal getVitaminE() {
+    return vitaminE;
+  }
+
+  public BigDecimal getVitaminK() {
+    return vitaminK;
+  }
+
+  public BigDecimal getVitaminB1() {
+    return vitaminB1;
+  }
+
+  public BigDecimal getVitaminB2() {
+    return vitaminB2;
+  }
+
+  public BigDecimal getVitaminB6() {
+    return vitaminB6;
+  }
+
+  public BigDecimal getVitaminB12() {
+    return vitaminB12;
+  }
+
+  public BigDecimal getVitaminC() {
+    return vitaminC;
+  }
+
+  public BigDecimal getFolate() {
+    return folate;
+  }
+
+  public BigDecimal getPotassium() {
+    return potassium;
+  }
+
+  public BigDecimal getCalcium() {
+    return calcium;
+  }
+
+  public BigDecimal getMagnesium() {
+    return magnesium;
+  }
+
+  public BigDecimal getIron() {
+    return iron;
+  }
+
+  public BigDecimal getZinc() {
+    return zinc;
+  }
+
+  public BigDecimal getIodine() {
+    return iodine;
   }
 }

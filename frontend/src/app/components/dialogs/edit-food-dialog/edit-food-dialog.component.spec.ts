@@ -22,6 +22,9 @@ describe('EditFoodDialogComponent', () => {
     protein: 1,
     salt: 0.11,
     sodium: 0.04,
+    vitaminC: 0,
+    iron: 4.7,
+    potassium: 429,
   }
 
   function create(data: FoodModel = food) {
@@ -54,9 +57,11 @@ describe('EditFoodDialogComponent', () => {
     expect(component.food.value.diet).toBe('VEGAN')
     expect(component.food.value.fat).toBe('1.5')
     expect(component.food.value.sodium).toBe('0.04')
+    expect(component.food.value.vitaminC).toBe('0')
+    expect(component.food.value.iron).toBe('4.7')
   })
 
-  it('prefills optional macronutrient fields as empty when missing', () => {
+  it('prefills optional macro- and micronutrient fields as empty when missing', () => {
     const fixture = create({
       uuid: 'food-2',
       name: 'Manuell',
@@ -67,6 +72,8 @@ describe('EditFoodDialogComponent', () => {
 
     expect(component.food.value.fat).toBe('')
     expect(component.food.value.sodium).toBe('')
+    expect(component.food.value.vitaminC).toBe('')
+    expect(component.food.value.iron).toBe('')
   })
 
   it('submits the updated values and closes the dialog on success', fakeAsync(() => {
@@ -97,6 +104,21 @@ describe('EditFoodDialogComponent', () => {
     expect(foodStoreSpy.update).toHaveBeenCalledWith(
       'food-1',
       jasmine.objectContaining({ fat: undefined }),
+    )
+  }))
+
+  it('submits edited micronutrient values converted to numbers', fakeAsync(() => {
+    const fixture = create()
+    const component = fixture.componentInstance
+    foodStoreSpy.update.and.resolveTo(true)
+
+    component.food.patchValue({ iron: '5.2', potassium: '' })
+    component.onSubmit()
+    tick()
+
+    expect(foodStoreSpy.update).toHaveBeenCalledWith(
+      'food-1',
+      jasmine.objectContaining({ iron: 5.2, potassium: undefined }),
     )
   }))
 

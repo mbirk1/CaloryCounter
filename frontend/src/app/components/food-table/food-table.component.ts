@@ -51,6 +51,9 @@ export class FoodTableComponent {
   totalPages: Signal<number> = computed(() => this.foodStore.totalPages())
   sort: Signal<SortField> = computed(() => this.foodStore.sort())
   direction: Signal<SortDirection> = computed(() => this.foodStore.direction())
+  isDeleteInProgress: Signal<boolean> = computed(() =>
+    this.foodStore.isDeleteInProgress(),
+  )
 
   protected readonly faEye = faEye
   protected readonly faTrash = faTrash
@@ -82,7 +85,7 @@ export class FoodTableComponent {
 
   isInARecipe(foodId: string) {
     return this.recipes().some((recipe: RecipeModel) =>
-      recipe.foods.some((food: FoodModel) => food.uuid === foodId),
+      recipe.foods.some((entry) => entry.food.uuid === foodId),
     )
   }
 

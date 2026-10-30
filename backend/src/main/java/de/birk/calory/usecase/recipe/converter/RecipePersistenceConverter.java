@@ -1,21 +1,21 @@
 package de.birk.calory.usecase.recipe.converter;
 
-import de.birk.calory.adapter.secondary.model.FoodPersistence;
+import de.birk.calory.adapter.secondary.model.RecipeFoodEntryPersistence;
 import de.birk.calory.adapter.secondary.model.RecipePersistence;
-import de.birk.calory.domain.food.Food;
 import de.birk.calory.domain.recipe.Recipe;
+import de.birk.calory.domain.recipe.RecipeFoodEntry;
 import de.birk.calory.usecase.converter.Converter;
 import de.birk.calory.usecase.food.converter.FoodPersistenceConverter;
 
-
 /**
- * Inheritor of the converter.
+ * Inheritor of the converter. Converts between {@link Recipe} and its JPA persistence entity,
+ * delegating the Food/FoodPersistence side of each entry to the existing
+ * {@link FoodPersistenceConverter} so a food item's full data (brand, macros, diet, image, ...)
+ * survives the roundtrip instead of only its core {@code id/name/calory/grams}.
  *
  * @author Marius Birk
  */
 public class RecipePersistenceConverter extends Converter<RecipePersistence, Recipe> {
-
-  private final FoodPersistenceConverter foodPersistenceConverter = new FoodPersistenceConverter();
 
   /**
    * Inherits the super constructor and creates the conversion from dto to
@@ -23,24 +23,33 @@ public class RecipePersistenceConverter extends Converter<RecipePersistence, Rec
    */
   public RecipePersistenceConverter() {
     super(
-            dto -> new Recipe(dto.getId(), dto.getName(), dto.getFoods().stream()
-                    .map(foodPersistence ->
-                            new Food(
-                                    foodPersistence.getId(),
-                                    foodPersistence.getName(),
-                                    foodPersistence.getCalory(),
-                                    foodPersistence.getGrams())
-                    ).toList()
-            ),
-            entity -> new RecipePersistence(
-                    entity.getId(), entity.getName(), entity.getFoods().stream()
-                    .map(food -> new FoodPersistence(
-                            food.getId(),
-                            food.getName(),
-                            food.getCalory(),
-                            food.getGrams()
-                    )).toList()
-            )
+        dto -> {
+          FoodPersistenceConverter foodPersistenceConverter = new FoodPersistenceConverter();
+          return new Recipe(
+              dto.getId(),
+              dto.getName(),
+              dto.getFoodEntries().stream()
+                  .map(entry -> new RecipeFoodEntry(
+                      foodPersistenceConverter.convertFromDto(entry.getFood()),
+                      entry.getAmountGrams()
+                  ))
+                  .toList(),
+              dto.getServings()
+          );
+        },
+        entity -> {
+          FoodPersistenceConverter foodPersistenceConverter = new FoodPersistenceConverter();
+          RecipePersistence persistence =
+              new RecipePersistence(entity.getId(), entity.getName(), entity.getServings());
+          persistence.setFoodEntries(entity.getEntries().stream()
+              .map(entry -> new RecipeFoodEntryPersistence(
+                  persistence,
+                  foodPersistenceConverter.convertFromEntity(entry.getFood()),
+                  entry.getAmountGrams()
+              ))
+              .toList());
+          return persistence;
+        }
     );
   }
 }

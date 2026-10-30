@@ -17,4 +17,20 @@ export interface FoodModel extends BaseModel {
   source?: string
   externalId?: string
   diet?: string
+  vitaminA?: number
+  vitaminD?: number
+  vitaminE?: number
+  vitaminK?: number
+  vitaminB1?: number
+  vitaminB2?: number
+  vitaminB6?: number
+  vitaminB12?: number
+  vitaminC?: number
+  folate?: number
+  potassium?: number
+  calcium?: number
+  magnesium?: number
+  iron?: number
+  zinc?: number
+  iodine?: number
 }

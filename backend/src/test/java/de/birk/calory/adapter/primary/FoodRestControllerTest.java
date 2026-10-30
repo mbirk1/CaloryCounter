@@ -128,9 +128,13 @@ public class FoodRestControllerTest extends AbstractTestBase {
             delete("/api/food/{id}", UUID.fromString(id))
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
         )
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$").isArray())
-        .andExpect(jsonPath("$[?(@.uuid=='" + id + "')]").isEmpty());
+        .andExpect(status().isOk());
+
+    this.mockMvc.perform(
+            get("/api/food/{id}", UUID.fromString(id))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        )
+        .andExpect(status().isNotFound());
   }
 
   @Test

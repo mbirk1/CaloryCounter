@@ -87,26 +87,26 @@ public class FoodCsvRowMapper {
       return Optional.empty();
     }
 
-    return Optional.of(new FoodPersistence(
-        UUID.randomUUID(),
-        name,
-        calory,
-        FIXED_GRAMS,
-        brand,
-        firstOf(get(record, COLUMN_CATEGORIES)),
-        macroGrams(record, COLUMN_FAT),
-        macroGrams(record, COLUMN_SATURATED_FAT),
-        macroGrams(record, COLUMN_CARBOHYDRATES),
-        macroGrams(record, COLUMN_SUGAR),
-        macroGrams(record, COLUMN_FIBER),
-        macroGrams(record, COLUMN_PROTEIN),
-        macroGrams(record, COLUMN_SALT),
-        macroGrams(record, COLUMN_SODIUM),
-        trimToNull(get(record, COLUMN_IMAGE_URL)),
-        FoodSource.OPENFOODFACTS.name(),
-        trimToNull(get(record, COLUMN_CODE)),
-        diet(record).name()
-    ));
+    return Optional.of(new FoodPersistence.Builder()
+        .id(UUID.randomUUID())
+        .name(name)
+        .calory(calory)
+        .grams(FIXED_GRAMS)
+        .brand(brand)
+        .category(firstOf(get(record, COLUMN_CATEGORIES)))
+        .fat(macroGrams(record, COLUMN_FAT))
+        .saturatedFat(macroGrams(record, COLUMN_SATURATED_FAT))
+        .carbohydrates(macroGrams(record, COLUMN_CARBOHYDRATES))
+        .sugar(macroGrams(record, COLUMN_SUGAR))
+        .fiber(macroGrams(record, COLUMN_FIBER))
+        .protein(macroGrams(record, COLUMN_PROTEIN))
+        .salt(macroGrams(record, COLUMN_SALT))
+        .sodium(macroGrams(record, COLUMN_SODIUM))
+        .imageUrl(trimToNull(get(record, COLUMN_IMAGE_URL)))
+        .source(FoodSource.OPENFOODFACTS.name())
+        .externalId(trimToNull(get(record, COLUMN_CODE)))
+        .diet(diet(record).name())
+        .build());
   }
 
   /**

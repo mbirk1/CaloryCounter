@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -22,6 +21,7 @@ import java.util.zip.GZIPOutputStream;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -47,16 +47,27 @@ public class FoodCsvImportUsecaseUnitTest {
   private ImportJobRegistry jobRegistry;
 
   @Mock
-  private FoodCsvImportDispatcher dispatcher;
+  private FoodImportDispatcher dispatcher;
 
   @Mock
   private FoodCsvRowMapper rowMapper;
+
+  // A real (not mocked) persister wrapping the mocked repository - persistBatch/rollbackAndFail
+  // are pure delegation to FoodRepository, already covered by FoodImportPersisterUnitTest, so
+  // reusing the real implementation here lets every existing assertion against foodRepository's
+  // saveAll()/save()/deleteByImportJobId()/updateDietByExternalId() calls keep working unchanged.
+  private FoodImportPersister persister;
+
+  @BeforeEach
+  public void setUp() {
+    this.persister = new FoodImportPersister(this.foodRepository);
+  }
 
   @Test
   public void splitsRowsIntoBatchesOfTheConfiguredSizeTest() throws IOException {
     // Arrange
     FoodCsvImportUsecase usecase =
-        new FoodCsvImportUsecase(foodRepository, jobRegistry, dispatcher, 2);
+        new FoodCsvImportUsecase(jobRegistry, dispatcher, persister, 2);
     List<CSVRecord> records = parseRows(
         "1\tApple\tAcme\t50",
         "2\tBanana\tAcme\t90",
@@ -80,7 +91,7 @@ public class FoodCsvImportUsecaseUnitTest {
   public void countsSkippedRowsThatFailTheQualityFilterTest() throws IOException {
     // Arrange
     FoodCsvImportUsecase usecase =
-        new FoodCsvImportUsecase(foodRepository, jobRegistry, dispatcher, 10);
+        new FoodCsvImportUsecase(jobRegistry, dispatcher, persister, 10);
     List<CSVRecord> records = parseRows(
         "1\tApple\tAcme\t50",
         "2\t \tAcme\t90"
@@ -100,7 +111,7 @@ public class FoodCsvImportUsecaseUnitTest {
   public void countsRowsThatThrowDuringMappingAsErrorsTest() throws IOException {
     // Arrange
     FoodCsvImportUsecase usecase =
-        new FoodCsvImportUsecase(foodRepository, jobRegistry, dispatcher, rowMapper, 10);
+        new FoodCsvImportUsecase(jobRegistry, dispatcher, persister, rowMapper, 10);
     List<CSVRecord> records = parseRows("1\tApple\tAcme\t50");
     when(rowMapper.map(any())).thenThrow(new IllegalStateException("boom"));
     FoodImportJobStatus status = new FoodImportJobStatus(UUID.randomUUID(), 0);
@@ -118,7 +129,7 @@ public class FoodCsvImportUsecaseUnitTest {
   public void retriesRecordByRecordWhenBatchViolatesUniqueConstraintTest() throws IOException {
     // Arrange
     FoodCsvImportUsecase usecase =
-        new FoodCsvImportUsecase(foodRepository, jobRegistry, dispatcher, 10);
+        new FoodCsvImportUsecase(jobRegistry, dispatcher, persister, 10);
     List<CSVRecord> records = parseRows(
         "1\tApple\tAcme\t50",
         "2\tBanana\tAcme\t90"
@@ -148,10 +159,10 @@ public class FoodCsvImportUsecaseUnitTest {
     // Arrange - a re-import of a row that already exists (duplicate external_id) must backfill
     // its now-derivable diet onto the existing row, since a plain re-import otherwise only skips
     // duplicates without updating them. This is the deliberately chosen backfill mechanism (see
-    // FoodCsvImportUsecase#persistOneByOne): no separate script or endpoint is needed, a normal
+    // FoodImportPersister#persistOneByOne): no separate script or endpoint is needed, a normal
     // re-import of the original file is enough.
     FoodCsvImportUsecase usecase =
-        new FoodCsvImportUsecase(foodRepository, jobRegistry, dispatcher, 10);
+        new FoodCsvImportUsecase(jobRegistry, dispatcher, persister, 10);
     String headerWithDiet = HEADER + "\tingredients_analysis_tags";
     List<CSVRecord> records = parseRowsWithHeader(
         headerWithDiet, "42\tTofu\tAcme\t120\ten:vegan,en:vegetarian"
@@ -177,7 +188,7 @@ public class FoodCsvImportUsecaseUnitTest {
     // subtype that is NOT DataIntegrityViolationException; persistBatch's fallback must still
     // kick in so one bad batch doesn't take the whole job down.
     FoodCsvImportUsecase usecase =
-        new FoodCsvImportUsecase(foodRepository, jobRegistry, dispatcher, 10);
+        new FoodCsvImportUsecase(jobRegistry, dispatcher, persister, 10);
     List<CSVRecord> records = parseRows("1\tApple\tAcme\t50");
     doThrow(new InvalidDataAccessResourceUsageException("numeric field overflow"))
         .when(foodRepository).saveAll(anyList());
@@ -199,7 +210,7 @@ public class FoodCsvImportUsecaseUnitTest {
     // it escapes both persistBatch's fallback and mapRow's per-row catch entirely, reaching
     // importFromFile as a genuine job-level failure.
     FoodCsvImportUsecase usecase =
-        new FoodCsvImportUsecase(foodRepository, jobRegistry, dispatcher, 10);
+        new FoodCsvImportUsecase(jobRegistry, dispatcher, persister, 10);
     Path file = Files.createTempFile("csv-import-test-", ".tmp");
     Files.writeString(file, HEADER + "\n1\tApple\tAcme\t50\n");
     doThrow(new IllegalStateException("boom")).when(foodRepository).saveAll(anyList());
@@ -221,7 +232,7 @@ public class FoodCsvImportUsecaseUnitTest {
     // job stuck in RUNNING; a stray orphaned row is far less harmful than a client polling
     // forever for a status update that never comes.
     FoodCsvImportUsecase usecase =
-        new FoodCsvImportUsecase(foodRepository, jobRegistry, dispatcher, 10);
+        new FoodCsvImportUsecase(jobRegistry, dispatcher, persister, 10);
     Path file = Files.createTempFile("csv-import-test-", ".tmp");
     Files.writeString(file, HEADER + "\n1\tApple\tAcme\t50\n");
     doThrow(new IllegalStateException("boom")).when(foodRepository).saveAll(anyList());
@@ -241,7 +252,7 @@ public class FoodCsvImportUsecaseUnitTest {
   public void importsFromAPlainFileAndDeletesItAfterwardsTest() throws IOException {
     // Arrange
     FoodCsvImportUsecase usecase =
-        new FoodCsvImportUsecase(foodRepository, jobRegistry, dispatcher, 10);
+        new FoodCsvImportUsecase(jobRegistry, dispatcher, persister, 10);
     Path file = Files.createTempFile("csv-import-test-", ".tmp");
     String content = HEADER + "\n1\tApple\tAcme\t50\n";
     Files.writeString(file, content);
@@ -262,7 +273,7 @@ public class FoodCsvImportUsecaseUnitTest {
   public void marksTheJobAsFailedWhenTheFileCannotBeReadTest() {
     // Arrange
     FoodCsvImportUsecase usecase =
-        new FoodCsvImportUsecase(foodRepository, jobRegistry, dispatcher, 10);
+        new FoodCsvImportUsecase(jobRegistry, dispatcher, persister, 10);
     Path missingFile = Path.of(System.getProperty("java.io.tmpdir"), "does-not-exist-" + UUID
         .randomUUID() + ".csv");
     FoodImportJobStatus status = new FoodImportJobStatus(UUID.randomUUID(), 0);
@@ -279,7 +290,7 @@ public class FoodCsvImportUsecaseUnitTest {
   public void importsFromAGzipCompressedFileTest() throws IOException {
     // Arrange
     FoodCsvImportUsecase usecase =
-        new FoodCsvImportUsecase(foodRepository, jobRegistry, dispatcher, 10);
+        new FoodCsvImportUsecase(jobRegistry, dispatcher, persister, 10);
     Path file = Files.createTempFile("csv-import-test-", ".tmp.gz");
     try (var out = Files.newOutputStream(file);
         var gzip = new GZIPOutputStream(out)) {
@@ -305,7 +316,7 @@ public class FoodCsvImportUsecaseUnitTest {
     // instead of the parser aborting entirely, since the whole job would otherwise be unable to
     // get past that single row.
     FoodCsvImportUsecase usecase =
-        new FoodCsvImportUsecase(foodRepository, jobRegistry, dispatcher, 10);
+        new FoodCsvImportUsecase(jobRegistry, dispatcher, persister, 10);
     Path file = Files.createTempFile("csv-import-test-", ".tmp");
     Files.writeString(file, HEADER + "\n1\t12\" Pizza Margherita\tAcme\t250\n");
     FoodImportJobStatus status = new FoodImportJobStatus(UUID.randomUUID(), Files.size(file));
@@ -323,7 +334,7 @@ public class FoodCsvImportUsecaseUnitTest {
   public void startImportStagesFileCreatesJobAndDispatchesTest() throws IOException {
     // Arrange
     FoodCsvImportUsecase usecase =
-        new FoodCsvImportUsecase(foodRepository, jobRegistry, dispatcher, 10);
+        new FoodCsvImportUsecase(jobRegistry, dispatcher, persister, 10);
     MultipartFile file = new MockMultipartFile(
         "file", "sample.csv", "text/csv",
         (HEADER + "\n1\tApple\tAcme\t50\n").getBytes(StandardCharsets.UTF_8));
@@ -337,7 +348,7 @@ public class FoodCsvImportUsecaseUnitTest {
     // Assert
     assertThat(result.getJobId()).isEqualTo(jobId);
     assertThat(result.getState()).isEqualTo("RUNNING");
-    verify(dispatcher).dispatch(eq(usecase), any(Path.class), eq(status));
+    verify(dispatcher).dispatch(any(Runnable.class));
   }
 
   private List<CSVRecord> parseRows(String... rows) throws IOException {

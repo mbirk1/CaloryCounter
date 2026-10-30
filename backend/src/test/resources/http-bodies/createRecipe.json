@@ -1,9 +1,8 @@
 {
   "name": "recipe",
+  "servings": 2,
   "foods": [{
-    "uuid": "PLACEHOLDER",
-    "name": "food",
-    "calory": 1312,
-    "grams": 100
+    "foodId": "PLACEHOLDER",
+    "amountGrams": 100
   }]
 }

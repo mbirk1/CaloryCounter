@@ -16,11 +16,12 @@ public class FoodSourceUnitTest {
   }
 
   @Test
-  public void valuesContainsBothSourcesTest() {
+  public void valuesContainsAllSourcesTest() {
     // Arrange & Act
     FoodSource[] values = FoodSource.values();
 
     // Assert
-    assertThat(values).containsExactly(FoodSource.MANUAL, FoodSource.OPENFOODFACTS);
+    assertThat(values)
+        .containsExactly(FoodSource.MANUAL, FoodSource.OPENFOODFACTS, FoodSource.BLS);
   }
 }

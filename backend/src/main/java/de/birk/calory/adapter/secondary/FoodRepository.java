@@ -1,5 +1,6 @@
 package de.birk.calory.adapter.secondary;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.birk.calory.adapter.secondary.model.FoodPersistence;
+import de.birk.calory.adapter.secondary.model.NameSimilarityPair;
 
 /**
  * Basic Spring Boot Repository.
@@ -83,4 +85,38 @@ public interface FoodRepository extends JpaRepository<FoodPersistence, UUID> {
       + "and (:diet is null or f.diet = :diet)")
   Page<FoodPersistence> search(
       @Param("search") String search, @Param("diet") String diet, Pageable pageable);
+
+  /**
+   * Finds every pair of food items from the same source whose (lower-cased) names are trigram-
+   * similar (per {@code pg_trgm}'s {@code %} operator), together with their similarity score.
+   * Each pair is returned exactly once ({@code a.id < b.id}), and does not yet reflect the FR-2
+   * macro-nearness check - the caller is responsible for that second filter.
+   *
+   * <p>The leading {@code WITH} clause sets {@code pg_trgm.similarity_threshold} - what the
+   * {@code %} operator (and therefore the {@code idx_calory_food_name_trgm} GIN index it can
+   * use) evaluates against - for {@code threshold}'s value, scoped to just this one statement via
+   * {@code set_config(..., true)}. It is folded into the same query as the join, rather than
+   * being a separate repository call, specifically so the two can never end up split across
+   * different transactions (e.g. by the {@code @Async} self-invocation pitfall documented on
+   * {@code DuplicateAnalysisDispatcher}) - a {@code set_config} whose transaction ends before the
+   * join runs would silently fall back to the default 0.3 threshold instead of the configured
+   * one. Directly comparing {@code similarity(...) > :threshold} in a plain {@code WHERE} clause
+   * would compute the same result set, but without using the index.
+   *
+   * @param threshold the minimum trigram similarity for two names to be considered a candidate
+   *     pair, e.g. {@code 0.5}
+   * @param source the name of the {@code FoodSource} enum constant to search within
+   * @return the candidate pairs, with their name-similarity score
+   */
+  @Query(value = "with set_threshold as ("
+      + "  select set_config('pg_trgm.similarity_threshold', CAST(:threshold as text), true)"
+      + ") "
+      + "select a.id as first_food_id, b.id as second_food_id, "
+      + "similarity(lower(a.name), lower(b.name)) as name_similarity "
+      + "from tab_calory_food a join tab_calory_food b "
+      + "on lower(a.name) % lower(b.name) and a.id < b.id "
+      + "where a.source = :source and b.source = :source",
+      nativeQuery = true)
+  List<NameSimilarityPair> findNameSimilarPairs(
+      @Param("threshold") double threshold, @Param("source") String source);
 }

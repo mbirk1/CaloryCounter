@@ -1,6 +1,7 @@
 package de.birk.calory.usecase.food;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
 
@@ -110,8 +111,12 @@ public class FindFoodUsecase {
    * @return the food item
    */
   public FoodDetailsDto findFoodById(UUID uuid) {
+    LOG.debug("Lebensmittel-Anfrage fuer ID {} erhalten", uuid);
     FoodPersistence foodPersistence = this.foodRepository.findById(uuid)
-        .orElseThrow();
+        .orElseThrow(() -> {
+          LOG.warn("Lebensmittel-Anfrage fuer nicht vorhandene ID {} abgelehnt", uuid);
+          return new NoSuchElementException();
+        });
 
     Food food = this.persistenceConverter.convertFromDto(foodPersistence);
     return this.detailsDtoConverter.convertFromEntity(food);

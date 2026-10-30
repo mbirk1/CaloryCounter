@@ -1,5 +1,5 @@
 <form
-  class="flex flex-col bg-white rounded-xl p-5 gap-5 max-w-lg w-full"
+  class="flex flex-col bg-white rounded-xl p-5 gap-5 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
   [formGroup]="food"
   (submit)="onSubmit()"
 >
@@ -70,6 +70,75 @@
         <app-label [text]="'Natrium (g): '" />
       </div>
       <app-number-input [placeholder]="'–'" [formControlName]="'sodium'" />
+    </div>
+  </app-card>
+
+  <app-card title="Mikronährstoffe" panelClass="bg-gray-50 rounded-xl p-4">
+    <div class="grid grid-cols-2 gap-4 items-center">
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Vitamin A (µg): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'vitaminA'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Vitamin D (µg): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'vitaminD'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Vitamin E (mg): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'vitaminE'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Vitamin K (µg): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'vitaminK'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Vitamin B1 (mg): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'vitaminB1'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Vitamin B2 (mg): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'vitaminB2'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Vitamin B6 (µg): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'vitaminB6'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Vitamin B12 (µg): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'vitaminB12'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Vitamin C (mg): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'vitaminC'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Folat (µg): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'folate'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Kalium (mg): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'potassium'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Calcium (mg): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'calcium'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Magnesium (mg): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'magnesium'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Eisen (mg): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'iron'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Zink (mg): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'zinc'" />
+      <div class="text-[#444444] font-bold">
+        <app-label [text]="'Iod (µg): '" />
+      </div>
+      <app-number-input [placeholder]="'–'" [formControlName]="'iodine'" />
     </div>
   </app-card>
 

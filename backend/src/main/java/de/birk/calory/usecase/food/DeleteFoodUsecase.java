@@ -1,6 +1,5 @@
 package de.birk.calory.usecase.food;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
@@ -10,17 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
-import de.birk.calory.adapter.primary.model.FoodDetailsDto;
 import de.birk.calory.adapter.secondary.FoodRepository;
 import de.birk.calory.adapter.secondary.model.FoodPersistence;
-import de.birk.calory.domain.food.Food;
 import de.birk.calory.exception.FoodInUseException;
-import de.birk.calory.usecase.food.converter.FoodDetailsDtoConverter;
-import de.birk.calory.usecase.food.converter.FoodDtoConverter;
-import de.birk.calory.usecase.food.converter.FoodPersistenceConverter;
 
 /**
- * Usecase for deleting and finding foods.
+ * Usecase for deleting a food item.
  *
  * @author Marius Birk
  */
@@ -30,9 +24,6 @@ public class DeleteFoodUsecase {
   private static final Logger LOG = LoggerFactory.getLogger(DeleteFoodUsecase.class);
 
   private final FoodRepository foodRepository;
-  private final FoodPersistenceConverter persistenceConverter;
-  private final FoodDtoConverter dtoConverter;
-  private final FoodDetailsDtoConverter detailsDtoConverter;
 
   /**
    * Constructor for usecase.
@@ -41,13 +32,10 @@ public class DeleteFoodUsecase {
    */
   public DeleteFoodUsecase(FoodRepository foodRepository) {
     this.foodRepository = foodRepository;
-    this.persistenceConverter = new FoodPersistenceConverter();
-    this.dtoConverter = new FoodDtoConverter();
-    this.detailsDtoConverter = new FoodDetailsDtoConverter();
   }
 
   /**
-   * Deleting Foods with given identifier.
+   * Deletes the food item with the given identifier.
    *
    * <p>{@code tab_calory_recipe_food.food_id} references this row without an {@code ON DELETE}
    * clause, so deleting a food item that is still part of a recipe violates that foreign key
@@ -57,29 +45,30 @@ public class DeleteFoodUsecase {
    * caught here and translated into a {@link FoodInUseException}, so the client gets a clear,
    * mappable 409 instead of an unhandled 500.
    *
+   * <p>Deliberately does not return the remaining food items: this used to load and convert
+   * every single row in the table via {@code foodRepository.findAll()} after every delete - on
+   * a table with real, bulk-imported data (hundreds of thousands to millions of rows) that
+   * turns an O(1) primary-key delete into an O(n) operation, several seconds long, for a return
+   * value no caller ever read (the client reloads the food table's current, paginated page
+   * itself instead).
+   *
    * @param id UUID and primary key of food item.
-   * @return a list of remainig food items.
    */
-  public List<FoodDetailsDto> deleteFood(UUID id) {
+  public void deleteFood(UUID id) {
     LOG.debug("Loeschanfrage fuer Lebensmittel {} erhalten", id);
     Optional<FoodPersistence> food = this.foodRepository.findById(id);
-    if (food.isPresent()) {
-      try {
-        this.foodRepository.delete(food.get());
-        LOG.info("Lebensmittel {} ('{}') erfolgreich geloescht", id, food.get().getName());
-      } catch (DataIntegrityViolationException e) {
-        LOG.warn(
-            "Lebensmittel {} ('{}') kann nicht geloescht werden, da es Teil eines Rezepts ist",
-            id, food.get().getName());
-        throw new FoodInUseException();
-      }
-    } else {
+    if (food.isEmpty()) {
       LOG.warn("Loeschanfrage fuer nicht vorhandenes Lebensmittel {} - bereits geloescht?", id);
       throw new NoSuchElementException("Food not found");
     }
-    List<FoodPersistence> allFoods = this.foodRepository.findAll();
-    List<Food> foods = this.persistenceConverter.convertFromDtos(allFoods);
-
-    return this.detailsDtoConverter.convertFromEntities(foods);
+    try {
+      this.foodRepository.delete(food.get());
+      LOG.info("Lebensmittel {} ('{}') erfolgreich geloescht", id, food.get().getName());
+    } catch (DataIntegrityViolationException e) {
+      LOG.warn(
+          "Lebensmittel {} ('{}') kann nicht geloescht werden, da es Teil eines Rezepts ist",
+          id, food.get().getName());
+      throw new FoodInUseException();
+    }
   }
 }

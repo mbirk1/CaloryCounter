@@ -1,7 +1,6 @@
 package de.birk.calory.adapter.primary;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -29,6 +28,7 @@ import de.birk.calory.usecase.food.CreateFoodUsecase;
 import de.birk.calory.usecase.food.DeleteFoodUsecase;
 import de.birk.calory.usecase.food.FindFoodUsecase;
 import de.birk.calory.usecase.food.UpdateFoodUsecase;
+import de.birk.calory.usecase.food.importer.BlsFoodImportUsecase;
 import de.birk.calory.usecase.food.importer.FindImportJobStatusUsecase;
 import de.birk.calory.usecase.food.importer.FoodCsvImportUsecase;
 
@@ -47,6 +47,7 @@ public class FoodRestController {
   private final UpdateFoodUsecase updateFoodUsecase;
   private final DeleteFoodUsecase deleteFoodUsecase;
   private final FoodCsvImportUsecase foodCsvImportUsecase;
+  private final BlsFoodImportUsecase blsFoodImportUsecase;
   private final FindImportJobStatusUsecase findImportJobStatusUsecase;
 
 
@@ -58,6 +59,7 @@ public class FoodRestController {
    * @param updateFoodUsecase Update Food Usecase
    * @param deleteFoodUsecase Delete Foor Usecase
    * @param foodCsvImportUsecase Food Csv Import Usecase
+   * @param blsFoodImportUsecase BLS Food Import Usecase
    * @param findImportJobStatusUsecase Find Import Job Status Usecase
    */
   public FoodRestController(
@@ -66,12 +68,14 @@ public class FoodRestController {
       UpdateFoodUsecase updateFoodUsecase,
       DeleteFoodUsecase deleteFoodUsecase,
       FoodCsvImportUsecase foodCsvImportUsecase,
+      BlsFoodImportUsecase blsFoodImportUsecase,
       FindImportJobStatusUsecase findImportJobStatusUsecase) {
     this.findFoodUsecase = findFoodUsecase;
     this.createFoodUsecase = createFoodUsecase;
     this.updateFoodUsecase = updateFoodUsecase;
     this.deleteFoodUsecase = deleteFoodUsecase;
     this.foodCsvImportUsecase = foodCsvImportUsecase;
+    this.blsFoodImportUsecase = blsFoodImportUsecase;
     this.findImportJobStatusUsecase = findImportJobStatusUsecase;
   }
 
@@ -116,8 +120,8 @@ public class FoodRestController {
   }
 
   @DeleteRequest("/{id}")
-  public List<FoodDetailsDto> deleteFood(@PathVariable UUID id) {
-    return this.deleteFoodUsecase.deleteFood(id);
+  public void deleteFood(@PathVariable UUID id) {
+    this.deleteFoodUsecase.deleteFood(id);
   }
 
   /**
@@ -142,5 +146,24 @@ public class FoodRestController {
   @GetMapping("/import/{jobId}")
   public ImportJobStatusDto getImportStatus(@PathVariable UUID jobId) {
     return this.findImportJobStatusUsecase.findById(jobId);
+  }
+
+  /**
+   * Starts an asynchronous import of food items from a Bundeslebensmittelschlüssel (BLS) 4.0
+   * {@code .xlsx} export and immediately returns the (still running) job status.
+   *
+   * <p>There is currently no role model in this application, so this endpoint is reachable by
+   * any authenticated user.
+   *
+   * @param file the uploaded BLS {@code .xlsx} file
+   * @return 202 Accepted with the freshly created job status
+   * @throws IOException if the uploaded file cannot be staged for the import
+   */
+  //TODO Marius Restrict to an admin role once a role model exists
+  @PostMapping("/import/bls")
+  public ResponseEntity<ImportJobStatusDto> importBlsFoods(
+      @RequestParam("file") MultipartFile file) throws IOException {
+    ImportJobStatusDto status = this.blsFoodImportUsecase.startImport(file);
+    return new ResponseEntity<>(status, HttpStatus.ACCEPTED);
   }
 }

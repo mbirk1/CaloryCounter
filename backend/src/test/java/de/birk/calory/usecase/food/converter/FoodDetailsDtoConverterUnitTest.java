@@ -148,26 +148,26 @@ public class FoodDetailsDtoConverterUnitTest {
   @Test
   public void convertFromEntityWithExtendedFieldsTest() {
     // Arrange
-    Food food = new Food(
-        UUID.randomUUID(),
-        "Cola",
-        new BigDecimal("42.00"),
-        new BigDecimal("100"),
-        "Acme",
-        "Beverages",
-        new BigDecimal("0.00"),
-        new BigDecimal("0.00"),
-        new BigDecimal("10.60"),
-        new BigDecimal("10.60"),
-        new BigDecimal("0.00"),
-        new BigDecimal("0.00"),
-        new BigDecimal("0.01"),
-        new BigDecimal("0.00"),
-        "https://example.com/cola.png",
-        FoodSource.OPENFOODFACTS,
-        "1234567890123",
-        Diet.VEGAN
-    );
+    Food food = new Food.Builder()
+        .id(UUID.randomUUID())
+        .name("Cola")
+        .calory(new BigDecimal("42.00"))
+        .grams(new BigDecimal("100"))
+        .brand("Acme")
+        .category("Beverages")
+        .fat(new BigDecimal("0.00"))
+        .saturatedFat(new BigDecimal("0.00"))
+        .carbohydrates(new BigDecimal("10.60"))
+        .sugar(new BigDecimal("10.60"))
+        .fiber(new BigDecimal("0.00"))
+        .protein(new BigDecimal("0.00"))
+        .salt(new BigDecimal("0.01"))
+        .sodium(new BigDecimal("0.00"))
+        .imageUrl("https://example.com/cola.png")
+        .source(FoodSource.OPENFOODFACTS)
+        .externalId("1234567890123")
+        .diet(Diet.VEGAN)
+        .build();
     FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();
 
     // Act
@@ -185,10 +185,13 @@ public class FoodDetailsDtoConverterUnitTest {
   @Test
   public void convertFromEntityWithNullSourceLeavesSourceNullTest() {
     // Arrange
-    Food food = new Food(
-        UUID.randomUUID(), "Apple", new BigDecimal("52"), new BigDecimal("100"),
-        null, null, null, null, null, null, null, null, null, null, null, null, null, null
-    );
+    Food food = new Food.Builder()
+        .id(UUID.randomUUID())
+        .name("Apple")
+        .calory(new BigDecimal("52"))
+        .grams(new BigDecimal("100"))
+        .source(null)
+        .build();
     FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();
 
     // Act
@@ -219,7 +222,9 @@ public class FoodDetailsDtoConverterUnitTest {
         "https://example.com/cola.png",
         "OPENFOODFACTS",
         "1234567890123",
-        "VEGETARIAN"
+        "VEGETARIAN",
+        null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+        null
     );
     FoodDetailsDtoConverter foodDetailsDtoConverter = new FoodDetailsDtoConverter();
 

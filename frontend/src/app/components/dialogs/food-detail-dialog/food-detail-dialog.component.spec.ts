@@ -92,4 +92,20 @@ describe('FoodDetailDialogComponent', () => {
     expect(text).not.toContain('null')
     expect(text).not.toContain('undefined')
   })
+
+  it('shows the micronutrients card with values and units when present', () => {
+    const fixture = create(food({ vitaminC: 12, iron: 4.7 }))
+
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? ''
+    expect(text).toContain('Mikronährstoffe')
+    expect(text).toContain('12 mg')
+    expect(text).toContain('4.7 mg')
+  })
+
+  it('hides the micronutrients card entirely when none are present', () => {
+    const fixture = create(food())
+
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? ''
+    expect(text).not.toContain('Mikronährstoffe')
+  })
 })

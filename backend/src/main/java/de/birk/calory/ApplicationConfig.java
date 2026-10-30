@@ -20,8 +20,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableAsync
 public class ApplicationConfig implements WebMvcConfigurer {
 
-  private static final int CSV_IMPORT_POOL_SIZE = 1;
-  private static final int CSV_IMPORT_QUEUE_CAPACITY = 10;
+  private static final int FOOD_IMPORT_POOL_SIZE = 1;
+  private static final int FOOD_IMPORT_QUEUE_CAPACITY = 10;
+  private static final int DUPLICATE_ANALYSIS_POOL_SIZE = 1;
+  private static final int DUPLICATE_ANALYSIS_QUEUE_CAPACITY = 10;
 
   @Override
   public void addCorsMappings(CorsRegistry registry) {
@@ -33,20 +35,40 @@ public class ApplicationConfig implements WebMvcConfigurer {
   }
 
   /**
-   * Dedicated, bounded executor for CSV import jobs, used instead of Spring's default
-   * {@code SimpleAsyncTaskExecutor} (which spawns an unbounded thread per invocation). A single
-   * worker thread is enough - imports are IO/DB bound and running more than one at a time would
-   * only make them compete for the database connection pool.
+   * Dedicated, bounded executor for food import jobs (CSV and BLS alike), used instead of
+   * Spring's default {@code SimpleAsyncTaskExecutor} (which spawns an unbounded thread per
+   * invocation). A single worker thread is enough - imports are IO/DB bound and running more
+   * than one at a time would only make them compete for the database connection pool.
    *
-   * @return the executor bean, referenced by name from {@code @Async("csvImportExecutor")}
+   * @return the executor bean, referenced by name from {@code @Async("foodImportExecutor")}
    */
-  @Bean(name = "csvImportExecutor")
-  public Executor csvImportExecutor() {
+  @Bean(name = "foodImportExecutor")
+  public Executor foodImportExecutor() {
     ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-    executor.setCorePoolSize(CSV_IMPORT_POOL_SIZE);
-    executor.setMaxPoolSize(CSV_IMPORT_POOL_SIZE);
-    executor.setQueueCapacity(CSV_IMPORT_QUEUE_CAPACITY);
-    executor.setThreadNamePrefix("csv-import-");
+    executor.setCorePoolSize(FOOD_IMPORT_POOL_SIZE);
+    executor.setMaxPoolSize(FOOD_IMPORT_POOL_SIZE);
+    executor.setQueueCapacity(FOOD_IMPORT_QUEUE_CAPACITY);
+    executor.setThreadNamePrefix("food-import-");
+    executor.initialize();
+    return executor;
+  }
+
+  /**
+   * Dedicated, bounded executor for duplicate-detection analysis jobs (FR-3), separate from
+   * {@link #foodImportExecutor()} since the two are unrelated background tasks - a single worker
+   * thread is enough for the same reason as the import executor: this is IO/DB bound work, and
+   * running more than one analysis at a time would only make it compete for the connection pool.
+   *
+   * @return the executor bean, referenced by name from
+   *     {@code @Async("duplicateAnalysisExecutor")}
+   */
+  @Bean(name = "duplicateAnalysisExecutor")
+  public Executor duplicateAnalysisExecutor() {
+    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+    executor.setCorePoolSize(DUPLICATE_ANALYSIS_POOL_SIZE);
+    executor.setMaxPoolSize(DUPLICATE_ANALYSIS_POOL_SIZE);
+    executor.setQueueCapacity(DUPLICATE_ANALYSIS_QUEUE_CAPACITY);
+    executor.setThreadNamePrefix("duplicate-analysis-");
     executor.initialize();
     return executor;
   }

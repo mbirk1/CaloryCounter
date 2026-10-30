@@ -45,22 +45,28 @@
             </th>
             <td class="px-6 py-4">
               <span class="flex justify-center">
-                {{ this.addGrams(item.foods) }}
+                <app-diet-badge [diet]="item.diet" />
               </span>
             </td>
             <td class="px-6 py-4">
               <span class="flex justify-center">
-                {{ this.addCalories(item.foods) }}
+                {{ item.totalCalories }}
               </span>
             </td>
             <td class="px-6 py-4">
               <span class="flex justify-center">
-                {{ this.listFoods(item.foods) }}
+                {{ item.caloriesPerServing }}
               </span>
             </td>
             <td class="px-6 py-4">
               <div class="flex gap-4 flex justify-center">
-                <span class="material-symbols-rounded"> edit </span>
+                <button
+                  type="button"
+                  aria-label="Details anzeigen"
+                  (click)="openDetails(item)"
+                >
+                  <fa-icon [icon]="faEye" />
+                </button>
                 <span
                   class="material-symbols-rounded cursor-pointer"
                   (click)="delete(item.uuid!)"

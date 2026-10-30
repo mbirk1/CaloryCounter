@@ -33,13 +33,26 @@ public class UpdateFoodUsecaseUnitTest {
   public void updatesTheEditableFieldsAndKeepsProvenanceFieldsUnchangedTest() {
     // Arrange
     UUID id = UUID.randomUUID();
-    FoodPersistence existing = new FoodPersistence(
-        id, "Hafermilch", new BigDecimal("45"), new BigDecimal("100"),
-        "Oatly", "Plant-based beverages", new BigDecimal("1.5"), new BigDecimal("0.2"),
-        new BigDecimal("6.7"), new BigDecimal("4.1"), new BigDecimal("0.8"),
-        new BigDecimal("1"), new BigDecimal("0.11"), new BigDecimal("0.04"),
-        "https://example.com/oatly.png", "OPENFOODFACTS", "1234567890123", "VEGAN"
-    );
+    FoodPersistence existing = new FoodPersistence.Builder()
+        .id(id)
+        .name("Hafermilch")
+        .calory(new BigDecimal("45"))
+        .grams(new BigDecimal("100"))
+        .brand("Oatly")
+        .category("Plant-based beverages")
+        .fat(new BigDecimal("1.5"))
+        .saturatedFat(new BigDecimal("0.2"))
+        .carbohydrates(new BigDecimal("6.7"))
+        .sugar(new BigDecimal("4.1"))
+        .fiber(new BigDecimal("0.8"))
+        .protein(new BigDecimal("1"))
+        .salt(new BigDecimal("0.11"))
+        .sodium(new BigDecimal("0.04"))
+        .imageUrl("https://example.com/oatly.png")
+        .source("OPENFOODFACTS")
+        .externalId("1234567890123")
+        .diet("VEGAN")
+        .build();
     when(this.foodRepository.findById(id)).thenReturn(Optional.of(existing));
     when(this.foodRepository.save(any(FoodPersistence.class)))
         .thenAnswer(invocation -> invocation.getArgument(0));
@@ -49,7 +62,9 @@ public class UpdateFoodUsecaseUnitTest {
         "Hafermilch Bio", new BigDecimal("48"), new BigDecimal("100"), "VEGETARIAN",
         new BigDecimal("2"), new BigDecimal("0.3"), new BigDecimal("7"), new BigDecimal("4.5"),
         new BigDecimal("1"), new BigDecimal("1.2"), new BigDecimal("0.12"),
-        new BigDecimal("0.05"));
+        new BigDecimal("0.05"),
+        null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+        null);
 
     // Act
     FoodDetailsDto result = usecase.updateFood(id, updateFoodDto);
@@ -76,7 +91,9 @@ public class UpdateFoodUsecaseUnitTest {
     UpdateFoodUsecase usecase = new UpdateFoodUsecase(this.foodRepository);
     UpdateFoodDto updateFoodDto = new UpdateFoodDto(
         "Name", new BigDecimal("50"), new BigDecimal("100"), null,
-        null, null, null, null, null, null, null, null);
+        null, null, null, null, null, null, null, null,
+        null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+        null);
 
     // Act & Assert
     assertThatThrownBy(() -> usecase.updateFood(id, updateFoodDto))
@@ -94,7 +111,9 @@ public class UpdateFoodUsecaseUnitTest {
     UpdateFoodUsecase usecase = new UpdateFoodUsecase(this.foodRepository);
     UpdateFoodDto updateFoodDto = new UpdateFoodDto(
         "Food", new BigDecimal("1000"), new BigDecimal("100"), null,
-        null, null, null, null, null, null, null, null);
+        null, null, null, null, null, null, null, null,
+        null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+        null);
 
     // Act & Assert
     assertThatThrownBy(() -> usecase.updateFood(id, updateFoodDto))
@@ -112,7 +131,9 @@ public class UpdateFoodUsecaseUnitTest {
     UpdateFoodUsecase usecase = new UpdateFoodUsecase(this.foodRepository);
     UpdateFoodDto updateFoodDto = new UpdateFoodDto(
         "Food", new BigDecimal("50"), new BigDecimal("100"), null,
-        new BigDecimal("-1"), null, null, null, null, null, null, null);
+        new BigDecimal("-1"), null, null, null, null, null, null, null,
+        null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+        null);
 
     // Act & Assert
     assertThatThrownBy(() -> usecase.updateFood(id, updateFoodDto))

@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -13,6 +14,9 @@ import java.util.concurrent.TimeUnit;
 
 import jakarta.transaction.Transactional;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,6 +53,9 @@ public class FoodImportRestControllerTest extends AbstractTestBase {
   private static final List<String> IMPORTED_EXTERNAL_IDS =
       List.of("0001", "0002", "0006", "0007", "0009", "0010", "0011");
 
+  // Matches the in-memory workbook built by blsWorkbookBytes() below.
+  private static final List<String> IMPORTED_BLS_CODES = List.of("C131000", "T500001");
+
   @Autowired
   private FoodRepository foodRepository;
 
@@ -61,6 +68,9 @@ public class FoodImportRestControllerTest extends AbstractTestBase {
     CompletableFuture.runAsync(() -> {
       for (String externalId : IMPORTED_EXTERNAL_IDS) {
         this.foodRepository.findByExternalId(externalId).ifPresent(this.foodRepository::delete);
+      }
+      for (String blsCode : IMPORTED_BLS_CODES) {
+        this.foodRepository.findByExternalId(blsCode).ifPresent(this.foodRepository::delete);
       }
     }).get(10, TimeUnit.SECONDS);
   }
@@ -116,6 +126,76 @@ public class FoodImportRestControllerTest extends AbstractTestBase {
     assertThat(this.foodRepository.findByExternalId("0004")).isEmpty();
     assertThat(this.foodRepository.findByExternalId("0005")).isEmpty();
     assertThat(this.foodRepository.findByExternalId("0008")).isEmpty();
+  }
+
+  @Test
+  @DisplayName("imports a BLS xlsx file asynchronously, derives macros/micronutrients and diet")
+  public void importsSampleBlsFileTest() throws Exception {
+    String accessToken = registerAndGetAccessToken();
+    byte[] xlsxBytes = blsWorkbookBytes();
+    MockMultipartFile file = new MockMultipartFile(
+        "file", "bls.xlsx",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", xlsxBytes);
+
+    MvcResult startResult = this.mockMvc.perform(
+        multipart("/api/food/import/bls")
+            .file(file)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+    ).andExpect(status().isAccepted()).andReturn();
+
+    String jobId = asJson(startResult).read("$.jobId");
+    ReadContext finalStatus = pollUntilFinished(jobId, accessToken);
+
+    assertThat((String) finalStatus.read("$.state")).isEqualTo("COMPLETED");
+    assertThat((Integer) finalStatus.read("$.processedRows")).isEqualTo(2);
+    assertThat((Integer) finalStatus.read("$.importedCount")).isEqualTo(2);
+    assertThat((Integer) finalStatus.read("$.errorCount")).isEqualTo(0);
+
+    Optional<FoodPersistence> oats = this.foodRepository.findByExternalId("C131000");
+    assertThat(oats).isPresent();
+    assertThat(oats.get().getName()).isEqualTo("Hafer ganzes Korn, roh");
+    assertThat(oats.get().getSource()).isEqualTo("BLS");
+    assertThat(oats.get().getCalory()).isEqualByComparingTo("343.00");
+    assertThat(oats.get().getProtein()).isEqualByComparingTo("11.38");
+    assertThat(oats.get().getIron()).isEqualByComparingTo("4.700");
+    // Group "C" (Getreide-Rohware) with no meat/dairy keyword in the name falls back to VEGAN.
+    assertThat(oats.get().getDiet()).isEqualTo("VEGAN");
+
+    Optional<FoodPersistence> meat = this.foodRepository.findByExternalId("T500001");
+    assertThat(meat).isPresent();
+    assertThat(meat.get().getName()).isEqualTo("Rind Filet, roh");
+    // The "Rind" name keyword drives this, not group "T" - both agree here, but the keyword path
+    // is what's actually being exercised for a name containing a clear, space-delimited keyword.
+    assertThat(meat.get().getDiet()).isEqualTo("NON_VEGETARIAN");
+  }
+
+  /**
+   * Builds a minimal, in-memory BLS-shaped workbook (header row + two data rows) as raw bytes,
+   * avoiding the need to check in a binary {@code .xlsx} fixture file.
+   */
+  private byte[] blsWorkbookBytes() throws Exception {
+    try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+      Sheet sheet = workbook.createSheet();
+      sheet.createRow(0); // header row, skipped by the importer
+
+      Row oats = sheet.createRow(1);
+      oats.createCell(0).setCellValue("C131000");
+      oats.createCell(1).setCellValue("Hafer ganzes Korn, roh");
+      oats.createCell(6).setCellValue(343.0);
+      oats.createCell(12).setCellValue(11.38);
+      oats.createCell(144).setCellValue(4.7);
+
+      Row meat = sheet.createRow(2);
+      meat.createCell(0).setCellValue("T500001");
+      meat.createCell(1).setCellValue("Rind Filet, roh");
+      meat.createCell(6).setCellValue(115.0);
+      meat.createCell(12).setCellValue(21.0);
+
+      try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+        workbook.write(out);
+        return out.toByteArray();
+      }
+    }
   }
 
   private ReadContext pollUntilFinished(String jobId, String accessToken) throws Exception {

@@ -9,19 +9,22 @@ import java.util.List;
  */
 public class RecipeDto {
   private String name;
-  private List<FoodDetailsDto> foods;
+  private int servings;
+  private List<RecipeFoodEntryDto> foods;
 
   public RecipeDto() {
   }
 
   /**
-   * Basic constructor, with only a name and a list of foods.
+   * Basic constructor.
    *
    * @param name the name
-   * @param foods a list of foods
+   * @param servings the number of servings this recipe yields
+   * @param foods the food entries (by id, with amount) this recipe is made of
    */
-  public RecipeDto(String name, List<FoodDetailsDto> foods) {
+  public RecipeDto(String name, int servings, List<RecipeFoodEntryDto> foods) {
     this.name = name;
+    this.servings = servings;
     this.foods = foods;
   }
 
@@ -29,7 +32,11 @@ public class RecipeDto {
     return name;
   }
 
-  public List<FoodDetailsDto> getFoods() {
+  public int getServings() {
+    return servings;
+  }
+
+  public List<RecipeFoodEntryDto> getFoods() {
     return foods;
   }
 }

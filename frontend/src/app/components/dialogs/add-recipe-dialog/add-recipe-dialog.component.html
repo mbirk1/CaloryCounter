@@ -1,32 +1,154 @@
 <form
-  class="flex flex-col bg-white rounded-xl p-5 gap-5"
+  class="flex flex-col bg-white shadow-2xl rounded-l-2xl w-full h-full transition-transform duration-300 ease-out"
+  [class.translate-x-full]="!visible()"
   [formGroup]="recipe"
   (submit)="onSubmit()"
 >
-  <div class="mb-8">
+  <div class="flex items-center justify-between p-5 border-b border-gray-100">
     <label class="text-[#444444] font-bold text-xl">Rezept hinzufügen</label>
+    <button
+      type="button"
+      (click)="close()"
+      aria-label="Schließen"
+      class="text-gray-400 hover:text-gray-700"
+    >
+      <fa-icon [icon]="faXmark" />
+    </button>
   </div>
-  <div class="grid grid-cols-2 gap-8">
-    <div class="text-[#444444] font-bold">
-      <app-label [text]="'Name: '" />
-    </div>
-    <div class="">
-      <app-text-input [formControlName]="'name'" />
-    </div>
-    <div>
-      <span>Lebensmittel: </span>
-      @for (food of this.foods; track $index) {
-        <div>
-          <app-checkbox
-            [formControlName]="food.name"
-            [text]="food.name + ', ' + food.calory + 'cal, ' + food.grams + 'g'"
-          />
+
+  <div class="flex-1 min-h-0 flex flex-row gap-6 pt-20 pr-10 pb-10 pl-24">
+    <div class="flex-[3] flex flex-col gap-4 overflow-y-auto pr-2">
+      <div class="grid grid-cols-2 gap-x-4 gap-y-1 items-center">
+        <div class="text-[#444444] font-bold">
+          <app-label [text]="'Name: '" />
         </div>
+        <app-text-input [formControlName]="'name'" />
+        @if (recipe.get('name')?.invalid && recipe.get('name')?.touched) {
+          <span class="col-span-2 text-xs text-red-600">
+            @if (recipe.get('name')?.errors?.['required']) {
+              Bitte gib einen Namen für das Rezept ein.
+            } @else if (recipe.get('name')?.errors?.['minlength']) {
+              Der Name muss mindestens 3 Zeichen lang sein.
+            }
+          </span>
+        }
+        <div class="text-[#444444] font-bold">
+          <app-label [text]="'Portionen: '" />
+        </div>
+        <app-number-input [placeholder]="'1'" [formControlName]="'servings'" />
+        @if (
+          recipe.get('servings')?.invalid && recipe.get('servings')?.touched
+        ) {
+          <span class="col-span-2 text-xs text-red-600">
+            Bitte gib eine positive Anzahl an Portionen ein.
+          </span>
+        }
+      </div>
+
+      <div class="flex flex-col gap-2 relative">
+        <app-label [text]="'Lebensmittel hinzufügen:'" />
+        <app-text-input
+          #searchInputHost
+          [formControl]="searchControl"
+          [placeholder]="'Lebensmittel suchen...'"
+          [type]="'search'"
+        />
+        @if (searchResults().length > 0) {
+          <div
+            class="absolute top-full left-0 right-0 z-10 mt-1 max-h-96 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-lg"
+          >
+            @for (food of searchResults(); track food.uuid) {
+              <button
+                type="button"
+                class="w-full text-left px-3 py-2 hover:bg-gray-50 text-sm text-[#444444]"
+                (click)="addFood(food)"
+              >
+                {{ food.name }} · {{ food.calory }} cal / {{ food.grams }} g
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <span class="text-[#444444] font-bold">Ausgewählte Lebensmittel:</span>
+        <div
+          formArrayName="entries"
+          class="flex flex-col gap-2 max-h-[28rem] overflow-y-auto"
+        >
+          @for (
+            entryGroup of entries.controls;
+            track entryGroup;
+            let i = $index
+          ) {
+            <div class="flex flex-col gap-1" [formGroupName]="i">
+              <div class="flex items-center gap-3">
+                <span class="flex-1 truncate text-sm text-[#444444]">{{
+                  entryGroup.get('name')?.value
+                }}</span>
+                <app-number-input
+                  [placeholder]="'0'"
+                  [formControlName]="'amountGrams'"
+                />
+                <button
+                  type="button"
+                  aria-label="Entfernen"
+                  class="text-gray-400 hover:text-red-600"
+                  (click)="removeFood(i)"
+                >
+                  <fa-icon [icon]="faTrash" />
+                </button>
+              </div>
+              @if (
+                entryGroup.get('amountGrams')?.invalid &&
+                entryGroup.get('amountGrams')?.touched
+              ) {
+                <span class="text-xs text-red-600">
+                  Bitte gib eine positive Menge in Gramm ein.
+                </span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="flex-[2] flex flex-col gap-3 border-l border-gray-100 pl-6 overflow-y-auto"
+    >
+      @let summary = nutritionSummary();
+      <div class="flex items-center gap-2">
+        <span class="text-[#444444] font-bold">Nährwerte</span>
+        <app-diet-badge [diet]="summary.diet" />
+      </div>
+      @if (entries.length === 0) {
+        <p class="text-sm text-gray-400">
+          Füge Lebensmittel hinzu, um eine Nährwert-Übersicht zu sehen.
+        </p>
+      } @else {
+        <app-recipe-nutrient-summary
+          [totalCalories]="summary.totalCalories"
+          [caloriesPerServing]="summary.caloriesPerServing"
+          [servings]="summary.servings"
+          [totalAmountGrams]="summary.totalAmountGrams"
+          [fatPerServing]="summary.fatPerServing"
+          [saturatedFatPerServing]="summary.saturatedFatPerServing"
+          [carbohydratesPerServing]="summary.carbohydratesPerServing"
+          [sugarPerServing]="summary.sugarPerServing"
+          [fiberPerServing]="summary.fiberPerServing"
+          [proteinPerServing]="summary.proteinPerServing"
+          [saltPerServing]="summary.saltPerServing"
+          [sodiumPerServing]="summary.sodiumPerServing"
+        />
       }
-      <div class="mt-8">Gewicht (ca): {{ this.totalGrams() + 'g' }}</div>
     </div>
   </div>
-  <div class="mt-8">
-    <app-button [type]="'submit'" [text]="'Hinzufügen'" />
+
+  <div class="p-5 border-t border-gray-100">
+    <app-button
+      [type]="'submit'"
+      [text]="'Hinzufügen'"
+      [disabled]="recipe.invalid"
+    />
   </div>
 </form>

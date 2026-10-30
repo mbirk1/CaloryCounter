@@ -20,12 +20,10 @@ import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import de.birk.calory.adapter.primary.model.ImportJobStatusDto;
-import de.birk.calory.adapter.secondary.FoodRepository;
 import de.birk.calory.adapter.secondary.model.FoodPersistence;
 
 /**
@@ -38,6 +36,11 @@ import de.birk.calory.adapter.secondary.model.FoodPersistence;
  * the HTTP request, but the actual import happens asynchronously, long after the request has
  * completed and Spring/Tomcat have cleaned up the multipart request state.
  *
+ * <p>Job-tracking, batch-persistence and rollback are format-agnostic and live in
+ * {@link FoodImportPersister} and {@link ImportJobRegistry}, shared with {@code
+ * BlsFoodImportUsecase} - only the file parsing and row mapping here (Commons CSV +
+ * {@link FoodCsvRowMapper}) are specific to this import path.
+ *
  * @author Marius Birk
  */
 @Component
@@ -49,9 +52,9 @@ public class FoodCsvImportUsecase {
   private static final int GZIP_BYTE_1 = 0x1f;
   private static final int GZIP_BYTE_2 = 0x8b;
 
-  private final FoodRepository foodRepository;
   private final ImportJobRegistry jobRegistry;
-  private final FoodCsvImportDispatcher dispatcher;
+  private final FoodImportDispatcher dispatcher;
+  private final FoodImportPersister persister;
   private final FoodCsvRowMapper rowMapper;
   private final ImportJobStatusDtoConverter statusDtoConverter;
   private final int batchSize;
@@ -59,54 +62,54 @@ public class FoodCsvImportUsecase {
   /**
    * Basic Constructor takes all collaborators needed to run a CSV import.
    *
-   * @param foodRepository is used to persist the imported food items
    * @param jobRegistry tracks the progress of running and finished import jobs
    * @param dispatcher triggers the actual import asynchronously
+   * @param persister persists imported batches and rolls back a failed job
    */
   @Autowired
   public FoodCsvImportUsecase(
-      FoodRepository foodRepository,
       ImportJobRegistry jobRegistry,
-      FoodCsvImportDispatcher dispatcher) {
-    this(foodRepository, jobRegistry, dispatcher, DEFAULT_BATCH_SIZE);
+      FoodImportDispatcher dispatcher,
+      FoodImportPersister persister) {
+    this(jobRegistry, dispatcher, persister, DEFAULT_BATCH_SIZE);
   }
 
   /**
    * Package-private constructor that allows tests to use a small batch size, so batch-splitting
    * behavior can be verified without needing thousands of rows.
    *
-   * @param foodRepository is used to persist the imported food items
    * @param jobRegistry tracks the progress of running and finished import jobs
    * @param dispatcher triggers the actual import asynchronously
-   * @param batchSize the number of rows collected before each {@code saveAll()} call
+   * @param persister persists imported batches and rolls back a failed job
+   * @param batchSize the number of rows collected before each batch is persisted
    */
   FoodCsvImportUsecase(
-      FoodRepository foodRepository,
       ImportJobRegistry jobRegistry,
-      FoodCsvImportDispatcher dispatcher,
+      FoodImportDispatcher dispatcher,
+      FoodImportPersister persister,
       int batchSize) {
-    this(foodRepository, jobRegistry, dispatcher, new FoodCsvRowMapper(), batchSize);
+    this(jobRegistry, dispatcher, persister, new FoodCsvRowMapper(), batchSize);
   }
 
   /**
    * Package-private constructor that additionally allows tests to inject a (possibly mocked)
    * row mapper, so row-level mapping errors can be simulated without a malformed real CSV row.
    *
-   * @param foodRepository is used to persist the imported food items
    * @param jobRegistry tracks the progress of running and finished import jobs
    * @param dispatcher triggers the actual import asynchronously
+   * @param persister persists imported batches and rolls back a failed job
    * @param rowMapper maps CSV rows to persistable food items
-   * @param batchSize the number of rows collected before each {@code saveAll()} call
+   * @param batchSize the number of rows collected before each batch is persisted
    */
   FoodCsvImportUsecase(
-      FoodRepository foodRepository,
       ImportJobRegistry jobRegistry,
-      FoodCsvImportDispatcher dispatcher,
+      FoodImportDispatcher dispatcher,
+      FoodImportPersister persister,
       FoodCsvRowMapper rowMapper,
       int batchSize) {
-    this.foodRepository = foodRepository;
     this.jobRegistry = jobRegistry;
     this.dispatcher = dispatcher;
+    this.persister = persister;
     this.rowMapper = rowMapper;
     this.statusDtoConverter = new ImportJobStatusDtoConverter();
     this.batchSize = batchSize;
@@ -128,13 +131,13 @@ public class FoodCsvImportUsecase {
     LOG.info(
         "CSV-Import-Job {} gestartet: Datei '{}', {} Bytes",
         status.getJobId(), file.getOriginalFilename(), status.getTotalBytes());
-    this.dispatcher.dispatch(this, tempFile, status);
+    this.dispatcher.dispatch(() -> importFromFile(tempFile, status));
     return this.statusDtoConverter.toDto(status);
   }
 
   /**
    * Performs the actual import from a staged file. Package-private: only called by
-   * {@link FoodCsvImportDispatcher} from its {@code @Async} method, or directly from tests.
+   * {@link FoodImportDispatcher} from its {@code @Async} method, or directly from tests.
    *
    * <p>A distinction is deliberately made between a single bad row - skipped and counted, the
    * job carries on and still ends up {@code COMPLETED} - and a job-level failure (the file can't
@@ -177,34 +180,12 @@ public class FoodCsvImportUsecase {
           status.getSkippedCount(), status.getErrorCount());
     } catch (IOException e) {
       LOG.error("CSV-Import-Job {} beim Lesen der Datei fehlgeschlagen", status.getJobId(), e);
-      rollbackAndFail(status);
+      this.persister.rollbackAndFail(status);
     } catch (RuntimeException e) {
       LOG.error("CSV-Import-Job {} unerwartet fehlgeschlagen", status.getJobId(), e);
-      rollbackAndFail(status);
+      this.persister.rollbackAndFail(status);
     } finally {
       deleteQuietly(filePath);
-    }
-  }
-
-  /**
-   * Rolls back everything the job has already imported and marks it {@code FAILED} - {@code
-   * status.fail()} runs in a {@code finally} block so the job is guaranteed to leave {@code
-   * RUNNING} even if the rollback delete itself throws (e.g. a lost DB connection); a stray
-   * orphaned row is a far smaller problem than a job hanging in {@code RUNNING} forever, which
-   * would leave the client polling indefinitely with no way to ever learn the import failed.
-   *
-   * @param status the job status to roll back and mark as failed
-   */
-  private void rollbackAndFail(FoodImportJobStatus status) {
-    try {
-      this.foodRepository.deleteByImportJobId(status.getJobId());
-    } catch (RuntimeException e) {
-      LOG.error(
-          "CSV-Import-Job {} Rollback fehlgeschlagen, moeglicherweise verbleiben "
-              + "bereits importierte Zeilen in der Datenbank",
-          status.getJobId(), e);
-    } finally {
-      status.fail();
     }
   }
 
@@ -222,12 +203,12 @@ public class FoodCsvImportUsecase {
       status.incrementProcessed(1);
       mapRow(record, status).ifPresent(batch::add);
       if (batch.size() >= this.batchSize) {
-        persistBatch(batch, status);
+        this.persister.persistBatch(batch, status);
         batch.clear();
       }
     }
     if (!batch.isEmpty()) {
-      persistBatch(batch, status);
+      this.persister.persistBatch(batch, status);
     }
   }
 
@@ -242,73 +223,6 @@ public class FoodCsvImportUsecase {
     } catch (RuntimeException e) {
       status.incrementError(1);
       return Optional.empty();
-    }
-  }
-
-  /**
-   * Persists a batch in a single call, relying on Spring Data's default per-repository-method
-   * transaction boundary - each {@code saveAll()} call therefore already runs in its own short
-   * transaction without needing an explicit {@code @Transactional} here, which would be silently
-   * ignored anyway since this method is called via {@code this} from within the same bean.
-   *
-   * <p>Re-import safety: rather than pre-checking every row against the unique constraint on
-   * {@code external_id} (far too slow at this volume), batches are inserted optimistically. If a
-   * batch fails - because the file (or part of it) was already imported before, or because of
-   * any other row-level data error (e.g. a value that still slips past
-   * {@link FoodCsvRowMapper}'s plausibility checks and violates a column constraint) - it is
-   * retried record by record so only the genuinely bad rows are skipped, instead of one bad row
-   * in a batch of a thousand taking the other 999 valid ones down with it. The broader {@code
-   * DataAccessException} is caught here rather than only its unique-constraint-specific subtype,
-   * since Hibernate's PostgreSQL exception translation surfaces different SQLState classes
-   * (e.g. a numeric overflow) as other, unrelated {@code DataAccessException} subclasses.
-   *
-   * @param batch the batch to persist
-   * @param status the job status to update
-   */
-  void persistBatch(List<FoodPersistence> batch, FoodImportJobStatus status) {
-    try {
-      this.foodRepository.saveAll(batch);
-      status.incrementImported(batch.size());
-    } catch (DataAccessException e) {
-      LOG.debug(
-          "CSV-Import-Job {}: Batch mit {} Zeilen konnte nicht als Ganzes gespeichert werden "
-              + "({}), Fallback auf zeilenweises Speichern",
-          status.getJobId(), batch.size(), e.getMostSpecificCause().getMessage());
-      persistOneByOne(batch, status);
-    }
-  }
-
-  /**
-   * Persists rows one at a time, so a single bad row in an otherwise-good batch can be skipped
-   * without discarding the rest.
-   *
-   * <p>Backfill note: a row that fails here because it duplicates an already-imported {@code
-   * external_id} additionally has its {@code diet} column updated on the existing row (see
-   * {@link FoodRepository#updateDietByExternalId}). This is the deliberately chosen way to
-   * backfill the diet field onto rows that were imported before the diet column existed: a
-   * plain re-import of the same file already reaches every previously-imported row via this
-   * duplicate-handling path, so no separate backfill script or endpoint is needed - re-running
-   * the import is enough. Only the diet column is touched, never a full-row upsert, so an
-   * interrupted or partial re-import can't silently overwrite other, already-correct columns.
-   *
-   * @param batch the batch to persist record by record
-   * @param status the job status to update
-   */
-  private void persistOneByOne(List<FoodPersistence> batch, FoodImportJobStatus status) {
-    for (FoodPersistence food : batch) {
-      try {
-        this.foodRepository.save(food);
-        status.incrementImported(1);
-      } catch (DataAccessException e) {
-        if (food.getExternalId() != null) {
-          LOG.debug(
-              "CSV-Import-Job {}: Duplikat fuer externalId '{}' erkannt, Diaet-Backfill auf "
-                  + "'{}' wird angewendet",
-              status.getJobId(), food.getExternalId(), food.getDiet());
-          this.foodRepository.updateDietByExternalId(food.getExternalId(), food.getDiet());
-        }
-        status.incrementSkipped(1);
-      }
     }
   }
 

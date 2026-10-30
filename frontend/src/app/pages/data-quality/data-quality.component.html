@@ -1,0 +1,118 @@
+<div class="flex flex-col gap-6 p-6">
+  <h1 class="text-2xl font-bold text-neutral-darkGray">Datenqualität</h1>
+
+  <app-card
+    title="Duplikat-Analyse starten"
+    panelClass="bg-white rounded-xl p-5 gap-4"
+  >
+    <div class="flex flex-wrap gap-3">
+      @for (source of sources; track source.value) {
+        <app-button
+          [type]="'button'"
+          [text]="'Analyse starten: ' + source.label"
+          [loading]="duplicateStore.isAnalyzing()"
+          [disabled]="duplicateStore.isAnalyzing()"
+          (click)="analyze(source.value)"
+        />
+      }
+    </div>
+
+    @if (
+      duplicateStore.analysisPhase() === 'completed' &&
+        duplicateStore.analysisJobStatus();
+      as job
+    ) {
+      <app-alert
+        [variant]="'success'"
+        [message]="
+          'Analyse für ' +
+          job.source +
+          ' abgeschlossen: ' +
+          job.clustersFound +
+          ' Cluster vorgeschlagen.'
+        "
+      />
+    }
+    @if (duplicateStore.analysisPhase() === 'failed') {
+      <app-alert
+        [variant]="'error'"
+        [message]="
+          duplicateStore.analysisErrorMessage() ??
+          'Die Analyse ist fehlgeschlagen.'
+        "
+      />
+    }
+  </app-card>
+
+  @if (duplicateStore.clusters().length === 0) {
+    <p class="text-neutral-darkGray text-sm">
+      Keine offenen Duplikat-Vorschläge vorhanden.
+    </p>
+  }
+
+  @for (cluster of duplicateStore.clusters(); track cluster.id) {
+    <app-card
+      [title]="'Vorgeschlagenes Duplikat (' + cluster.source + ')'"
+      panelClass="bg-white rounded-xl p-5 gap-4"
+    >
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left text-neutral-darkGray">
+              <th class="p-2" scope="col">Kanonisch</th>
+              <th class="p-2" scope="col">Name</th>
+              <th class="p-2" scope="col">Kalorien</th>
+              <th class="p-2" scope="col">Fett</th>
+              <th class="p-2" scope="col">Ähnlichkeit</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (member of cluster.members; track member.food.uuid) {
+              <tr class="border-t border-neutral-lightGray">
+                <td class="p-2">
+                  <input
+                    type="radio"
+                    [name]="'canonical-' + cluster.id"
+                    [attr.aria-label]="
+                      'Als kanonisch wählen: ' + member.food.name
+                    "
+                    [checked]="
+                      selectedCanonicalId(cluster) === member.food.uuid
+                    "
+                    (change)="selectCanonical(cluster, member.food.uuid!)"
+                  />
+                </td>
+                <td class="p-2">
+                  {{ member.food.name }}
+                  @if (member.suggestedCanonical) {
+                    <span class="text-xs text-neutral-darkGray">
+                      (Vorschlag)</span
+                    >
+                  }
+                </td>
+                <td class="p-2">{{ member.food.calory }} kcal</td>
+                <td class="p-2">{{ member.food.fat ?? '–' }}</td>
+                <td class="p-2">
+                  {{ member.similarityScore | number: '1.2-2' }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="flex justify-end gap-3">
+        <app-button
+          [type]="'button'"
+          [text]="'Kein Duplikat'"
+          [style]="'text-[#444444] hover:underline rounded-lg p-2'"
+          (click)="reject(cluster)"
+        />
+        <app-button
+          [type]="'button'"
+          [text]="'Zusammenführen'"
+          (click)="merge(cluster)"
+        />
+      </div>
+    </app-card>
+  }
+</div>

@@ -35,9 +35,13 @@ public class SecurityConfig {
   private static final int BCRYPT_STRENGTH = 12;
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
+  private final RequestTracingFilter requestTracingFilter;
 
-  public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+  public SecurityConfig(
+      JwtAuthenticationFilter jwtAuthenticationFilter,
+      RequestTracingFilter requestTracingFilter) {
     this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    this.requestTracingFilter = requestTracingFilter;
   }
 
   /**
@@ -72,6 +76,7 @@ public class SecurityConfig {
             .permitAll()
             .anyRequest().authenticated())
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        .addFilterAfter(requestTracingFilter, JwtAuthenticationFilter.class)
         .build();
   }
 

@@ -1,5 +1,7 @@
 package de.birk.calory.usecase.food;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import de.birk.calory.adapter.primary.model.FoodDetailsDto;
@@ -7,6 +9,7 @@ import de.birk.calory.adapter.primary.model.FoodDto;
 import de.birk.calory.adapter.secondary.FoodRepository;
 import de.birk.calory.adapter.secondary.model.FoodPersistence;
 import de.birk.calory.domain.food.Food;
+import de.birk.calory.exception.ValidationException;
 import de.birk.calory.usecase.food.converter.FoodDetailsDtoConverter;
 import de.birk.calory.usecase.food.converter.FoodDtoConverter;
 import de.birk.calory.usecase.food.converter.FoodPersistenceConverter;
@@ -21,6 +24,8 @@ import de.birk.calory.usecase.food.converter.FoodPersistenceConverter;
 
 @Component
 public class CreateFoodUsecase {
+
+  private static final Logger LOG = LoggerFactory.getLogger(CreateFoodUsecase.class);
 
   private final FoodRepository foodRepository;
   private final FoodPersistenceConverter persistenceConverter;
@@ -48,11 +53,28 @@ public class CreateFoodUsecase {
    *
    * @return the new food item with a generated uuid
    *
+   * @throws de.birk.calory.exception.ValidationException if a core field is missing, or calory
+   *     or a macronutrient falls outside its plausible range
    */
   public FoodDetailsDto createFood(FoodDto foodDto) {
+    LOG.debug(
+        "Anlegeanfrage fuer Lebensmittel erhalten: name='{}', calory={}, grams={}",
+        foodDto.getName(), foodDto.getCalory(), foodDto.getGrams());
     Food food = this.dtoConverter.convertFromDto(foodDto);
-    FoodPersistence foodPersistence = this.persistenceConverter.convertFromEntity(food);
-    this.foodRepository.save(foodPersistence);
-    return this.detailsDtoConverter.convertFromEntity(food);
+    try {
+      food.validatePlausibility();
+    } catch (ValidationException e) {
+      LOG.warn(
+          "Anlegen von Lebensmittel '{}' abgelehnt: unplausibler Wert (calory={})",
+          foodDto.getName(), foodDto.getCalory());
+      throw e;
+    }
+
+    FoodPersistence saved = this.foodRepository.save(
+        this.persistenceConverter.convertFromEntity(food));
+    Food savedFood = this.persistenceConverter.convertFromDto(saved);
+    LOG.info("Lebensmittel {} ('{}') erfolgreich angelegt", savedFood.getId(), savedFood.getName());
+
+    return this.detailsDtoConverter.convertFromEntity(savedFood);
   }
 }

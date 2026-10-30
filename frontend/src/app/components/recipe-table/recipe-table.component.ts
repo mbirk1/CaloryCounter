@@ -7,46 +7,35 @@ import {
   computed,
   ChangeDetectionStrategy,
 } from '@angular/core'
-import { NgClass } from '@angular/common'
+import { Dialog } from '@angular/cdk/dialog'
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
+import { faEye } from '@fortawesome/free-solid-svg-icons'
+import { DietBadgeComponent } from '../diet-badge/diet-badge.component'
 import { RecipeModel } from '../../models/RecipeModel'
 import { RecipeStore } from '../../api/stores/recipe.store'
-import { FoodModel } from '../../models/FoodModel'
+import { RecipeDetailDialogComponent } from '../dialogs/recipe-detail-dialog/recipe-detail-dialog.component'
 
 @Component({
   selector: 'app-recipe-table',
   standalone: true,
-  imports: [],
+  imports: [FontAwesomeModule, DietBadgeComponent],
   templateUrl: './recipe-table.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: '',
 })
 export class RecipeTableComponent {
   private readonly recipeStore = inject(RecipeStore)
+  private readonly dialog = inject(Dialog)
   data: Signal<RecipeModel[]> = computed(() => this.recipeStore.recipes())
   columnHeaders: InputSignal<string[]> = input.required()
+
+  protected readonly faEye = faEye
 
   delete(id: string) {
     this.recipeStore.delete(id)
   }
 
-  listFoods(foods: FoodModel[]): string {
-    return foods.map((food: FoodModel): string => food.name).join(', ')
-  }
-
-  addGrams(foods: FoodModel[]) {
-    let gram = 0
-    foods.forEach((food: FoodModel) => {
-      gram = gram + food.grams
-      console.log(gram)
-    })
-    return gram
-  }
-
-  addCalories(foods: FoodModel[]) {
-    let calory = 0
-    foods.forEach((food: FoodModel) => {
-      calory = calory + food.calory
-    })
-    return calory
+  openDetails(recipe: RecipeModel): void {
+    this.dialog.open(RecipeDetailDialogComponent, { data: recipe })
   }
 }

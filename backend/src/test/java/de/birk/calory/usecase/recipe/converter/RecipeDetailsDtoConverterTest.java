@@ -11,171 +11,114 @@ import org.junit.jupiter.api.Test;
 
 import de.birk.calory.adapter.primary.model.FoodDetailsDto;
 import de.birk.calory.adapter.primary.model.RecipeDetailsDto;
+import de.birk.calory.adapter.primary.model.RecipeFoodEntryDetailsDto;
 import de.birk.calory.domain.food.Food;
 import de.birk.calory.domain.recipe.Recipe;
+import de.birk.calory.domain.recipe.RecipeFoodEntry;
 import de.birk.calory.exception.ValidationException;
 
 public class RecipeDetailsDtoConverterTest {
-  @Test
-  public void convertValidRecipeDetailsDtoToEntityTest() {
-    // Arrange
-    RecipeDetailsDtoConverter converter = new RecipeDetailsDtoConverter();
-    RecipeDetailsDto dto = new RecipeDetailsDto(UUID.randomUUID(), "Recipe",
-        List.of((new FoodDetailsDto(UUID.randomUUID(), "Food", BigDecimal.valueOf(100),
-            BigDecimal.valueOf(200)))));
-
-    // Act
-    Recipe entity = converter.convertFromDto(dto);
-
-    // Assert
-    Food firstFood = entity.getFoods().getFirst();
-    FoodDetailsDto firstDetail = dto.getFoods().getFirst();
-
-    assertThat(entity).isNotNull();
-    assertThat(dto.getId()).isEqualTo(entity.getId());
-    assertThat(dto.getName()).isEqualTo(entity.getName());
-    assertThat(dto.getFoods().size()).isEqualTo(entity.getFoods().size());
-    assertThat(firstDetail.getUuid()).isEqualTo(firstFood.getId());
-    assertThat(firstDetail.getName()).isEqualTo(firstFood.getName());
-    assertThat(firstDetail.getCalory()).isEqualTo(firstFood.getCalory());
-    assertThat(firstDetail.getGrams()).isEqualTo(firstFood.getGrams());
-  }
 
   @Test
-  public void convertEntityToValidRecipeDetailsDtoTest() {
+  public void convertEntityToDtoIncludesAggregatesAndFoodEntriesTest() {
     // Arrange
     RecipeDetailsDtoConverter converter = new RecipeDetailsDtoConverter();
+    Food food = new Food(UUID.randomUUID(), "Food", BigDecimal.valueOf(200),
+        BigDecimal.valueOf(100));
     Recipe entity = new Recipe(UUID.randomUUID(), "Recipe",
-        List.of(new Food(
-            UUID.randomUUID(),
-            "Food",
-            BigDecimal.valueOf(100),
-            BigDecimal.valueOf(200)
-        )));
+        List.of(new RecipeFoodEntry(food, BigDecimal.valueOf(50))), 2);
 
     // Act
     RecipeDetailsDto dto = converter.convertFromEntity(entity);
 
     // Assert
-    Food firstFood = entity.getFoods().getFirst();
-    FoodDetailsDto firstDetail = dto.getFoods().getFirst();
-
-    assertThat(dto).isNotNull();
-    assertThat(entity.getId()).isEqualTo(dto.getId());
-    assertThat(entity.getName()).isEqualTo(dto.getName());
-    assertThat(entity.getFoods().size()).isEqualTo(dto.getFoods().size());
-    assertThat(firstFood.getId()).isEqualTo(firstDetail.getUuid());
-    assertThat(firstFood.getName()).isEqualTo(firstDetail.getName());
-    assertThat(firstFood.getCalory()).isEqualTo(firstDetail.getCalory());
-    assertThat(firstFood.getGrams()).isEqualTo(firstDetail.getGrams());
+    RecipeFoodEntryDetailsDto firstEntry = dto.getFoods().getFirst();
+    assertThat(dto.getUuid()).isEqualTo(entity.getId());
+    assertThat(dto.getName()).isEqualTo(entity.getName());
+    assertThat(dto.getServings()).isEqualTo(2);
+    assertThat(dto.getFoods()).hasSize(1);
+    assertThat(firstEntry.getFood().getUuid()).isEqualTo(food.getId());
+    assertThat(firstEntry.getFood().getName()).isEqualTo(food.getName());
+    assertThat(firstEntry.getAmountGrams()).isEqualByComparingTo("50");
+    assertThat(dto.getTotalCalories()).isEqualByComparingTo("100.00");
+    assertThat(dto.getCaloriesPerServing()).isEqualByComparingTo("50.00");
+    assertThat(dto.getDiet()).isEqualTo(entity.getDiet().name());
   }
 
   @Test
-  public void convertDtoWithEmptyFoodsListToEntityTest() {
+  public void convertDtoToEntityReconstructsEntriesTest() {
     // Arrange
     RecipeDetailsDtoConverter converter = new RecipeDetailsDtoConverter();
-    RecipeDetailsDto dto =
-        new RecipeDetailsDto(UUID.randomUUID(), "Recipe", List.of());
+    UUID foodId = UUID.randomUUID();
+    RecipeDetailsDto dto = new RecipeDetailsDto(
+        UUID.randomUUID(), "Recipe", 1,
+        List.of(new RecipeFoodEntryDetailsDto(
+            new FoodDetailsDto(foodId, "Food", BigDecimal.valueOf(100), BigDecimal.valueOf(100)),
+            BigDecimal.valueOf(100)
+        )),
+        BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+        BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+        BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+        BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+        "VEGAN"
+    );
 
     // Act
     Recipe entity = converter.convertFromDto(dto);
 
     // Assert
-    assertThat(entity).isNotNull();
-    assertThat(dto.getId()).isEqualTo(entity.getId());
-    assertThat(dto.getName()).isEqualTo(entity.getName());
-    assertThat(entity.getFoods().isEmpty()).isTrue();
+    assertThat(entity.getId()).isEqualTo(dto.getUuid());
+    assertThat(entity.getName()).isEqualTo(dto.getName());
+    assertThat(entity.getServings()).isEqualTo(1);
+    assertThat(entity.getEntries()).hasSize(1);
+    assertThat(entity.getEntries().getFirst().getFood().getId()).isEqualTo(foodId);
+    assertThat(entity.getEntries().getFirst().getAmountGrams()).isEqualByComparingTo("100");
   }
 
   @Test
-  public void convertEntityWithEmptyFoodsListToDtoTest() {
+  public void convertEntityWithEmptyEntriesToDtoTest() {
     // Arrange
     RecipeDetailsDtoConverter converter = new RecipeDetailsDtoConverter();
-    Recipe entity = new Recipe(UUID.randomUUID(), "Recipe", List.of());
+    Recipe entity = new Recipe(UUID.randomUUID(), "Recipe", List.of(), 1);
 
     // Act
     RecipeDetailsDto dto = converter.convertFromEntity(entity);
 
     // Assert
-    assertThat(dto).isNotNull();
-    assertThat(entity.getId()).isEqualTo(dto.getId());
-    assertThat(entity.getName()).isEqualTo(dto.getName());
-    assertThat(dto.getFoods().isEmpty()).isTrue();
-  }
-
-  @Test
-  public void convertDtoWithNullIdToEntityTest() {
-    // Arrange
-    RecipeDetailsDtoConverter converter = new RecipeDetailsDtoConverter();
-    RecipeDetailsDto dto = new RecipeDetailsDto(null, "Recipe",
-        List.of(new FoodDetailsDto(
-            UUID.randomUUID(),
-            "Food",
-            BigDecimal.valueOf(100),
-            BigDecimal.valueOf(200)
-        )));
-
-    // Act
-    Recipe entity = converter.convertFromDto(dto);
-
-    // Assert
-    FoodDetailsDto firstDetails = dto.getFoods().getFirst();
-    Food firstFood = entity.getFoods().getFirst();
-
-    assertThat(entity).isNotNull();
-    assertThat(entity.getId()).isNull();
-    assertThat(dto.getName()).isEqualTo(entity.getName());
-    assertThat(dto.getFoods().size()).isEqualTo(entity.getFoods().size());
-    assertThat(firstDetails.getUuid()).isEqualTo(firstFood.getId());
-    assertThat(firstDetails.getName()).isEqualTo(firstFood.getName());
-    assertThat(firstDetails.getCalory()).isEqualTo(firstFood.getCalory());
-    assertThat(firstDetails.getGrams()).isEqualTo(firstFood.getGrams());
+    assertThat(dto.getFoods()).isEmpty();
+    assertThat(dto.getTotalCalories()).isEqualByComparingTo("0.00");
+    assertThat(dto.getDiet()).isEqualTo("VEGAN");
   }
 
   @Test
   public void convertEntityWithNullIdToDtoTest() {
     // Arrange
     RecipeDetailsDtoConverter converter = new RecipeDetailsDtoConverter();
-    Recipe entity = new Recipe(null, "Recipe",
-        List.of(new Food(
-            UUID.randomUUID(),
-            "Food",
-            BigDecimal.valueOf(100),
-            BigDecimal.valueOf(200)
-        )));
+    Recipe entity = new Recipe(null, "Recipe", List.of(), 1);
 
     // Act
     RecipeDetailsDto dto = converter.convertFromEntity(entity);
 
     // Assert
-    Food firstFood = entity.getFoods().getFirst();
-    FoodDetailsDto firstDetail = dto.getFoods().getFirst();
-
-    assertThat(dto).isNotNull();
-    assertThat(dto.getId()).isNull();
+    assertThat(dto.getUuid()).isNull();
     assertThat(entity.getName()).isEqualTo(dto.getName());
-    assertThat(entity.getFoods().size()).isEqualTo(dto.getFoods().size());
-    assertThat(firstFood.getId()).isEqualTo(firstDetail.getUuid());
-    assertThat(firstFood.getName()).isEqualTo(firstDetail.getName());
-    assertThat(firstFood.getCalory()).isEqualTo(firstDetail.getCalory());
-    assertThat(firstFood.getGrams()).isEqualTo(firstDetail.getGrams());
   }
 
   @Test
-  public void convertDtoWithNullNameToEntityTest() {
+  public void convertDtoWithNullNameToEntityThrowsValidationExceptionTest() {
     // Arrange
     RecipeDetailsDtoConverter converter = new RecipeDetailsDtoConverter();
-    RecipeDetailsDto dto = new RecipeDetailsDto(UUID.randomUUID(), null,
-        List.of(new FoodDetailsDto(
-            UUID.randomUUID(),
-            "Food",
-            BigDecimal.valueOf(100),
-            BigDecimal.valueOf(200)
-        )));
+    RecipeDetailsDto dto = new RecipeDetailsDto(
+        UUID.randomUUID(), null, 1, List.of(),
+        BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+        BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+        BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+        BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+        "VEGAN"
+    );
 
-    // Act
-    assertThatThrownBy(() ->
-        converter.convertFromDto(dto)
-    ).isInstanceOf(ValidationException.class);
+    // Act & Assert
+    assertThatThrownBy(() -> converter.convertFromDto(dto))
+        .isInstanceOf(ValidationException.class);
   }
 }

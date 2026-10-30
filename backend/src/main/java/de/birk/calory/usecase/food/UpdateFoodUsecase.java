@@ -65,26 +65,43 @@ public class UpdateFoodUsecase {
         });
     Food existing = this.persistenceConverter.convertFromDto(existingPersistence);
 
-    Food updated = new Food(
-        id,
-        updateFoodDto.getName(),
-        updateFoodDto.getCalory(),
-        updateFoodDto.getGrams(),
-        existing.getBrand(),
-        existing.getCategory(),
-        updateFoodDto.getFat(),
-        updateFoodDto.getSaturatedFat(),
-        updateFoodDto.getCarbohydrates(),
-        updateFoodDto.getSugar(),
-        updateFoodDto.getFiber(),
-        updateFoodDto.getProtein(),
-        updateFoodDto.getSalt(),
-        updateFoodDto.getSodium(),
-        existing.getImageUrl(),
-        existing.getSource(),
-        existing.getExternalId(),
-        updateFoodDto.getDiet() == null ? Diet.UNKNOWN : Diet.valueOf(updateFoodDto.getDiet())
-    );
+    Food updated = new Food.Builder()
+        .id(id)
+        .name(updateFoodDto.getName())
+        .calory(updateFoodDto.getCalory())
+        .grams(updateFoodDto.getGrams())
+        .brand(existing.getBrand())
+        .category(existing.getCategory())
+        .fat(updateFoodDto.getFat())
+        .saturatedFat(updateFoodDto.getSaturatedFat())
+        .carbohydrates(updateFoodDto.getCarbohydrates())
+        .sugar(updateFoodDto.getSugar())
+        .fiber(updateFoodDto.getFiber())
+        .protein(updateFoodDto.getProtein())
+        .salt(updateFoodDto.getSalt())
+        .sodium(updateFoodDto.getSodium())
+        .imageUrl(existing.getImageUrl())
+        .source(existing.getSource())
+        .externalId(existing.getExternalId())
+        .diet(updateFoodDto.getDiet() == null
+            ? Diet.UNKNOWN : Diet.valueOf(updateFoodDto.getDiet()))
+        .vitaminA(updateFoodDto.getVitaminA())
+        .vitaminD(updateFoodDto.getVitaminD())
+        .vitaminE(updateFoodDto.getVitaminE())
+        .vitaminK(updateFoodDto.getVitaminK())
+        .vitaminB1(updateFoodDto.getVitaminB1())
+        .vitaminB2(updateFoodDto.getVitaminB2())
+        .vitaminB6(updateFoodDto.getVitaminB6())
+        .vitaminB12(updateFoodDto.getVitaminB12())
+        .vitaminC(updateFoodDto.getVitaminC())
+        .folate(updateFoodDto.getFolate())
+        .potassium(updateFoodDto.getPotassium())
+        .calcium(updateFoodDto.getCalcium())
+        .magnesium(updateFoodDto.getMagnesium())
+        .iron(updateFoodDto.getIron())
+        .zinc(updateFoodDto.getZinc())
+        .iodine(updateFoodDto.getIodine())
+        .build();
     try {
       updated.validatePlausibility();
     } catch (ValidationException e) {

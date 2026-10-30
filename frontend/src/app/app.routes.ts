@@ -8,6 +8,7 @@ import { OnboardingComponent } from './pages/onboarding/onboarding.component'
 import { DashboardComponent } from './pages/dashboard/dashboard.component'
 import { FoodComponent } from './pages/food/food.component'
 import { RecipeComponent } from './pages/recipe/recipe.component'
+import { DataQualityComponent } from './pages/data-quality/data-quality.component'
 import { publicOnlyGuard } from './guards/public-only.guard'
 import { authGuard } from './guards/auth.guard'
 import { profileCompleteGuard } from './guards/profile-complete.guard'
@@ -46,6 +47,11 @@ export const routes: Routes = [
       {
         path: 'recipe',
         component: RecipeComponent,
+        canActivate: [authGuard, profileCompleteGuard],
+      },
+      {
+        path: 'data-quality',
+        component: DataQualityComponent,
         canActivate: [authGuard, profileCompleteGuard],
       },
     ],

@@ -1,0 +1,44 @@
+<div class="flex flex-col gap-3">
+  <div class="flex items-baseline gap-2">
+    <span class="text-secondary">
+      <fa-icon [icon]="faFire" />
+    </span>
+    <span class="text-3xl font-bold text-[#444444]">{{
+      caloriesPerServing()
+    }}</span>
+    <span class="text-sm text-gray-500">kcal pro Portion</span>
+  </div>
+  <div class="text-sm text-gray-500">
+    {{ totalCalories() }} kcal insgesamt · {{ servings() }} Portionen ·
+    {{ totalAmountGrams() }} g gesamt
+  </div>
+
+  <app-card
+    title="Nährwerte pro Portion"
+    panelClass="bg-gray-50 rounded-xl p-4"
+  >
+    <div class="flex flex-col gap-3">
+      @for (row of nutrientRows(); track row.label) {
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center justify-between text-sm gap-2">
+            <span class="flex items-center gap-2 text-[#444444] min-w-0">
+              <span class="text-gray-400 w-4 shrink-0">
+                <fa-icon [icon]="row.icon" />
+              </span>
+              <span class="truncate">{{ row.label }}</span>
+            </span>
+            <span class="font-medium text-[#444444] shrink-0">
+              {{ row.value ?? '–' }}{{ unit(row.value) }}
+            </span>
+          </div>
+          <div class="h-1.5 w-full bg-gray-200 rounded-full overflow-hidden">
+            <div
+              class="h-full bg-primary rounded-full"
+              [style.width.%]="barWidth(row.value)"
+            ></div>
+          </div>
+        </div>
+      }
+    </div>
+  </app-card>
+</div>

@@ -7,5 +7,6 @@ package de.birk.calory.domain.food;
  */
 public enum FoodSource {
   MANUAL,
-  OPENFOODFACTS
+  OPENFOODFACTS,
+  BLS
 }

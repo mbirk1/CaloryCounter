@@ -1,0 +1,16 @@
+ALTER TABLE tab_calory_food ADD COLUMN vitamin_a numeric(8,3);
+ALTER TABLE tab_calory_food ADD COLUMN vitamin_d numeric(8,3);
+ALTER TABLE tab_calory_food ADD COLUMN vitamin_e numeric(8,3);
+ALTER TABLE tab_calory_food ADD COLUMN vitamin_k numeric(8,3);
+ALTER TABLE tab_calory_food ADD COLUMN vitamin_b1 numeric(8,3);
+ALTER TABLE tab_calory_food ADD COLUMN vitamin_b2 numeric(8,3);
+ALTER TABLE tab_calory_food ADD COLUMN vitamin_b6 numeric(8,3);
+ALTER TABLE tab_calory_food ADD COLUMN vitamin_b12 numeric(8,3);
+ALTER TABLE tab_calory_food ADD COLUMN vitamin_c numeric(8,3);
+ALTER TABLE tab_calory_food ADD COLUMN folate numeric(8,3);
+ALTER TABLE tab_calory_food ADD COLUMN potassium numeric(8,3);
+ALTER TABLE tab_calory_food ADD COLUMN calcium numeric(8,3);
+ALTER TABLE tab_calory_food ADD COLUMN magnesium numeric(8,3);
+ALTER TABLE tab_calory_food ADD COLUMN iron numeric(8,3);
+ALTER TABLE tab_calory_food ADD COLUMN zinc numeric(8,3);
+ALTER TABLE tab_calory_food ADD COLUMN iodine numeric(8,3);

@@ -1,0 +1,51 @@
+<div
+  class="flex flex-col bg-white rounded-xl p-5 gap-5 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+>
+  <div class="flex items-start justify-between gap-4">
+    <div class="flex items-center gap-2 min-w-0">
+      <app-diet-badge [diet]="data.diet" />
+      <span class="text-[#444444] font-bold text-xl truncate">{{
+        data.name
+      }}</span>
+    </div>
+    <button
+      type="button"
+      (click)="close()"
+      aria-label="Schließen"
+      class="text-gray-400 hover:text-gray-700 shrink-0"
+    >
+      <fa-icon [icon]="faXmark" />
+    </button>
+  </div>
+
+  <app-recipe-nutrient-summary
+    [totalCalories]="data.totalCalories"
+    [caloriesPerServing]="data.caloriesPerServing"
+    [servings]="data.servings"
+    [totalAmountGrams]="totalAmountGrams"
+    [fatPerServing]="data.fatPerServing"
+    [saturatedFatPerServing]="data.saturatedFatPerServing"
+    [carbohydratesPerServing]="data.carbohydratesPerServing"
+    [sugarPerServing]="data.sugarPerServing"
+    [fiberPerServing]="data.fiberPerServing"
+    [proteinPerServing]="data.proteinPerServing"
+    [saltPerServing]="data.saltPerServing"
+    [sodiumPerServing]="data.sodiumPerServing"
+  />
+
+  <app-card
+    title="Enthaltene Lebensmittel"
+    panelClass="bg-gray-50 rounded-xl p-4"
+  >
+    <div class="flex flex-col gap-2">
+      @for (entry of data.foods; track entry.food.uuid) {
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-[#444444] truncate">{{ entry.food.name }}</span>
+          <span class="font-medium text-[#444444] shrink-0"
+            >{{ entry.amountGrams }} g</span
+          >
+        </div>
+      }
+    </div>
+  </app-card>
+</div>

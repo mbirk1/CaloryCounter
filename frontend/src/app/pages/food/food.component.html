@@ -11,13 +11,13 @@
       <input
         #csvFileInput
         type="file"
-        accept=".csv"
+        accept=".xlsx"
         class="hidden"
         (change)="onCsvFileSelected($event)"
       />
       <app-button
         [type]="'button'"
-        [text]="'CSV importieren'"
+        [text]="'Lebensmittel-Datenbank importieren (BLS)'"
         [disabled]="csvImportService.isActive()"
         (click)="csvFileInput.click()"
         class="right-0"

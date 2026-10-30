@@ -24,6 +24,22 @@ public class UpdateFoodDto {
   private BigDecimal protein;
   private BigDecimal salt;
   private BigDecimal sodium;
+  private BigDecimal vitaminA;
+  private BigDecimal vitaminD;
+  private BigDecimal vitaminE;
+  private BigDecimal vitaminK;
+  private BigDecimal vitaminB1;
+  private BigDecimal vitaminB2;
+  private BigDecimal vitaminB6;
+  private BigDecimal vitaminB12;
+  private BigDecimal vitaminC;
+  private BigDecimal folate;
+  private BigDecimal potassium;
+  private BigDecimal calcium;
+  private BigDecimal magnesium;
+  private BigDecimal iron;
+  private BigDecimal zinc;
+  private BigDecimal iodine;
 
   public UpdateFoodDto() {
   }
@@ -44,6 +60,22 @@ public class UpdateFoodDto {
    * @param protein amount of protein per {@code grams}
    * @param salt amount of salt per {@code grams}
    * @param sodium amount of sodium per {@code grams}
+   * @param vitaminA amount of vitamin A (µg) per {@code grams}, optional
+   * @param vitaminD amount of vitamin D (µg) per {@code grams}, optional
+   * @param vitaminE amount of vitamin E (mg) per {@code grams}, optional
+   * @param vitaminK amount of vitamin K (µg) per {@code grams}, optional
+   * @param vitaminB1 amount of vitamin B1 (mg) per {@code grams}, optional
+   * @param vitaminB2 amount of vitamin B2 (mg) per {@code grams}, optional
+   * @param vitaminB6 amount of vitamin B6 (µg) per {@code grams}, optional
+   * @param vitaminB12 amount of vitamin B12 (µg) per {@code grams}, optional
+   * @param vitaminC amount of vitamin C (mg) per {@code grams}, optional
+   * @param folate amount of folate (µg) per {@code grams}, optional
+   * @param potassium amount of potassium (mg) per {@code grams}, optional
+   * @param calcium amount of calcium (mg) per {@code grams}, optional
+   * @param magnesium amount of magnesium (mg) per {@code grams}, optional
+   * @param iron amount of iron (mg) per {@code grams}, optional
+   * @param zinc amount of zinc (mg) per {@code grams}, optional
+   * @param iodine amount of iodine (µg) per {@code grams}, optional
    */
   public UpdateFoodDto(
       String name,
@@ -57,7 +89,23 @@ public class UpdateFoodDto {
       BigDecimal fiber,
       BigDecimal protein,
       BigDecimal salt,
-      BigDecimal sodium) {
+      BigDecimal sodium,
+      BigDecimal vitaminA,
+      BigDecimal vitaminD,
+      BigDecimal vitaminE,
+      BigDecimal vitaminK,
+      BigDecimal vitaminB1,
+      BigDecimal vitaminB2,
+      BigDecimal vitaminB6,
+      BigDecimal vitaminB12,
+      BigDecimal vitaminC,
+      BigDecimal folate,
+      BigDecimal potassium,
+      BigDecimal calcium,
+      BigDecimal magnesium,
+      BigDecimal iron,
+      BigDecimal zinc,
+      BigDecimal iodine) {
     this.name = name;
     this.calory = calory;
     this.grams = grams;
@@ -70,6 +118,22 @@ public class UpdateFoodDto {
     this.protein = protein;
     this.salt = salt;
     this.sodium = sodium;
+    this.vitaminA = vitaminA;
+    this.vitaminD = vitaminD;
+    this.vitaminE = vitaminE;
+    this.vitaminK = vitaminK;
+    this.vitaminB1 = vitaminB1;
+    this.vitaminB2 = vitaminB2;
+    this.vitaminB6 = vitaminB6;
+    this.vitaminB12 = vitaminB12;
+    this.vitaminC = vitaminC;
+    this.folate = folate;
+    this.potassium = potassium;
+    this.calcium = calcium;
+    this.magnesium = magnesium;
+    this.iron = iron;
+    this.zinc = zinc;
+    this.iodine = iodine;
   }
 
   public String getName() {
@@ -118,5 +182,69 @@ public class UpdateFoodDto {
 
   public BigDecimal getSodium() {
     return sodium;
+  }
+
+  public BigDecimal getVitaminA() {
+    return vitaminA;
+  }
+
+  public BigDecimal getVitaminD() {
+    return vitaminD;
+  }
+
+  public BigDecimal getVitaminE() {
+    return vitaminE;
+  }
+
+  public BigDecimal getVitaminK() {
+    return vitaminK;
+  }
+
+  public BigDecimal getVitaminB1() {
+    return vitaminB1;
+  }
+
+  public BigDecimal getVitaminB2() {
+    return vitaminB2;
+  }
+
+  public BigDecimal getVitaminB6() {
+    return vitaminB6;
+  }
+
+  public BigDecimal getVitaminB12() {
+    return vitaminB12;
+  }
+
+  public BigDecimal getVitaminC() {
+    return vitaminC;
+  }
+
+  public BigDecimal getFolate() {
+    return folate;
+  }
+
+  public BigDecimal getPotassium() {
+    return potassium;
+  }
+
+  public BigDecimal getCalcium() {
+    return calcium;
+  }
+
+  public BigDecimal getMagnesium() {
+    return magnesium;
+  }
+
+  public BigDecimal getIron() {
+    return iron;
+  }
+
+  public BigDecimal getZinc() {
+    return zinc;
+  }
+
+  public BigDecimal getIodine() {
+    return iodine;
   }
 }

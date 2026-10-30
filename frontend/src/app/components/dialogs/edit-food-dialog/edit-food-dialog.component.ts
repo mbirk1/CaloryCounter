@@ -69,6 +69,22 @@ export class EditFoodDialogComponent extends Dialog {
       .control('protein', this.numberOrEmpty(this.data.protein), [])
       .control('salt', this.numberOrEmpty(this.data.salt), [])
       .control('sodium', this.numberOrEmpty(this.data.sodium), [])
+      .control('vitaminA', this.numberOrEmpty(this.data.vitaminA), [])
+      .control('vitaminD', this.numberOrEmpty(this.data.vitaminD), [])
+      .control('vitaminE', this.numberOrEmpty(this.data.vitaminE), [])
+      .control('vitaminK', this.numberOrEmpty(this.data.vitaminK), [])
+      .control('vitaminB1', this.numberOrEmpty(this.data.vitaminB1), [])
+      .control('vitaminB2', this.numberOrEmpty(this.data.vitaminB2), [])
+      .control('vitaminB6', this.numberOrEmpty(this.data.vitaminB6), [])
+      .control('vitaminB12', this.numberOrEmpty(this.data.vitaminB12), [])
+      .control('vitaminC', this.numberOrEmpty(this.data.vitaminC), [])
+      .control('folate', this.numberOrEmpty(this.data.folate), [])
+      .control('potassium', this.numberOrEmpty(this.data.potassium), [])
+      .control('calcium', this.numberOrEmpty(this.data.calcium), [])
+      .control('magnesium', this.numberOrEmpty(this.data.magnesium), [])
+      .control('iron', this.numberOrEmpty(this.data.iron), [])
+      .control('zinc', this.numberOrEmpty(this.data.zinc), [])
+      .control('iodine', this.numberOrEmpty(this.data.iodine), [])
       .build()
   }
 
@@ -91,6 +107,22 @@ export class EditFoodDialogComponent extends Dialog {
       protein: this.emptyToUndefined(value.protein),
       salt: this.emptyToUndefined(value.salt),
       sodium: this.emptyToUndefined(value.sodium),
+      vitaminA: this.emptyToUndefined(value.vitaminA),
+      vitaminD: this.emptyToUndefined(value.vitaminD),
+      vitaminE: this.emptyToUndefined(value.vitaminE),
+      vitaminK: this.emptyToUndefined(value.vitaminK),
+      vitaminB1: this.emptyToUndefined(value.vitaminB1),
+      vitaminB2: this.emptyToUndefined(value.vitaminB2),
+      vitaminB6: this.emptyToUndefined(value.vitaminB6),
+      vitaminB12: this.emptyToUndefined(value.vitaminB12),
+      vitaminC: this.emptyToUndefined(value.vitaminC),
+      folate: this.emptyToUndefined(value.folate),
+      potassium: this.emptyToUndefined(value.potassium),
+      calcium: this.emptyToUndefined(value.calcium),
+      magnesium: this.emptyToUndefined(value.magnesium),
+      iron: this.emptyToUndefined(value.iron),
+      zinc: this.emptyToUndefined(value.zinc),
+      iodine: this.emptyToUndefined(value.iodine),
     }
 
     const success = await this.foodStore.update(this.data.uuid!, payload)
